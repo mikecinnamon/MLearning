@@ -29,7 +29,7 @@ A word of caution. Correlation and R-squared are sensitive to extreme values, no
 
 ## Evaluating a regression model
 
-The interpretation of the coefficient of determination as a squared correlation is no longer valid in regression models which are nonlinear or that, though being linear, are not obtained by the least squares method. Though it is presented as the standard metric for regression models in many sources, in a business application one should evaluate the prediction errors in a simple, direct way. Two popular metrics are the mean absolute error or the mean absolute percentage error, whose interpretation is completely straightforward.
+The interpretation of the coefficient of determination as a squared correlation is no longer valid in regression models which are nonlinear or that, though being linear, are not obtained by the least squares method. Though it is presented as the standard metric for regression models in many sources, in a business application one should evaluate the prediction errors in a simple, direct way. Two popular metrics are the mean absolute error and the mean absolute percentage error, whose interpretation is completely straightforward.
 
 Suppose that `y` is the target vector in the training data set, and `y_pred` is the predicted target vector. The **mean absolute error** can be obtained directly in Pandas as
 
