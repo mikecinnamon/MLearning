@@ -361,3 +361,15 @@ There are still negative predicted prices, though this has improved:
 In [29]: (y_pred < 0).sum()
 Out[29]: 16
 ```
+
+## Homework
+
+1. The role of longitude and latitude in the prediction of real estate prices is unclear. Do they really contribute to get better predictions in the first model of this example? If we keep them in the second model, do we get a better model? 
+
+2. Evaluate in dollar terms the predictive performance of the two models presented in this example. For instance, you can use the mean (or median) absolute error. Can you make a statement like "the value of *x*% of the houses can be predicted with an error below *y* thousand dollars"?
+
+3. Is it better to use the percentage error in the above assessment?
+
+4. Can the strong correlation be an artifact created by the extreme values? Trim the data set, dropping the houses beyond a certain threshold of price and/or size. Do you get a better model?
+
+5. The distribution of the price is quite skewed, which is a fact of life in real state. The extreme values in the right tail of the distribution can exert an undesired influence on the regression coefficients. Develop and evaluate a model for predicting the price that is based on a linear regression equation which has the logarithm of the price on the left side. 
