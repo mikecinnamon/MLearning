@@ -8,7 +8,7 @@ df = pd.read_csv(path + 'churn.csv', index_col=0)
 # Exploring the data #
 df.info()
 
-# Q1. Logistic regression equation #
+# Q1. Logistic regression model #
 y = df['churn']
 X = df.drop(columns='churn')
 from sklearn.linear_model import LogisticRegression
