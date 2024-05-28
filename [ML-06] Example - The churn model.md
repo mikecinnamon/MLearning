@@ -200,7 +200,7 @@ In [11]: # Set the size of the figure
     ...: plt.xlabel('Churn score');
 ```
 
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/06.1.png)
+![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/06-1.png)
 
 You can now imagine the cutoff as a vertical line, and move it, right or left from the default threshold 0.5. The customers falling on the right of that vertical line would be classified as positive, and those falling on the left as negative.
 
