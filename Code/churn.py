@@ -2,7 +2,7 @@
 
 # Importing the data #
 import pandas as pd
-path = 'https://raw.githubusercontent.com/cinnData/MLearning/main/Data/'
+path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
 df = pd.read_csv(path + 'churn.csv', index_col=0)
 
 # Exploring the data #
