@@ -167,7 +167,7 @@ First, we import `matplotlib.pyplot`.
 In [8]: from matplotlib import pyplot as plt
 ```
 
-Now, we plot create the visualization. The size has been chosen for a good fit in a webpage. The argument `edgecolor='white'` creates the white lines separating the bars, which improves the visualization. The final semicolon stops some irrelevant output to be printed.
+Now, we plot create the visualization. The size has been chosen for a good fit in a webpage. The argument `edgecolor='white'` creates the white lines separating the bars, which improves the visualization. The default of `plt.hist()` takes the same value for `color` and `edgecolor`. The final semicolon stops some irrelevant output to be printed.
 
 ```
 In [9]: plt.figure(figsize=(7,5))
