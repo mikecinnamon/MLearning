@@ -1,4 +1,4 @@
-# [ML-11]  Example - Direct marketing of term deposits
+# [ML-10]  Example - Direct marketing of term deposits
 
 ## Introduction
 
@@ -290,7 +290,7 @@ In [14]: from matplotlib import pyplot as plt
     ...: plt.xlabel('Subscription score');
 ```
 
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/11-1.png)
+![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/10-1.png)
 
 These figures show what is wrong with the threshold 0.5. In order to capture at least 2/3 of the potential subscribers, we have to set the threshold within the range 10-20%.
 
