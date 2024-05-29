@@ -403,3 +403,11 @@ The last of these account numbers would be the label `call_list[9999]` (20513704
 In [22]: df['cum_subscription'][call_list[9999]]
 Out[22]: 4031
 ```
+
+## Homework
+
+1. Perform a **random split** of the data set, taking one half for training and the other half for testing. You will use this partition for all the questions of this assignment. Suppose that we use our predictive model as suggested in question Q5 of example MLE-04, but calling 20% of the clients. How would you validate the model for that application, based on your train-test split?
+
+2. **Undersample** the training subset, by randomly dropping as many negative units as needed to match the positive units, so that you end up with a pefectly balanced training data set. Leave the test data set as it is, without correcting there the class imbalance. Train a logistic regression model on the undersampled training data set and evaluate it on the test data set, based on a confusion matrix. 
+
+3. **Oversample** the training subset, by randomly adding as many duplicates of the positive units as needed to match the negative units, so that you end up with a pefectly balanced training data set. Leave the test data set as it is, without correcting there the class imbalance. Train a logistic regression model on oversampled training data set and evaluate it on the test data set, based on a confusion matrix.
