@@ -1,4 +1,4 @@
-# [ML-09] Example - The spam filter
+# [ML-08] Example - The spam filter
 
 ## Introduction
 
