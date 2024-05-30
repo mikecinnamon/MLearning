@@ -43,7 +43,7 @@ The **mean absolute percentage error** would be
 mape = ((y - y_pred)/y).abs().mean()
 ```
 
-The mean can be replaced by the median to get a more robust metric. The scikit-learn subpackage `metrics` provides many functions to calculate regression metrics, in particular `mean_abolute_error` and `mean_abolute_percentage_error`.
+The mean can be replaced by the median to get a more robust metric. The scikit-learn subpackage `metrics` provides many functions to calculate regression metrics, in particular `mean_abolute_error()` and `mean_abolute_percentage_error()`.
 
 A final word. These metrics allow for a quick comparison of regression models, which is needed in model selection. But a different question is whether the model selected would be good enough for the intended application. At that level of the analysis, a visualization of the prediction errors such as a histogram or a scatter plot can be useful.
 
