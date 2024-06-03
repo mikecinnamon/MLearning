@@ -1,4 +1,4 @@
-## [ML-16 ] Example - Airline passenger satisfaction ##
+## [ML-16] Example - Airline passenger satisfaction ##
 
 # Importing the data #
 import pandas as pd, numpy as np
