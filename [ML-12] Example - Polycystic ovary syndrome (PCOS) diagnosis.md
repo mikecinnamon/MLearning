@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The **polycystic ovary syndrome** (PCOS) is a disorder involving infrequent, irregular or prolonged menstrual periods, and often excess male hormone(androgen) levels. The ovaries develop numerous small collections of fluid (called follicles) and may fail to regularly release eggs.
+The **polycystic ovary syndrome** (PCOS) is a disorder involving infrequent, irregular or prolonged menstrual periods, and often excess male hormone (androgen) levels. The ovaries develop numerous small collections of fluid (called follicles) and may fail to regularly release eggs.
 
 The most common PCOS symptoms are missed, irregular, infrequent, or prolonged periods. Other symptoms include hair loss, or hair in places you don't want it, acne, darkened skin, mood changes, weight gain and others.
 
@@ -92,13 +92,15 @@ The file `pcos.csv` contains data on 538 subjects, including an identifier, a la
 
 * `endometrium`, the thickness of the endometrium (mm).
 
+Source: Kaggle.
+
 ## Questions
 
-Q1. Develop a decision tree classifier for the diagnosis of PCOS. Which are the most relevant features?
+Q1. Develop a **decision tree classifier** for the diagnosis of PCOS. Which are the most **relevant features**?
 
 Q2. There are three features which are used in this context: (a) the body mass index (BMI) is the body mass divided by the square of the body height (kg/m2), (b) the LH/FSH ratio, and (c) the hip/waist ratio. Does your model improve with these three additional features?
 
-Q3. Perform a 3-fold cross-validation of your model. 
+Q3. Perform a **3-fold cross-validation** of your model. 
 
 Q4. Reduce the size of the tree if you are not happy with the results obtained.
 
@@ -175,34 +177,31 @@ Out[3]: 0.327
 
 ## Feature matrix and target vector
 
-We create a target vector and a feature matrix. The target vector is the first column (`pcos`). Among the features, `blood` is categorical, so we have to replace it by a collection of dummies. We create a submatrix integrates all the columns, except `blood`.
+We create a target vector and a feature matrix. The target vector is the first column (`pcos`). Among the features, `blood` is categorical, so we have to replace it by a collection of dummies. We create a submatrix integrating all the columns, except `blood`.
 
 ```
 In [4]: y = df['pcos']
    ...: X1 = df.drop(columns=['blood', 'pcos'])
 ```
 
-We apply the Pandas function `get_dummies()` to the categorical feature.
+Next, we apply the Pandas function `get_dummies()` to the categorical feature.
 
 ```
 In [5]: X2 = pd.get_dummies(df['blood'])
-```
-
-```
-In [6]: X2.columns
-Out[6]: Index([11, 12, 13, 14, 15, 16, 17, 18], dtype='int64')
+   ...: X2.columns
+Out[5]: Index([11, 12, 13, 14, 15, 16, 17, 18], dtype='int64')
 ```
 
 The column names of this matrix are integers, so we have to change that, which is easy.
 
 ```
-In [7]: X2.columns = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+In [6]: X2.columns = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
 ```
 
 With the Pandas function `concat()`, we join the two parts of the new feature matrix, as we did in example ML-04.
 
 ```
-In [8]: X = pd.concat([X1, X2], axis=1)
+In [7]: X = pd.concat([X1, X2], axis=1)
 ```
 
 ## Q1. Decision tree classifier
@@ -210,26 +209,26 @@ In [8]: X = pd.concat([X1, X2], axis=1)
 We train a decision tree classifier, as requested. Given the dimensions of the feature matrix, we allow for maximum depth 5.
 
 ```
-In [9]: from sklearn.tree import DecisionTreeClassifier
+In [8]: from sklearn.tree import DecisionTreeClassifier
    ...: clf = DecisionTreeClassifier(max_depth=5)
    ...: clf.fit(X, y)
-Out[9]: DecisionTreeClassifier(max_depth=5)
+Out[8]: DecisionTreeClassifier(max_depth=5)
 ```
 
 The accuracy is quite high. Note this applies to a very specific population.
 
 ```
-In [10]: clf.score(X, y).round(3)
-Out[10]: 0.941
+In [9]: clf.score(X, y).round(3)
+Out[9]: 0.941
 ```
 
 Nevertheless, the confusion matrix warns us that the accuracy is not that high for the PCOS patients (84.1%).
 
 ```
-In [11]: y_pred = clf.predict(X)
+In [10]: y_pred = clf.predict(X)
     ...: from sklearn.metrics import confusion_matrix
     ...: confusion_matrix(y, y_pred)
-Out[11]: 
+Out[10]: 
 array([[358,   4],
        [ 28, 148]])
 ```
@@ -237,9 +236,9 @@ array([[358,   4],
 The relevance of the features involved in this tree is obtained as in example ML-08.
 
 ```
-In [12]: importance = pd.Series(clf.feature_importances_, index=X.columns)
+In [11]: importance = pd.Series(clf.feature_importances_, index=X.columns)
     ...: importance[importance > 0].sort_values(ascending=False).round(3)
-Out[12]: 
+Out[11]: 
 rfollicle      0.537
 weight_gain    0.103
 hair_growth    0.090
@@ -267,7 +266,7 @@ So far, it is pretty obvious which are the relevant features.
 We add the extra features suggested to the current feature matrix.
 
 ```
-In [13]: X['bmi'] = df['weight']/df['height']**2
+In [12]: X['bmi'] = df['weight']/df['height']**2
     ...: X['lh_fsh'] = df['lh']/df['fsh']
     ...: X['hip_waist'] = df['hip']/df['waist']
 ```
@@ -275,17 +274,17 @@ In [13]: X['bmi'] = df['weight']/df['height']**2
 We train again the decision tree classifier.
 
 ```
-In [14]: clf.fit(X, y)
+In [13]: clf.fit(X, y)
     ...: clf.score(X, y).round(3)
-Out[14]: 0.952
+Out[13]: 0.952
 ```
 
 So, the new model is a bit better. The hip waist seems to be reponsible for the improvement.
 
 ```
-In [15]: importance = pd.Series(clf.feature_importances_, index=X.columns)
+In [14]: importance = pd.Series(clf.feature_importances_, index=X.columns)
     ...: importance[importance > 0].sort_values(ascending=False).round(3)
-Out[15]: 
+Out[14]: 
 rfollicle      0.529
 weight_gain    0.101
 hair_growth    0.088
@@ -312,9 +311,9 @@ dtype: float64
 We address now the validation of the decision tree classifier. We use the function `cross_val_score()`, from the subpackage `model_selection`. We use a 3-fold partition, as suggested.
 
 ```
-In [16]: from sklearn.model_selection import cross_val_score
+In [15]: from sklearn.model_selection import cross_val_score
     ...: cross_val_score(clf, X, y, cv=3).round(3)
-Out[16]: array([0.689, 0.799, 0.827])
+Out[15]: array([0.689, 0.799, 0.827])
 ```
 
 We have a clear case of **overfitting**. Let us try with a smaller tree.
@@ -324,17 +323,17 @@ We have a clear case of **overfitting**. Let us try with a smaller tree.
 We set now the maximum depth at 4, which will potentially halve the number of leaf nodes. The accuracy is just a bit lower.
 
 ```
-In [17]: clf = DecisionTreeClassifier(max_depth=4)
+In [16]: clf = DecisionTreeClassifier(max_depth=4)
     ...: clf.fit(X, y)
     ...: clf.score(X, y).round(3)
-Out[17]: 0.931
+Out[16]: 0.931
 ```
 
 We still have an overfitting problem here, though not so extreme. We leave further analysis for the homework.
 
 ```
-In [18]: cross_val_score(clf, X, y, cv=3).round(3)
-Out[18]: array([0.833, 0.754, 0.832])
+In [17]: cross_val_score(clf, X, y, cv=3).round(3)
+Out[17]: array([0.833, 0.754, 0.832])
 ```
 
 ## Homework
@@ -343,4 +342,4 @@ Out[18]: array([0.833, 0.754, 0.832])
 
 2. Apply the same cross-validation approach to a logistic regression model. Do you get better results?
 
-3. Cross-validation in scikit-learn uses a non-random specific splitting strategy called `StratifiedKFold`. So you get the same results across calls of `cross_val_score`. You change this easily by replacing `X` and `y` by "shuffled" versions, which can be created with the method `.sample()`. Try that and see what happens. Take care of shuffling `X` and `y` in the same way, by giving the same value to the parameter `random_state` of `.sample()`.
+3. Cross-validation in scikit-learn uses a non-random specific splitting strategy called `StratifiedKFold`. So you get the same results across calls of `cross_val_score`. You can change this easily by replacing `X` and `y` by "shuffled" versions, which can be created with the method `.sample()`. Try that and see what happens. Take care of shuffling `X` and `y` in the same way, by giving the same value to the parameter `random_state` of `.sample()`.
