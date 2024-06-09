@@ -68,6 +68,8 @@ Q3. Select the best two models and use them to calculate predictive scores for t
 
 ## Importing the data
 
+As in the preceding examples, we use the Pandas funcion `read_csv()` to import the data from a GitHub repository. In this case, we take the column `id` as the index (`index_col=0`).
+
 ```
 In [1]: import pandas as pd
    ...: path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
@@ -75,6 +77,8 @@ In [1]: import pandas as pd
 ```
 
 ## Exploring the data
+
+We print a report of the content of `df` with the method `.info()`. Everything is as expected, so far. There are no missing values.
 
 ```
 In [2]: df.info()
@@ -120,6 +124,8 @@ Data columns (total 34 columns):
 dtypes: float64(27), int64(7)
 memory usage: 4.0 MB
 ```
+
+The **conversion rate** is 17%, so we have **class imbalance** here. Moreover, given the cost/benefit analysis suggested in the introduction, we have to pay more attention to false negatives than to false positives.
 
 ```
 In [3]: df['resp'].mean().round(3)
