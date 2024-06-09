@@ -237,3 +237,37 @@ In [16]: xgb_score = xgbclf.predict_proba(X_train)[:, 1]
 ```
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-4.png)
+
+## Q3. Testing
+
+```
+In [17]: log_score_train, log_score_test = logclf.predict_proba(X_train)[:, 1], logclf.predict_proba(X_test)[:, 1]
+    ...: y_pred_train, y_pred_test = log_score_train > 0.2, log_score_test > 0.2
+    ...: conf_train, conf_test = pd.crosstab(y_train, y_pred_train), pd.crosstab(y_test, y_pred_test)
+    ...: conf_train, conf_test
+Out[17]: 
+(col_0  False  True 
+ resp               
+ 0       7240   2612
+ 1        464   1569,
+ col_0  False  True 
+ resp               
+ 0       1752    724
+ 1        106    390)
+```
+
+```
+In [18]: xgb_score_train, xgb_score_test = xgbclf.predict_proba(X_train)[:, 1], xgbclf.predict_proba(X_test)[:, 1]
+    ...: y_pred_train, y_pred_test = xgb_score_train > 0.2, xgb_score_test > 0.2
+    ...: conf_train, conf_test = pd.crosstab(y_train, y_pred_train), pd.crosstab(y_test, y_pred_test)
+    ...: conf_train, conf_test
+Out[18]: 
+(col_0  False  True 
+ resp               
+ 0       7892   1960
+ 1        265   1768,
+ col_0  False  True 
+ resp               
+ 0       1836    640
+ 1        126    370)
+```
