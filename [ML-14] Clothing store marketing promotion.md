@@ -234,6 +234,8 @@ In [12]: def score_plot(score):
 
 ## Q2. Predictive scores
 
+We calculate now the predictive scores for each model, applying the plotting function just defined to get the histograms. First, the logistic regression model.
+
 ```
 In [13]: log_score = logclf.predict_proba(X_train)[:, 1]
     ...: score_plot(log_score)
@@ -241,12 +243,18 @@ In [13]: log_score = logclf.predict_proba(X_train)[:, 1]
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-1.png)
 
+Based on these histograms, a theshold about 0.2 or a bit less looks reasonable. We take a look now to the scores of the decision tree model.
+
 ```
 In [14]: tree_score = treeclf.predict_proba(X_train)[:, 1]
     ...: score_plot(tree_score)
 ```
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-2.png)
+
+These histograms look a bit awkward, but mind that a decision tree model produces a *discrete score*, with as many different values as the number of leaf nodes, which, with maximum depth 4, cannot exceed 16. Thresholds don't make much sense for the scores of decision tree models.
+
+Now the random forest model, which does not look as a serious competitor, compared to the logistic regression model.
 
 ```
 In [15]: rf_score = rfclf.predict_proba(X_train)[:, 1]
