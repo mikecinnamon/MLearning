@@ -134,10 +134,14 @@ Out[3]: 0.17
 
 ## Train-test split
 
+We split the data as suggested in question Q1, leaving a 20% of the data for testing.
+
 ```
 In [4]: from sklearn.model_selection import train_test_split
    ...: df_train, df_test = train_test_split(df, test_size=0.2)
 ```
+
+So, these are the numbers. With 2,972 testing units, the 17% conversion rate gives us about 500 positives in the testing data set.
 
 ```
 In [5]: df_train.shape, df_test.shape
@@ -146,12 +150,16 @@ Out[5]: ((11885, 34), (2972, 34))
 
 ## Target vectors and feature matrices
 
+Next, we define a target vector and a feature matrix for both training and test data.
+
 ```
 In [6]: y_train, X_train = df_train['resp'], df_train.drop(columns='resp')
    ...: y_test, X_test = df_test['resp'], df_test.drop(columns='resp')
 ```
 
 ## Q1. Training the four models
+
+Our first candidate will be a logistic regression model. The maximum number of iterations has been set after some trial and error.
 
 ```
 In [7]: from sklearn.linear_model import LogisticRegression
@@ -160,19 +168,25 @@ In [7]: from sklearn.linear_model import LogisticRegression
 Out[7]: LogisticRegression(max_iter=5000)
 ```
 
+Second, a decision tree model, with maximum depth 4. As we did in example ML-08, we specify the cross-entropy as the loss function, by means of the parameter `criterion`.
+
 ```
 In [8]: from sklearn.tree import DecisionTreeClassifier
-   ...: treeclf = DecisionTreeClassifier(max_depth=4)
+   ...: treeclf = DecisionTreeClassifier(criterion='entropy', max_depth=4)
    ...: treeclf.fit(X_train, y_train)
-Out[8]: DecisionTreeClassifier(max_depth=4)
+Out[8]: DecisionTreeClassifier(criterion='entropy', max_depth=4)
 ```
+
+Third, a random forest model with the same loss function and the same maximum depth. The default for the number of trees (parameter `n_estimators`) is 100, but, following the suggestion of question Q1, we raise this to 200.
 
 ```
 In [9]: from sklearn.ensemble import RandomForestClassifier
-   ...: rfclf = RandomForestClassifier(max_depth=4, n_estimators=200)
+   ...: rfclf = RandomForestClassifier(criterion='entropy', max_depth=4, n_estimators=200)
    ...: rfclf.fit(X_train, y_train)
-Out[9]: RandomForestClassifier(max_depth=4, n_estimators=200)
+Out[9]: RandomForestClassifier(criterion='entropy', max_depth=4, n_estimators=200)
 ```
+
+Finally, the gradient boosting model. We set the maximum depth and the number of trees as for the random forest model (no defaults). The **learning rate** 0.1 is a typical one (no default). The deafult loss function (parameter `objective`) is the cross-entropy, so we specify nothing here, to make it simpler, focusing on the number of trees and their size.
 
 ```
 In [10]: from xgboost import XGBClassifier
@@ -194,9 +208,13 @@ XGBClassifier(base_score=None, booster=None, callbacks=None,
 
 ## Plotting function
 
+To plot the scores, separately for positive and negative training units, we will use the same code as in examples ML-06 and ML-10. First, we import `matplotlib.pyplot` in the usual way.
+
 ```
 In [11]: from matplotlib import pyplot as plt
 ```
+
+We pack the code chunk for the plots as a Python function, so we will not repeat the same again and again. 
 
 ```
 In [12]: def score_plot(score):
