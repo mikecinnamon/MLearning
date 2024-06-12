@@ -254,7 +254,7 @@ In [14]: tree_score = treeclf.predict_proba(X_train)[:, 1]
 
 These histograms look a bit awkward, but mind that a decision tree model produces a *discrete score*, with as many different values as the number of leaf nodes, which, with maximum depth 4, cannot exceed 16. Thresholds don't make much sense for the scores of decision tree models.
 
-Now the random forest model, which does not look as a serious competitor, compared to the logistic regression model.
+Now the random forest model, which, compared to the logistic regression model, does not look as a serious competitor. Note that, by averaging the trees that integrate the forest, we no longer have a discrete score, with just a few different values.
 
 ```
 In [15]: rf_score = rfclf.predict_proba(X_train)[:, 1]
@@ -262,6 +262,9 @@ In [15]: rf_score = rfclf.predict_proba(X_train)[:, 1]
 ```
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-3.png)
+
+
+Finally, the gradient boosting model, which looks superior to the other three. But, since we have been warned that gradient boosting models are prone to overfitting, we postpone our conclusions to having tested this approach.
 
 ```
 In [16]: xgb_score = xgbclf.predict_proba(X_train)[:, 1]
@@ -271,6 +274,10 @@ In [16]: xgb_score = xgbclf.predict_proba(X_train)[:, 1]
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-4.png)
 
 ## Q3. Testing
+
+In the preceding section, we have trained four models. On the training data, the gradient boosting model is the top performer, followed by the logistic regression model. So, we pick these two for the testing step. Mind that, while logistic regression is, essentially, a single thing, we can obtain different gradient boosting models by changing the parameters `max_depth` and `n_estimators`. What we say in this section about gradient boosting refers only to the specific choice we have made (`max_depth=4` and `n_estimators=200`). Trying a few alternatives is proposed as part of the homework. 
+
+First, the logistic regression model. We set the threshold at 0.2 (you can also try variations on this), and extract two confusion matrices, one for the training data and another one for the testing data. 
 
 ```
 In [17]: log_score_train, log_score_test = logclf.predict_proba(X_train)[:, 1], logclf.predict_proba(X_test)[:, 1]
@@ -288,6 +295,8 @@ Out[17]:
  1        106    390)
 ```
 
+A visual inspection is enough here to conclude that there is not evidence of overfitting. For instance, the true positive rates are 77.1% and 78.6%, respectively. Let us repeat the exercise with our gradient boosting model.
+
 ```
 In [18]: xgb_score_train, xgb_score_test = xgbclf.predict_proba(X_train)[:, 1], xgbclf.predict_proba(X_test)[:, 1]
     ...: y_pred_train, y_pred_test = xgb_score_train > 0.2, xgb_score_test > 0.2
@@ -303,3 +312,11 @@ Out[18]:
  0       1836    640
  1        126    370)
 ```
+
+Overfitting is evident here. For instance, the true positive rate is 87% on the training data and 74.6% on the test data, which makes a difference from a business perspective. For this model, the performance on the test data should be taken as the only valid evaluation. Given the cost/benefit analysis suggested in the introduction, the comparison between the two models would favor the logistic regression model. You can explore this a bit more in the homework.
+
+## Homework
+
+1. Switch to `max_depth=5` in the random forest model, to see whether it becomes competitive.
+
+2. Intuition suggests that too may iterations in the gradient boosting process may lead to a model with very performance on the training data but, at the same time, have a negative impact on the performance on test data. To explore this question, try different values of `n_estimators`, such as 25, 50, 100 and 150, to monitor the overfitting and the potential negative impact on the performance of the gradient boosting model on the test data.
