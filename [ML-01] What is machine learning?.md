@@ -2,15 +2,15 @@
 
 ## Machine learning
 
-The objective of **artificial intelligence** (AI) is create agents, which perform certain tasks in an "intelligent" way. An **AI agent** can be something physical, like a robot that sweeps the floor, or a software app, like a model that classifies the potential customers of a lending institution as good or bad creditors.
+The objective of **artificial intelligence** (AI) is create agents that perform certain tasks in an "intelligent" way. An **AI agent** can be something physical, like a robot that sweeps the floor, or a software app, like a model that classifies the potential customers of a lending institution as good or bad creditors.
 
-When the AI agent learns from data how to perform a task, we call this **machine learning** (ML). In machine learning, we operationalize the learning process as follows. We design a **model**, which can be as simple as a single equation, or as complex as **GPT-4**. This model has a set of **parameters**. The number of parameters can be high (GPT-4 is said to have 1.76 trillion parameters), so it is often unclear what their specific role is. Then the learning process consists in using the data to find the **optimal values** for the parameters. 
+**Machine learning** (ML) takes place when the AI agent learns from data how to perform its task. We operationalize the learning process as follows. We design a **model**, which can be as simple as a single equation, or as complex as **GPT-4**. This model has a set of **parameters**. The number of parameters can be high (GPT-4 is said to have 1.76 trillion parameters), so it is often unclear what their specific role is. Then the learning process consists in using the data to find the **optimal values** for the parameters. 
 
 Instead of talking about "learning", a statistician would say that he is **fitting** the model to the data, or **estimating** the parameters of the model. This terminology is used in the Python package that we will use in the first part of this course, **scikit-learn**. 
 
-Finding the optimal parameters is also called **training**. Then the data used for training the model would then be the **training data**. A major issue with training a model is that the parameter values that are optimal on the training data may be suboptimal on data that have not been involved in the training, so that the model underperforms in real applications. This is the **overfitting** problem.
+Finding the optimal parameter values is also called **training**. The data used for training the model are then the **training data**. A major issue with training a model is that the parameter values that are optimal on the training data may be suboptimal on data that have not been involved in the training, so that the model underperforms in real applications. This is the **overfitting** problem.
 
-To assess the potential overfitting problem, a model is tested on different data, which are then called **test data**. This is **model validation**. Validation is needed for models whose complexity allows them to overfit the data. Overfitting is a fact of life for many machine learning algorithms, *e.g*. for those used to develop **neural network models**. So, validation is integrated in the learning process of those models.
+To assess the potential overfitting, the model is tested on different data, which are then called **test data**. This is **model validation**. Validation is needed for models whose complexity allows them to overfit the data. Overfitting is a fact of life for many machine learning algorithms, *e.g*. for those used to develop **neural network models**. So, validation is integrated in the learning process of those models.
 
 ## Supervised and unsupervised learning
 
