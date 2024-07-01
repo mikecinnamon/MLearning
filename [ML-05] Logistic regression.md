@@ -70,7 +70,7 @@ $$\textrm{F1-score} = \frac{\textrm{2}\times\textrm{Precision}\times\textrm{Reca
 
 Suppose that the prediction uses $k$ numeric features $X_1, \dots, X_k$. The model uses linear expressions, 
 
-$$z = \big(b_0 + b_1X_1 + b_2X_2 + \cdots + b_kX_k\big),$$
+$$z = b_0 + b_1X_1 + b_2X_2 + \cdots + b_kX_k,$$
 
 to calculate a collection of values $z_1, \dots, z_k$, one for each class. This set of values is transformed in a set of class probabilities $p_1, \dots, p_k$ by means of the **softmap function**
 
