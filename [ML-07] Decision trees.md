@@ -23,9 +23,7 @@ Figure 1 shows a decision tree regressor, developed to predict the price of a ho
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/07-2.png)
 
-In a decision tree classifier, the default loss function is **Gini impurity measure**. Nevertheless, to present a more consistent approach to classification models along this course, we use everywhere the **cross-entropy**, which in the class `DecisionTreeClassifier()` is specified with the argument `criterion='entropy'`). Figure 2 shows a decision tree intended to be used in a spam filter (example ML-08). At every leaf, you find the number of units (`samples`), the cross-entropy (`entropy`) and the number of negative and positive units (in alphabetical order, so negative first) in that leaf. The predicted class probabilities in each leaf are the class proportions. In a binary setting, we can say that the predicted score for a data unit is the proportion of positive units in the leaf where that unit is. The tree is optimal in the sense that the total cross-entropy (the weighted average of the cross-entropies of the leaf nodes) is minimum.
-
-*Note*. Remember that the cross-entropy is calculated here using binary logarithms. In Python, you get the binary logarithm of `x` as `math.log(x, 2)`.
+In a decision tree classifier, the default loss function is **Gini impurity measure**. Nevertheless, to present a more consistent approach to classification models along this course, we use everywhere the **average cross-entropy**, which in the class `DecisionTreeClassifier()` is specified with the argument `criterion='entropy'`). Figure 2 shows a decision tree intended to be used in a spam filter (example ML-08). At every leaf, you find the number of units (`samples`), the average cross-entropy (`entropy`) and the number of negative and positive units (in alphabetical order, so negative first) in that leaf. The predicted class probabilities in each leaf are the class proportions. In a binary setting, we can say that the predicted score for a data unit is the proportion of positive units in the leaf where that unit is. The tree is optimal in the sense that the overall average cross-entropy (the weighted average of the cross-entropies at the leaf nodes) is minimum.
 
 ## Controlling the growth of the tree
 
@@ -71,6 +69,6 @@ reg.feature_importances_
 
 1. In Figure 1, the initial MSE is equal to 134,776.142. Calculate the final MSE as the weighted average of the MSE's in the four leaf nodes. Translate the MSE reduction into a R-squared value (what the method `.score()` would return for this model).
 
-2. Check that the initial cross-entropy in Figure 2 is indeed 0.967. What is the final entropy, after the three splits?
+2. Check that the initial cross-entropy in Figure 2 is indeed 0.967. What is the final entropy, after the three splits? Remember that scikit-learn uses binary logs to calculate the cross-entropy. In Python, you get the binary log with `math.log(x, 2)`.
 
 3. In Figure 2, suppose that the split in the root node has already been performed. The second split will be the one that brings a greater reduction of the cross-entropy. Is this the leftt one (`x[15] <= 0.135`) or the right one (`x[26] <= 0.08`)?  
