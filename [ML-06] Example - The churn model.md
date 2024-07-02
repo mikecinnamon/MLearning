@@ -97,7 +97,7 @@ In [3]: y = df['churn']
    ...: X = df.drop(columns='churn')
 ```
 
-Alternatively, we could have used `.iloc` specifications here. Now, we import the **estimator class** `LogisticRegression()` from the scikit-learn subpackage `linear_model`. We instantiate an estimator from this class, calling it `clf`. Instead of accepting the default parameter values, as we did in the preceding example (ML-04), we increase the **maximum number of iterations**, whose default is 100, to 1,500. Using the default `max_iter=100` would have raised a warning indicating that the optimization process has not finished.
+Alternatively, we could have used `.iloc` specifications here. Now, we import the **estimator class** `LogisticRegression()` from the scikit-learn subpackage `linear_model`. We instantiate an estimator from this class, calling it `clf`. Instead of accepting the default parameter values, as we did in example ML-04, we increase the **maximum number of iterations**. Using the default `max_iter=100` would have raised a warning indicating that the optimization process has not converged.
 
 ```
 In [4]: from sklearn.linear_model import LogisticRegression
@@ -268,3 +268,11 @@ The **false positive rate** is the proportion of predicted positives among the a
 In [19]: y_pred[y == 0].mean().round(3)
 Out[19]: 0.215
 ``` 
+
+### Homework
+
+1. There is no formula to calculate the optimal parameter values of a logistic regression model, as it happens with linear regression. So, the best thing you can get is an approximation to the optimal values by means of an iterative method, which is called the **solver**. There are many options for the solver, and we have used here the scikit-learn default, to make it simple. But it turns out that the default maximum number of **iterations** is not enough in many cases and you get a warning from Python. To grasp this point, try different values for `max_iter` in the specification of the `LogisticRegression()`. Examine how the maximum number of iterations affects the model accuracy in this case.
+
+2. Assume that the Omicron management plans to offer a **20% discount** to the customers that the model classifies as potential churners, and that this offer is going to have a 100% success, so the company will retain all the churners detected. Evaluate the benefit produced by this **retention policy** with the two models presented in this example.
+
+3. Define a Python function which gives the benefit in terms of the threshold and find an **optimal threshold** for this retention policy.
