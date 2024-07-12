@@ -2,7 +2,7 @@
 
 # Importing the data #
 import numpy as np, pandas as pd
-path = 'https://raw.githubusercontent.com/mikecinnamon/MLearning/main/'
+path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
 df = pd.read_csv(path + 'mnist.csv.zip')
 
 # Target vector and feature matrix #
