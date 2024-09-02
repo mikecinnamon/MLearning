@@ -34,9 +34,11 @@ pd.Series(xgb.feature_importances_, index=X.columns).sort_values(ascending=False
 pd.crosstab(df['business'], df['sat'])
 
 # Q4. MLP model #
-from keras import models, layers
-network = [layers.Dense(32, activation='relu'), layers.Dense(2, activation='softmax')]
-mlp = models.Sequential(layers=network)
+from keras import Input, models, layers
+input_tensor = Input(shape=(22,))
+x = layers.Dense(32, activation='relu')(input_tensor)
+output_tensor = layers.Dense(2, activation='softmax')(x)
+mlp = models.Model(input_tensor, output_tensor)
 mlp.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 mlp.fit(X_train, y_train, epochs=50, verbose=0);
 round(mlp.evaluate(X_test, y_test, verbose=0)[1], 3)
@@ -46,7 +48,7 @@ def normalize(x):
     return (x - x.min())/(x.max() - x.min())
 XN = X.apply(normalize)
 XN_train, XN_test = train_test_split(XN, test_size=0.2, random_state=0)
-mlp = models.Sequential(layers=network)
+mlp = models.Model(input_tensor, output_tensor)
 mlp.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 mlp.fit(XN_train, y_train, epochs=50, verbose=0);
 round(mlp.evaluate(XN_test, y_test, verbose=0)[1], 3)
