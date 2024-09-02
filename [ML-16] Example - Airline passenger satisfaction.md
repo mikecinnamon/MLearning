@@ -4,7 +4,7 @@
 
 The data for this example, published by Mysar Ahmad Bhat, provide details of customers who have already flown with an **airline company**. The feedback of the customers on various contexts and their flight data has been consolidated.
 
-The main objective of these data could be to predict whether a future customer would be satisfied with the service given by this company, from the features evaluated in the study. A second objective could to explore which aspects of the services offered have to be emphasized to generate more satisfied customers.
+The main objective of the data could be to predict whether a future customer would be satisfied with the service given by this company, from the features evaluated in the study. A second objective could be to explore which aspects of the services offered have to be emphasized to generate more satisfied customers.
 
 ## The data set
 
@@ -72,7 +72,7 @@ Q5. Does the MLP model get better after **normalizing** the features?
 
 ## Importing the data
 
-As in other examples, we use the Pandas funcion `read_csv()` to import the data from a GitHub repository. Since the passengers don't have an identifier, we let the index to be a `RangeIndex`. 
+As in other examples, we use the Pandas funcion `read_csv()` to import the data from a GitHub repository. Since the passengers don't have an identifier, we let the index be a `RangeIndex`. 
 
 ```
 In [1]: import pandas as pd
@@ -145,7 +145,7 @@ In [5]: from sklearn.model_selection import train_test_split
 
 ## Q1. Random forest model
 
-Our first predictive model is a random forest model. Using the scikit-learn class `ensemble.RandomForestClassifier()`, we set the number of trees to 200 and the maximum depth to 5. As usual, the model is trained on the training data.
+Our first predictive model is a random forest model. We instantiate an estimator from the scikit-learn class `ensemble.RandomForestClassifier()`, setting the number of trees to 200 and the maximum depth to 5. As usual, the model is trained on the training data.
 
 ```
 In [6]: from sklearn.ensemble import RandomForestClassifier
@@ -154,7 +154,7 @@ In [6]: from sklearn.ensemble import RandomForestClassifier
 Out[6]: RandomForestClassifier(max_depth=5, n_estimators=200, random_state=0)
 ```
 
-Then, we evaluate the model on both the training and the test subsets, which this comes easily in scikit-learn.
+Then, we evaluate the model on both the training and the test subsets, which comes easily in scikit-learn.
 
 ```
 In [7]: rf.score(X_train, y_train).round(3), rf.score(X_test, y_test).round(3)
@@ -165,7 +165,7 @@ The accuracy is about 91%. The test data do not provide evidence of overfitting.
 
 ## Q2. XGBoost model
 
-We repeat the exercise with a XGBoost model, using the class `XGBClassifier()` from the package `xgboost`. We use the same arguments as in the preceding section, leaving the learning rate at the default value. 
+We repeat the exercise with an XGBoost model, from the class `XGBClassifier()` of the package `xgboost`. We use the same arguments as in the preceding section, leaving the learning rate at the default value. 
 
 ```
 In [8]: from xgboost import XGBClassifier
@@ -185,7 +185,7 @@ XGBClassifier(base_score=None, booster=None, callbacks=None,
               num_parallel_tree=None, random_state=0, ...)
 ```
 
-Overfitting, whis is typical of gradient boosting models, is moderate in this case. We can take the accuracy 95% as the benchmark for other models. It could considered as the state-of-the-art for **shallow models**, which are those that take the actual features as they come, with no **feature engineering** of any type.
+Overfitting, whis is typical of gradient boosting models, is moderate in this case. We can take the accuracy 95% as the benchmark for other models. This is a **shallow model**, which takes the actual features as they come, with no **feature engineering**
 
 ```
 In [9]: xgb.score(X_train, y_train).round(3), xgb.score(X_test, y_test).round(3)
@@ -194,7 +194,7 @@ Out[9]: (0.969, 0.953)
 
 ## Q3. Relevant features
 
-In any predictive model based on decision trees, the relevance of the different features for predicting the target can be assessed with the attribute `.feature_importances_`, which works in `xgboost` as in scikit-learn. Since the outcome of this method is a plain 1D array, without index labels, we convert it to a Pandas series, using the column names as the index. Sorting by values, we get a clear report.
+In a predictive model based on decision trees, the relevance of the different features for predicting the target can be assessed with the attribute `.feature_importances_`, which works in `xgboost` as in scikit-learn. Since the outcome of this method is a plain 1D array, without index labels, we convert it to a Pandas series, using the column names as the index. Sorting by values, we get a clear report.
 
 ```
 In [10]: pd.Series(xgb.feature_importances_, index=X.columns).sort_values(ascending=False)
@@ -224,7 +224,7 @@ female          0.002411
 dtype: float32
 ```
 
-Online boarding looks that the most relevant feature. Also, the model reveals a difference between flying for business and the overall satisfaction, although it does not show in which direction. Popular wisdom tells us that people flying for personal issues (and also paying) are usually less tolerant with anything not working properly. Indeed, this is what cross tabulation tells us:
+Online boarding looks that the most relevant feature. Also, the model reveals a difference between flying for business and the overall satisfaction, although it does not show in which direction. Popular wisdom tells us that people flying for personal issues (and also paying) are usually less tolerant with things not working properly. Indeed, this is what cross tabulation tells us:
 
 ```
 In [11]: pd.crosstab(df['business'], df['sat'])
@@ -237,41 +237,53 @@ business
 
 ## Q4. MLP model
 
-We try now a simple neural network, using the **package Keras** with the default **TensorFlow** backend. We import the modules `models` and `layers`, that contain all the resources needed.
+We try now a simple neural network, using the **package Keras**, with the default **TensorFlow** backend. We import the modules `models` and `layers`, that contain all the resources needed.
 
 ```
-In [12]: from keras import models, layers
+In [12]: from keras import Input, models, layers
 ```
 
-Next, we specify the **network architecture**, as a list. This will be multilayer perceptron (MLP) with one hidden layer. The **input layer** contains one node for every feature, and will be specified on the fly when we fit the model to the data. The **hidden layer** is then the first item of the list. It has 32 nodes (powers of 2 are commonly used in deep learning), and the activation function is the **rectified linear unit function** (ReLU). The **output layer** has two nodes, since this model is a binary classifier. The activation function is the **softmax function**, which ensures that the output is a vector of probabilities (positive numbers summing 1). These two layers are **dense layers**, meaning that every node is connected to all nodes of the preceding layer. This means 23 $\times$ 32 = 736 parameters for the connection between the input layer and the hidden layer plus 33 $\times$ 2 = 66 parameters for the connections between the hidden layer and the output layer.
+Next, we specify the **network architecture**, as a sequence of transformations. This will be multilayer perceptron (MLP) with one hidden layer. The **input layer** contains one node for every feature. 
 
 ```
-In [13]: network = [layers.Dense(32, activation='relu'), layers.Dense(2, activation='softmax')]
+In [13]: input_tensor = Input(shape=(22,))
 ```
 
-The next step is instantiate an object of the class `models.Sequential()`. This works as in scikit-learn. The list `network` is the value of the parameter `layers`.
+The **hidden layer** has 32 nodes (powers of 2 are commonly used in deep learning), and the activation function is the **rectified linear unit function** (ReLU). It is a **dense layer**, meaning that every node is connected to all nodes of the preceding layer. This involves 23 $\times$ 32 = 736 parameters.
 
 ```
-In [14]: mlp = models.Sequential(layers=network)
+In [14]: x = layers.Dense(32, activation='relu')(input_tensor)
 ```
 
-Now, we **compile** the model, meaning the mathematical apparatus neede for fitting the model to the data gets ready. We have to specify the **optimization algorithm** (`optimizer='adam'`), the **loss function** (`loss='sparse_categorical_crossentropy'`) and the metrics used to evaluate the model performance (`metrics=['acc']`), in a list or dictionary.
+The **output layer** has two nodes, since this model is a binary classifier. The activation function is here the **softmax function**, which ensures that the output is a vector of probabilities (positive numbers summing 1). It adds 33 $\times$ 2 = 66 parameters.
 
 ```
-In [15]: mlp.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
+In [15]: output_tensor = layers.Dense(2, activation='softmax')(x)
 ```
 
-We are ready now to apply the method `.fit()`. Note that the number of iterations is specified here, not when creating the model `mlp`, as in scikit-learn. In every iteration, or **epoch**, the data set is randomly split in batches of size 32 (if you accept the deafult size). These batches are passed sequentially, and the weights are updated for evey batch. This means that they not updated 50 times, but 50 times the number of batches (2,838). With `verbose=0` we stop a report of the progress being gradually displayed on the screen (we will see this later). Also, the semicolon stops some irrelevant output showing up (the same we do when plotting with Matplotlib)). In this example, every epoch takes between one and two seconds in a regular laptop.
+The next step is instantiate an object of the class `models.Model()`. This works as in scikit-learn. We specify here the input and the output.
 
 ```
-In [16]: mlp.fit(X_train, y_train, epochs=50, verbose=0);
+In [16]: mlp = models.Model(input_tensor, output_tensor)
+```
+
+Now, we **compile** the model, meaning the mathematical apparatus needed for fitting the model to the data gets ready. We have to specify the **optimization algorithm** (`optimizer='adam'`), the **loss function** (`loss='sparse_categorical_crossentropy'`) and the metrics used to evaluate the model performance (`metrics=['acc']`), in a list or dictionary.
+
+```
+In [17]: mlp.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
+```
+
+We are ready now to apply the method `.fit()`. Note that the number of iterations is specified here, not when creating the model, as it was in scikit-learn. In every iteration, or **epoch**, the data set is randomly split in batches of size 32 (if you accept the deafult size). These batches are passed sequentially, and the parameter values are updated for evey batch. This means that they not are updated 50 times, but 50 times the number of batches (2,838). With `verbose=0` we stop a report of the progress being gradually displayed on the screen (we will see this later). Also, the semicolon stops some irrelevant output showing up (the same we do when plotting with Matplotlib). In this example, every epoch takes between one and two seconds in a regular laptop.
+
+```
+In [18]: mlp.fit(X_train, y_train, epochs=50, verbose=0);
 ```
 
 Once the model has been trained, it is evaluated on the test data. The model does not improve the accuracy of the ensemble models tried before.  
 
 ```
-In [17]: round(mlp.evaluate(X_test, y_test, verbose=0)[1], 3)
-Out[17]: 0.895
+In [19]: round(mlp.evaluate(X_test, y_test, verbose=0)[1], 3)
+Out[19]: 0.907
 ```
 
 ## Q5. Multilayer perceptron model (normalized data)
@@ -279,27 +291,27 @@ Out[17]: 0.895
 Though scikit-learn has a method for normalizing all the columns of the feature matrix in one shot, it is not dificult to do it in Pandas. First we define a **min-max normalization** function:
 
 ```
-In [18]: def normalize(x): 
+In [20]: def normalize(x): 
     ...:     return (x - x.min())/(x.max() - x.min())
 ```
 
 Now, we apply this function by column with the method `.apply()`.
 
 ```
-In [19]: XN = X.apply(normalize)
+In [21]: XN = X.apply(normalize)
 ```
 
 We have now a new feature matrix, that we split exactly in the same way as we did with `X` and `y` (the argument `random_state=0` does the trick).
 
 ```
-In [20]: XN_train, XN_test = train_test_split(XN, test_size=0.2, random_state=0)
+In [22]: XN_train, XN_test = train_test_split(XN, test_size=0.2, random_state=0)
 ```
 We replicate the process of question Q4 with the normalized features. The improvement is quite clear, though the accuracy falls a bit short of that of the XGBoost model.
 
 ```
-In [21]: mlp = models.Sequential(layers=network)
-     ...: mlp.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
-     ...: mlp.fit(XN_train, y_train, epochs=50, verbose=0);
-     ...: round(mlp.evaluate(XN_test, y_test, verbose=0)[1], 3)
-Out[21]: 0.94
+In [23]: mlp = models.Model(input_tensor, output_tensor)
+    ...: mlp.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
+    ...: mlp.fit(XN_train, y_train, epochs=50, verbose=0);
+    ...: round(mlp.evaluate(XN_test, y_test, verbose=0)[1], 3)
+Out[23]: 0.943
 ```
