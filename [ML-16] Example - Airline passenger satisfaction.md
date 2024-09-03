@@ -237,7 +237,7 @@ business
 
 ## Q4. MLP model
 
-We try now a simple neural network, using the **package Keras**, with the default **TensorFlow** backend. We import the modules `models` and `layers`, that contain all the resources needed.
+We try now a simple neural network, using the **package Keras**, with the default **TensorFlow** backend. We import the function `Input()` and the modules `models` and `layers`, which contain the resources needed for this example.
 
 ```
 In [12]: from keras import Input, models, layers
