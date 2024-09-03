@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This example uses the **MNIST data** that appeared in the example ML-17. There, we compared several tree-based models for classifying handwritten digits. Assuming that the evaluation of the model is based on the accuracy, we show how to improve the predictive performance of neural network models by switching from the classic MLP neural network to a **convolutional neural network**. We use standard **Keras** procedures to develop these models.
+This example uses the **MNIST data** that appeared in the example ML-17. There, we compared the accuracies of several tree-based models for classifying handwritten digits. Here, we show how to improve the performance of the classic MLP neural network with a **convolutional neural network**. We use standard **Keras** procedures to develop these models.
 
 ## Questions
 
@@ -26,7 +26,7 @@ In [1]: import numpy as np, pandas as pd
    ...: df = pd.read_csv(path + 'mnist.csv.zip')
 ```
 
-We set the first column (image labels) as the target vector and the pixel intensities as the feature matrix. We use only NumPy arrays in this example, to simplify the syntax.
+We set the first column (the image labels) as the target vector and the pixel intensities as the feature matrix. We use only NumPy arrays in this example, to simplify the syntax. So, we convert the Pandas objects to arrays by means of `.values`
 
 ```
 In [2]: y = df.iloc[:, 0].values
@@ -44,34 +44,61 @@ In [3]: from sklearn import model_selection
 
 ## Q2. MLP model
 
-As in our previous experience with neural networks, in example ML-16, we use here the package Keras with the default **TensorFlow backend**. We import the modules `models` and `layers`, that contain all the resources that we need.
+As in our previous experience with neural networks, in example ML-16, we use the package Keras with the default **TensorFlow backend**. We import the function `Input` and the modules `models` and `layers`.
 
 ```
-In [4]: from keras import models, layers
+In [4]: from keras import Input, models, layers
 ```
 
-Next, we specify our first **network architecture**, as a list. As in the preceding example, we use a multilayer perceptron (MLP) network with one **hidden layer** of 32 nodes, with **ReLU activation**. The **output layer** has now ten nodes, one for each digit, with **softmax activation**. These two layers are **dense layers**, meaning that every node is connected to all nodes of the preceding layer. This means 784 $\times$ 32 $\times$ 10 connections.
+Next, we specify our first **network architecture**, as a sequence of transformations. As in the preceding example, we use a multilayer perceptron (MLP) network with one **hidden layer** of 32 nodes, with **ReLU activation**. The **output layer** has now ten nodes, one for each digit, with **softmax activation**. These two layers are **dense layers**, meaning that every node is connected to all nodes of the preceding layer. Note that, in lines 1 and 3, the shapes have been adapted to the data of this example.
 
 ```
-In [5]: net1 = [layers.Dense(32, activation='relu'), layers.Dense(10, activation='softmax')]
+In [5]: input_tensor = Input(shape=(784,))
+   ...: x = layers.Dense(32, activation='relu')(input_tensor)
+   ...: output_tensor = layers.Dense(10, activation='softmax')(x)
 ```
 
-We instantiate an object of the class `models.Sequential()`, with the argument `layers=net1`.
+We instantiate an object of the class `models.Sequential()`, specifying the the input and the output.
 
 ```
-In [6]: clf1 = models.Sequential(net1)
+In [6]: clf1 = models.Model(input_tensor, output_tensor)
+```
+
+The method `.summary()` prints a summary of the network architecture, reporting the number of parameters in every layer. In the hidden layer, every node receives 784 inputs (one for each pixel), which are combined with a linear expression involving the same number of **weights** (the slope coefficients) plus a **bias** (the intercept). So, 785 parameters are needed at every node, which makes a total of 32 $\times$ 785 = 25,120 parameters. In a similar way, in the output layer, every node needs 33 parameters, which adds 10 $\times$ 33 = 330 parameters to get a total of 25,450 parameters for the whole network.  
+
+```
+In [7]: clf1.summary()
+Model: "functional"
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ input_layer (InputLayer)        │ (None, 784)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (Dense)                   │ (None, 32)             │        25,120 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (Dense)                 │ (None, 10)             │           330 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+
+ Total params: 76,352 (298.25 KB)
+
+ Trainable params: 25,450 (99.41 KB)
+
+ Non-trainable params: 0 (0.00 B)
+
+ Optimizer params: 50,902 (198.84 KB)
 ```
 
 The **compilation** step is the same as in example ML-16.
 
 ```
-In [7]: clf1.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
+In [8]: clf1.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 ```
 
 Finally, we fit the model to the training data. We don't use `verbose=0` here (this means `verbose=1`), so we are going to get a complete report of the fitting process. So, we set `epochs=20`, to keep it short. Also, with the argument `validation_data=(X_test, y_test)`, the model is evaluated on the test data at the end of every epoch.
 
 ```
-In [8]: clf1.fit(X_train, y_train, epochs=20, validation_data=(X_test, y_test));
+In [9]: clf1.fit(X_train, y_train, epochs=20, validation_data=(X_test, y_test));
 Epoch 1/20
 1875/1875 [==============================] - 1s 642us/step - loss: 1.7580 - acc: 0.6203 - val_loss: 0.9735 - val_acc: 0.7821
 Epoch 2/20
@@ -114,26 +141,7 @@ Epoch 20/20
 1875/1875 [==============================] - 1s 531us/step - loss: 0.2325 - acc: 0.9416 - val_loss: 0.3716 - val_acc: 0.9240
 ```
 
-This report shows that the accuracy on the test data is about 92.5% at the 10th epoch, and does not go beyond this, while it keeps improving on the training data, so it is above 94% at the 20th epoch. In example ML-17, we did a bit better with a random forest model.
-
-The method `.summary()` prints a summary of the network architecture, reporting the number of parameters added by every layer. In the hidden layer, every node receives 784 inputs (one for each pixel), which are combined with a linear expression involving the same number of **weights** (the slope coefficients) plus a **bias** (the intercept). So, 785 parameters are needed at every node, which makes a total of 25,120 parameters for the hidden layer. In a similar way, every output node needs 33 parameters, which adds 330 parameters to get a total of 25,450 parameters for the whole network.  
-
-```
-In [9]: clf1.summary()
-Model: "sequential"
------------------------------------------------------------------
- Layer (type)                Output Shape              Param #   
-=================================================================
- dense (Dense)               (None, 32)                25120     
-                                                                 
- dense_1 (Dense)             (None, 10)                330       
-                                                                 
-=================================================================
-Total params: 25450 (99.41 KB)
-Trainable params: 25450 (99.41 KB)
-Non-trainable params: 0 (0.00 Byte)
------------------------------------------------------------------
-```
+This report shows that the accuracy on the test data is about 92.5% at the 10th epoch, and does not go beyond this, while it keeps improving on the training data, so it is above 94% at the 20th epoch. In example ML-16, we did a bit better with a random forest model.
 
 ## Q3. Prediction with a MLP network
 
@@ -157,7 +165,7 @@ Out[11]: 0
 
 ## Q4. Rescaling the data
 
-We rescale the pixel intensities by dividing by 255.
+In this example, no normalization function is needed, since we can rescale the pixel intensities by dividing by 255.
 
 ```
 In [12]: X = X/255
@@ -169,10 +177,10 @@ Since we fixed `random_state=0` in our split, we can reproduce it for the rescal
 In [13]: X_train, X_test = model_selection.train_test_split(X, test_size=1/7, random_state=0)
 ```
 
-Now, we instantiate a new model, which we train on the rescaled data. We keep `epochs=20`, even if we guess that so many epochs are not needed. The training process is not only faster, achieving accuracy 92.3% in the first epoch, but it also yields better results at the end. But, though this model performs better than the random forest models of example MLE-09, it is still weaker than the GBoost models that you have probably explored in assignment MLA-04. 
+Now, we instantiate a new model, which we train on the rescaled data. We keep `epochs=20`, even if we guess that so many epochs are not needed. The training process is not only faster, achieving accuracy 92.3% in the first epoch, but it also yields better results at the end. But, though this model performs better than the random forest models of example MLE-09, it is still weaker than the GBoost model that you may have explored in the homework of example ML-17. 
 
 ```
-In [14]: clf2 = models.Sequential(net1)
+In [14]: clf2 = models.Model(input_tensor, output_tensor)
     ...: clf2.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
     ...: clf2.fit(X_train, y_train, epochs=20, validation_data=(X_test, y_test));
 Epoch 1/20
@@ -225,35 +233,89 @@ We dig deeper in this last section, exploring **convolutional neural network** (
 
 * `axis=1` and `axis=2` both with dimension 28, identify the pixel positions.
 
-* `axis=2` with 1 dimension, identifies the **channel**. 
+* `axis=2` with 1 dimension, identifies the **channel**. Since we work with gray scale, there is only one channel (for RGB pictures, we would have three channels). 
 
-Since we work with gray scale, there is only one channel (for RGB pictures, we would have three channels). We reshape the arrays `X_train` and `X_-_test` as 4D arrays accordingly.
-
-```
-In [15]: Z_train, Z_test = X_train.reshape(60000, 28, 28, 1), X_test.reshape(10000, 28, 28, 1)
-```
-
-As for the MLP model, we specify the network architecture as a list of layers. The input layer is not included. In this example, we propose a standard CNN architecture, used by many authors for these data. 
-
-In this case, every input will be 3D array, with shape `(28,28,1)`. The networks starts with a sequence of three `Conv2D` layers, with 32, 64 and 64 nodes, respectively, with two interspersed `MaxPooling` layers. After passing these layers, the input has been transformed into a set of 64 smaller 3D arrays (we will later how small). Then, this set is flattened into a 1D array, which is the input for the rest of the network, which is just a MLP network. 
+We reshape the arrays `X_train` and `X_test` as 4D arrays accordingly.
 
 ```
-In [16]: net2 = [layers.Conv2D(32, (3, 3), activation='relu'),
-    ...:     layers.MaxPooling2D((2, 2)),
-    ...:     layers.Conv2D(64, (3, 3), activation='relu'), 
-    ...:     layers.MaxPooling2D((2, 2)),
-    ...:     layers.Conv2D(64, (3, 3), activation='relu'),
-    ...:     layers.Flatten(),
-    ...:     layers.Dense(64, activation='relu'),
-    ...:     layers.Dense(10, activation='softmax')]
+In [15]: X_train, X_test = X_train.reshape(60000, 28, 28, 1), X_test.reshape(10000, 28, 28, 1)
+```
+
+As for the MLP model, we specify the network architecture as a sequence of transformations. In this example, we propose a standard CNN architecture, used by many authors for these data. 
+
+In this case, every input will be 3D array, with shape `(28,28,1)`. The networks starts with a sequence of three `Conv2D` layers, with 32, 64 and 64 nodes, respectively, with two interspersed `MaxPooling` layers. After passing these layers, the input has been transformed into a set of 64 smaller 3D arrays (we will see below how small). Then, this set is flattened into a 1D array, which is the input for the rest of the network. This last part part is the same as a MLP network with a hidden layer of 64 nodes. 
+
+```
+In [16]: input_tensor = Input(shape=(28, 28, 1))
+    ...: x1 = layers.Conv2D(32, (3, 3), activation='relu')(input_tensor)
+    ...: x2 = layers.MaxPooling2D((2, 2))(x1)
+    ...: x3 = layers.Conv2D(64, (3, 3), activation='relu')(x2)
+    ...: x4 = layers.MaxPooling2D((2, 2))(x3)
+    ...: x5 = layers.Conv2D(64, (3, 3), activation='relu')(x4)
+    ...: x6 = layers.Flatten()(x5)
+    ...: x7 = layers.Dense(64, activation='relu')(x6)
+    ...: output_tensor = layers.Dense(10, activation='softmax')(x7)
+```
+
+As for the MLP model, we can print a summary reporting the number of parameters involved in every layer:
+
+* The first `Conv2D` layer has 32 nodes, with specific parameters. At every node, a special type of linear calculation, called **convolution**, takes place. The convolution extracts a single number of a 3 $\times$ 3 submatrix, using nine weights and one bias. This makes a total of 10 parameters for every node, a grand total of 32 $\times$ 10 = 320 parameters. The original 28 $\times$ 28 matrix can be covered by a 26 $\times$ 26 grid of 3 $\times$ 3 submatrices, so the outputs of this layer have shape (26, 26, 32).
+
+* The `MaxPooling` layer uses 2 $\times$ 2 submatrices and, instead of a convolution, it just takes the maximum value. So, no parameters are involved, and the outputs have shape (13, 13, 32). 
+
+* The third layer has 64 nodes. Every node takes inputs from the 32 nodes of the preceding layer. Nine weights are needed for every input and one bias for the whole set, making a total of 32 $\times$ 9 + 1 = 289 parameters for every node. So, we have 64 $\times$ 289 = 18,496 additional parameters in this layer. Now, the outputs have shape `(11, 11, 64)`.
+
+* The next two layers can be explained in a similar way. In the fifth layer, we have added 36,928 parameters and the outputs have shape `(3, 3, 64)`.
+
+* The sixth layer consistes in taking 3 $\times$ 3 $\times$ 64 = 576 inputs and arranging them as a 1D array. No parameters are needed.
+
+* The seventh layer is a dense layer, so have we already know how it works. The 64 nodes need 577 parameters each to manage the 576 inputs. So, we have 64 $\times$ 577 = 36,928 additional parameters, and the output has shape `(64,)`.
+
+* The last layer has 10 nodes. Each node takes 64 inputs, involving 65 parameters. So we have 10 $\times$ 65 = 650 additional parameters, ad the output is a vector of 10 class probabilities.
+
+At the end of the day, comparing this *deep* model with the previous MLP model, with only 32 hidden nodes, the number of parameters does not increase so much. This is due to the **low connectivity** of the CNN model.
+
+```
+In [17]: clf3.summary()
+Model: "functional_4"
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ input_layer_3 (InputLayer)      │ (None, 28, 28, 1)      │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d_6 (Conv2D)               │ (None, 26, 26, 32)     │           320 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d_6 (MaxPooling2D)  │ (None, 13, 13, 32)     │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d_7 (Conv2D)               │ (None, 11, 11, 64)     │        18,496 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d_7 (MaxPooling2D)  │ (None, 5, 5, 64)       │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d_8 (Conv2D)               │ (None, 3, 3, 64)       │        36,928 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ flatten_2 (Flatten)             │ (None, 576)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_6 (Dense)                 │ (None, 64)             │        36,928 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_7 (Dense)                 │ (None, 10)             │           650 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+
+ Total params: 279,968 (1.07 MB)
+
+ Trainable params: 93,322 (364.54 KB)
+
+ Non-trainable params: 0 (0.00 B)
+
+ Optimizer params: 186,646 (729.09 KB)
 ```
 
 The rest of the process is the same as in the MLP models. We use here `epochs=10`, to make it shorter. At the end of the first epoch, the model achieves 98% accuracy on the test data. After the 10 epochs, this has been improved to 99%, which is quite satisfactory.
 
 ```
-In [17]: clf3 = models.Sequential(net2)
+In [18]: clf3 = models.Model(input_tensor, output_tensor)
     ...: clf3.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
-    ...: clf3.fit(Z_train, y_train, epochs=10, validation_data=(Z_test, y_test));
+    ...: clf3.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test));
 Epoch 1/10
 1875/1875 [==============================] - 14s 7ms/step - loss: 0.1442 - acc: 0.9548 - val_loss: 0.0635 - val_acc: 0.9796
 Epoch 2/10
@@ -274,54 +336,4 @@ Epoch 9/10
 1875/1875 [==============================] - 15s 8ms/step - loss: 0.0104 - acc: 0.9966 - val_loss: 0.0300 - val_acc: 0.9926
 Epoch 10/10
 1875/1875 [==============================] - 15s 8ms/step - loss: 0.0080 - acc: 0.9973 - val_loss: 0.0363 - val_acc: 0.9919
-```
-
-As for the MLP model, we can print a summary reporting the number of parameters involved in every layer:
-
-* The first `Conv2D` layer has 32 nodes, with different parameters. At every node, a special type of linear calculation, called **convolution**, takes place. The convolution extracts a single number of a 3 $\times$ 3 submatrix, using nine weights and one bias. This makes a total of 10 parameters for every node, a grand total of 32 $\times$ 10 = 320 parameters. The original 28 $\times$ 28 matrix can be covered by a 26 $\times$ 26 grid of 3 $\times$ 3 submatrices, so the outputs of this layer have shape (26, 26, 32).
-
-* The `MaxPooling` layer uses 2 $\times$ 2 submatrices and, instead of a convolution, it just takes the maximum value. So, no parameters are involved, and the outputs have shape (13, 13, 32). 
-
-* The third layer has 64 nodes, with different parameters. Every node takes inputs from the 32 nodes of the preceding layer. Nine weights are needed for every input and one bias for the whole set, making a total of 32 $\times$ 9 + 1 = 289 parameters for every node, a grand total of 64 $\times$ 289 = 18,496 parameters. Now the outputs have shape (11, 11, 64).
-
-* The next two layers can be explained in a similar way. At the fifth layer, we have added 36,928 parameters and the outputs have shape (3, 3, 64).
-
-* The sixth layer consistes in taking 3 $\times$ 3 $\times$ 64 = 576 inputs and arranging them as a 1D array. No parameters are involved.
-
-* The seventh layer is a dense layer, so have we already know how it works. The 64 nodes need 577 parameters each to manage the 576 inputs. So, we have 36,928 parameters more, and the output has shape (64,).
-
-* The last layer has 10 nodes. Each node takes 64 inputs, involving 65 parameters. So we have 650 additional parameters, ad the output is a vector of 10 class probabilities.
-
-At the end of the day, comparing this *deep* model with the previous MLP model, with only 32 hidden nodes, the number of parameters does not increase so much. This is due to the **low connectivity** of the CNN model.
-
-```
-In [18]: clf3.summary()
-Model: "sequential_2"
------------------------------------------------------------------
-
- Layer (type)                Output Shape              Param #   
-=================================================================
- conv2d (Conv2D)             (None, 26, 26, 32)        320       
-                                                                 
- max_pooling2d (MaxPooling2  (None, 13, 13, 32)        0         
- D)                                                              
-                                                                 
- conv2d_1 (Conv2D)           (None, 11, 11, 64)        18496     
-                                                                 
- max_pooling2d_1 (MaxPoolin  (None, 5, 5, 64)          0         
- g2D)                                                            
-                                                                 
- conv2d_2 (Conv2D)           (None, 3, 3, 64)          36928     
-                                                                 
- flatten (Flatten)           (None, 576)               0         
-                                                                 
- dense_2 (Dense)             (None, 64)                36928     
-                                                                 
- dense_3 (Dense)             (None, 10)                650       
-                                                                 
-=================================================================
-Total params: 93322 (364.54 KB)
-Trainable params: 93322 (364.54 KB)
-Non-trainable params: 0 (0.00 Byte)
------------------------------------------------------------------
 ```
