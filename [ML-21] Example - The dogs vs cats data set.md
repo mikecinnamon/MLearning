@@ -2,11 +2,11 @@
 
 ## Introduction
 
-Web services are often protected with a challenge that's supposed to be easy for people to solve, but difficult for computers. Such a challenge is often called a **CAPTCHA** (Completely Automated Public Turing test to tell Computers and Humans Apart) or **HIP** (Human Interactive Proof). HIPs are used for many purposes, such as to reduce email and blog spam and prevent brute force attacks on web site passwords.
+Web services are often protected with a challenge that is supposed to be easy for people to solve, but difficult for computers. Such a challenge is often called a **CAPTCHA** (Completely Automated Public Turing test to tell Computers and Humans Apart) or **HIP** (Human Interactive Proof). HIPs are used for many purposes, such as to reduce email and blog spam and prevent brute force attacks on web site passwords.
 
-**Asirra** (Animal Species Image Recognition for Restricting Access) is a HIP that works by asking users to identify photographs of cats and dogs. This task is difficult for computers, but studies have shown that people can accomplish it quickly and accurately. Asirra is unique because of its partnership with **Petfinder.com**, the world's largest site devoted to finding homes for homeless pets. They've provided Microsoft Research with over three million images of cats and dogs, manually classified by people at thousands of animal shelters across the United States. Kaggle is fortunate to offer a subset of this data for fun and research. 
+**Asirra** (Animal Species Image Recognition for Restricting Access) is an HIP that works by asking users to identify photographs of **cats** and **dogs**. This task is difficult for computers, but studies have shown that people can accomplish it quickly and accurately. Asirra is unique because of its partnership with **Petfinder.com**, the world's largest site devoted to finding homes for homeless pets. They have provided Microsoft Research with over three million images of cats and dogs, manually classified by people at thousands of animal shelters across the United States.
 
-This example uses part of this data set, released for the *Dogs vs. Cats* Kaggle competition. We are inspired by the approach to transfer learning taken in chapter 9 of F Chollet's book. 
+This example uses part of this data set, released for the *Dogs vs. Cats* Kaggle competition. It is inspired by the approach to transfer learning taken in chapter 9 of F Chollet's book. 
 
 
 ## The data set
@@ -25,76 +25,103 @@ Sources:
 
 ## Questions
 
-## The package opencv
+## Creating a data folder
 
 ```
-$ pip install opencv-python
-```
-
-Now you can import `opencv` as follows. 
+In [1]: import os
+``` 
 
 ```
-In [1]: import cv2
-```
+In [2]: os.mkdir('data')
+``` 
 
-## Listing the image files
-
-```
-In [2]: import os
-```
+## Dowloading the zip files
 
 ```
-In [3]: dogs_train = os.listdir('/Users/miguel/Dropbox/data/dogs-train')
-   ...: cats_train = os.listdir('/Users/miguel/Dropbox/data/cats-train')
-   ...: dogs_test = os.listdir('/Users/miguel/Dropbox/data/dogs-test')
-   ...: cats_test = os.listdir('/Users/miguel/Dropbox/data/cats-test')
+In [3]: import requests
 ```
-
-## Resizing function
-
 ```
-In [4]: import numpy as np
+In [4]: gitpath = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
 ```
 
 ```
-In [5]: def f(src):
-   ...:     img = cv2.imread(src)
-   ...:     resized_img = cv2.resize(img, (150, 150), interpolation=cv2.INTER_LANCZOS4)
-   ...:     resized_img = resized_img.reshape(1, 150, 150, 3)
-   ...:     return resized_img
+In [5]: gitlist = ['cats-train.zip', 'cats-test.zip', 'dogs-train.zip', 'dogs-test.zip']
+```
+
+```
+In [6]: for f in gitlist:
+   ...: 	r = requests.get(gitpath + f, stream=True)
+   ...: 	conn = open('data/' + f, 'wb')
+   ...: 	conn.write(r.content)
+   ...: 	conn.close()
+```
+
+## Unzipping and removing the zip files
+
+```
+In [7]: import zipfile
+```
+
+```
+In [8]: ziplist = [f for f in os.listdir('data') if 'zip' in f]
+```
+
+```
+In [9]: for f in ziplist:
+   ...: 	zf = zipfile.ZipFile('data/' + f, 'r')
+   ...: 	zf.extractall('data/')
+   ...: 	del zf
+   ...: 	os.remove('data/' + f)
+```
+
+## Converting images to tensors
+
+Install package `opencv` with `pip install opencv-python`.
+
+```
+In [10]: import numpy as np, cv2
 ```
 
 The `opencv` function `imread()` converts a JPEG file to a NumPy array. This is a classic Matplotlib function incorporated by many packages. It works the same for other image formats (such as BMP or PNG).
 
+
+```
+In [11]: def img_to_arr(f):
+    ...:     arr = cv2.imread(f)
+    ...:     resized_arr = cv2.resize(arr, (150, 150), interpolation=cv2.INTER_LANCZOS4)
+    ...:     reshaped_arr = resized_arr.reshape(1, 150, 150, 3)
+    ...:     return reshaped_arr
+```
+
 ## Training data
 
 ```
-In [6]: X_train = f('/Users/miguel/Dropbox/data/dogs-train/' + dogs_train[0])
+In [12]: X_train = img_to_arr('data/dogs-train/' + os.listdir('data/dogs-train')[0])
 ```
 
 ```
-In [7]: for i in range(1, 1000):
-   ...:     X_train = np.concatenate([X_train, f('/Users/miguel/Dropbox/data/dogs-train/' + dogs_train[i])])
+In [13]: for i in range(1, 1000):
+    ...:     X_train = np.concatenate([X_train, img_to_arr('data/dogs-train/' + os.listdir('data/dogs-train')[i])])
 ```
 
 ```
-In [8]: for i in range(1000):
-   ...:     X_train = np.concatenate([X_train, f('/Users/miguel/Dropbox/data/cats-train/' + cats_train[i])])
+In [14]: for i in range(1000):
+    ...:     X_train = np.concatenate([X_train, img_to_arr('data/cats-train/' + os.listdir('data/cats-train')[i])])
 ```
 
 ```
-In [9]: X_train = X_train/255
+In [15]: X_train = X_train/255
 ```
 
 ```
-In [10]: y_train = np.concatenate([np.ones(1000), np.zeros(1000)])
+In [16]: y_train = np.concatenate([np.ones(1000), np.zeros(1000)])
 ```
 
 We check now that the shapes of these arrays are the expected ones.
 
 ```
-In [11]: X_train.shape, y_train.shape
-Out[11]: ((2000, 150, 150, 3), (2000,))
+In [17]: X_train.shape, y_train.shape
+Out[17]: ((2000, 150, 150, 3), (2000,))
 ```
 
 ## Test data
@@ -102,15 +129,15 @@ Out[11]: ((2000, 150, 150, 3), (2000,))
 For the test data, we follow the same steps.
 
 ```
-In [12]: X_test = f('/Users/miguel/Dropbox/data/dogs-test/' + dogs_test[0])
+In [18]: X_test = img_to_arr('data/dogs-test/' + os.listdir('data/dogs-test')[0])
     ...: for i in range(1, 500):
-    ...:     X_test = np.concatenate([X_test, f('/Users/miguel/Dropbox/data/dogs-test/' + dogs_test[i])])
+    ...:     X_test = np.concatenate([X_test, img_to_arr('data/dogs-test/' + os.listdir('data/dogs-test')[i])])
     ...: for i in range(500):
-    ...:     X_test = np.concatenate([X_test, f('/Users/miguel/Dropbox/data/cats-test/' + cats_test[i])])
+    ...:     X_test = np.concatenate([X_test, img_to_arr('data/cats-test/' + os.listdir('data/cats-test')[i])])
     ...: X_test = X_test/255
     ...: y_test = np.concatenate([np.ones(500), np.zeros(500)])
     ...: X_test.shape, y_test.shape
-Out[12]: ((1000, 150, 150, 3), (1000,))
+Out[18]: ((1000, 150, 150, 3), (1000,))
 ```
 
 ## Training a CNN model from scratch
@@ -118,19 +145,19 @@ Out[12]: ((1000, 150, 150, 3), (1000,))
 We import the Keras function `Input()` and the modules `models` and `layers`, as in the previous examples.
 
 ```
-In [13]: from keras import Input, models, layers
+In [19]: from keras import Input, models, layers
 ```
 
 Next, we specify the shape of the input tensor, which corresponds to an RGB image with resolution 150 $\times$ 150.
 
 ```
-In [14]: input_tensor = Input(shape=(150, 150, 3))
+In [20]: input_tensor = Input(shape=(150, 150, 3))
 ```
 
 Now, the hidden layers. As in example ML-19, we stack convolutional blocks (`Conv2D` plus `MaxPooling2D`). Since we are dealing with bigger images, we make the network larger, including a fourth block. The depth of the feature maps progressively increases in the network (from 32 to 128), while the size decreases (from 150 $\times 150 to 7 $\times 7). As we will see in the summary below, flattening the output of the fourth convolutional block leaves us with a tensor of length 6272, so we reduce the dimensionality with a final `Dense` layer. This last layer returns a vector of length 512 which is expected to provide a representation of the image which helps the classification as either dog or cat. This is called an **embedding vector**. 
 
 ```
-In [15]: x1 = layers.Conv2D(32, (3, 3), activation='relu')(input_tensor)
+In [21]: x1 = layers.Conv2D(32, (3, 3), activation='relu')(input_tensor)
     ...: x2 = layers.MaxPooling2D((2, 2))(x1)
     ...: x3 = layers.Conv2D(64, (3, 3), activation='relu')(x2)
     ...: x4 = layers.MaxPooling2D((2, 2))(x3)
@@ -145,18 +172,18 @@ In [15]: x1 = layers.Conv2D(32, (3, 3), activation='relu')(input_tensor)
 Finally, the output layer, which returns the predicted class probabilities.
 
 ```
-In [16]: output_tensor = layers.Dense(2, activation='softmax')(x10)
+In [22]: output_tensor = layers.Dense(2, activation='softmax')(x10)
 ```
 
 The successive application of these functions make the CNN model, which works as a flow that starts with the input tensor and ends with the output tensor.
 
 ```
-In [17]: clf1 = models.Model(input_tensor, output_tensor)
+In [23]: clf1 = models.Model(input_tensor, output_tensor)
 ```
 The table returned by the method `.summary()` illustrates this network architecture, with involves 3.45M parameters.
 
 ```
-In [18]: clf1.summary()
+In [24]: clf1.summary()
 Model: "functional"
 
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
@@ -197,13 +224,13 @@ Model: "functional"
 Now we compile the model. Nothing new here.
 
 ```
-In [19]: clf1.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
+In [25]: clf1.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 ```
 
 With the method `.fit()`, we train and test the model with the data sets that were built above. 10 epochs are enough to see the limitations of this approach. We get about 68.5% accuracy on the test data (not negligeable), but with a clear overfitting issue. The training data do not seem to be enough for so many parameters.
 
 ```
-In [20]: clf1.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test));
+In [26]: clf1.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test));
 Epoch 1/10
 63/63 ━━━━━━━━━━━━━━━━━━━━ 18s 277ms/step - acc: 0.5026 - loss: 0.7671 - val_acc: 0.5000 - val_loss: 0.6933
 Epoch 2/10
@@ -231,7 +258,7 @@ Epoch 10/10
 The Keras module `applications` provides a collection of deep learning models that are made available alongside pre-trained weights. These models can be used for prediction, feature extraction, and fine-tuning. The model VGG16 is a (relatively) simple CNN model witha convolutional base made of `Conv2D` and `MaxPooling2D` layers. Importing this model in a straightforward.
 
 ```
-In [21]: from keras.applications import VGG16
+In [27]: from keras.applications import VGG16
 ```
 
 We instantiate a VGG16 model. Note the choices made:
@@ -245,7 +272,7 @@ We instantiate a VGG16 model. Note the choices made:
 The summary shows that the VGG16 base is made of five convolutional blocks. These blocks contain two or three `Conv2D` layers. The height and width are kept constant with a trick called **padding** (look at the Keras book is you are interested).
 
 ```
-In [22]: conv_base = VGG16(weights='imagenet', include_top=False, input_shape=(150, 150, 3))
+In [28]: conv_base = VGG16(weights='imagenet', include_top=False, input_shape=(150, 150, 3))
     ...: conv_base.summary()
 Model: "vgg16"
 
@@ -301,13 +328,13 @@ Model: "vgg16"
 We can freeze the weight values, so they will not adapted to the cats vs dogs data. This is optional, and it is even possible to freeze only the initial layers (some practitioners use the expression fine-tuning specifically for this case). Freezing all the convolutional base is pretty easy:
 
 ```
-In [23]: conv_base.trainable = False
+In [29]: conv_base.trainable = False
 ```
 
 ## Adding a densely connected classifier on top of the pre-trained model
 
 ```
-In [24]: input_tensor = Input(shape=(150, 150, 3))
+In [30]: input_tensor = Input(shape=(150, 150, 3))
     ...: x1 = conv_base(input_tensor)
     ...: x2 = layers.Flatten()(x1)
     ...: x3 = layers.Dense(256, activation='relu')(x2)
@@ -341,7 +368,7 @@ Model: "functional_2"
 ## Training the classifier
 
 ```
-In [25]: clf2.fit(X_train, y_train, epochs=5, validation_data=(X_test, y_test));
+In [31]: clf2.fit(X_train, y_train, epochs=5, validation_data=(X_test, y_test));
 Epoch 1/5
 63/63 ━━━━━━━━━━━━━━━━━━━━ 125s 2s/step - acc: 0.7007 - loss: 0.8703 - val_acc: 0.8790 - val_loss: 0.2536
 Epoch 2/5
@@ -353,6 +380,20 @@ Epoch 4/5
 Epoch 5/5
 63/63 ━━━━━━━━━━━━━━━━━━━━ 128s 2s/step - acc: 0.9873 - loss: 0.0529 - val_acc: 0.8950 - val_loss: 0.2710
 ```
+
+## Removing the data
+
+```
+In [32]: for d in os.listdir('data'):
+    ...:     for f in os.listdir('data/' + d):
+    ...:         os.remove('data/' + d + '/' + f)
+    ...:     os.rmdir('data/' + d)
+```
+
+```
+In [33]: os.rmdir('data')
+```
+
 
 ## Homework
 
@@ -374,4 +415,3 @@ and then compile the model as
 ```
 
 3. If you survive to the preceding challenges, you can play with the learning rate, to see how this affects the fitting process.
-
