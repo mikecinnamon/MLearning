@@ -2,7 +2,7 @@
 
 # Chatting through the API #
 import cohere
-co = cohere.Client('OCAVTT8U76T9EsepDmTjnUTGWdFIrfWP6xaWRHG3')
+co = cohere.Client('Your API Key')
 response = co.chat(message='Tell me, in no more than 25 words, what is machine learning')
 response
 response.text
