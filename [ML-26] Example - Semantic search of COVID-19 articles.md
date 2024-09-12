@@ -92,7 +92,7 @@ and the denominator is the product of the lengths (length meaning here the dista
 
 $$\lVert\hbox{\bf x}\rVert = \sqrt{\sum_{i=1}^n x_i^2}.$$
 
-The cosine is commonly used in data mining to measure the similarity between two vectors (which represent texts, and this example, customers, products or many other possibilities, depending on the application). Mathematically, the cosine works as a correlation, so vectors pointing in the same direction have cosine 1, while orthogonal vectors have cosine 0. In the NLP context, the cosine is used as a **similarity measure**.
+The cosine is commonly used in data mining to measure the similarity between two vectors (which can represent texts, as in this example, or customers, products or many other possibilities, depending on the application). Mathematically, the cosine works as a correlation, so vectors pointing in the same direction have cosine 1, while orthogonal vectors have cosine 0. In the NLP context, the cosine is used as a **similarity measure**.
 
 In this example, the embedding vectors have length 1, which is the default of Cohere's method `.embed()`, so the denominator in the cosine formula is not needed, and we can use as a similarity function the NumPy function `dotproduct()`
 
