@@ -2,17 +2,42 @@
 
 ## Introduction
 
+**Semantic search** denotes search with meaning. The expression is used as opposed to **keyword seqacrh**, also called lexical serach, where the search engine looks for literal matches of the query words or variants of them.
+
+Semantic search is powered by **vector search**, which enables semantic search to deliver and rank content based on context relevance and intent relevance. Vector search encodes queries and documents as vectors, and then compares vectors to determine which are most similar. When a query is launched, the search engine transforms the query into an embedding vector. The algorithm matches vectors of existing documents to the query vector. The semantic search then generates results and ranks them based on conceptual relevance. **Reranking** is typically applied to improve the process.
+
+This example uses a data set posted on Kaggle to illustrate this process. It uses the **Cohere API** methods `.embed()` and `.rerank()`(see lecture ML-25), but this is just of the many possible choices, so the reader should pay more attention to the flow than to the specific toolkit used.
+
 ## The data set
+
+The file `covid.csv`  contains data on 10,000 Covid-19 research papers. The columns are:
+
+* `title`, the title of the paper.
+
+* `abstract`, the abstract of the paper. Abstracts of research papers are summaries of about 250 words.
+
+* `url`, the URL of the paper at the Pubmed website.
+
+Source of the data: `https://www.kaggle.com/datasets/anandhuh/covid-abstracts`.
 
 ## Questions
 
+
+
 ## Importing the data
 
+We import the data as a Pandas data frame from the usual GitHub repository.
+
 ```
-In [1]: import pandas as pd
+In [1]: import pandas as pd, numpy as np
    ...: path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
    ...: df = pd.read_csv(path + 'covid.csv')
-   ...: df.info()
+```
+
+The data come as expected. No missing values.
+
+```
+In [2]: df.info()
 <class 'pandas.core.frame.DataFrame'>
 RangeIndex: 10000 entries, 0 to 9999
 Data columns (total 3 columns):
@@ -24,10 +49,11 @@ Data columns (total 3 columns):
 dtypes: object(3)
 memory usage: 234.5+ KB
 ```
+This is hopw the data look like:
 
 ```
-In [2]: df[['title', 'abstract']].head()
-Out[2]: 
+In [3]: df[['title', 'abstract']].head()
+Out[3]: 
                                                title                                           abstract
 0  Real-World Experience with COVID-19  Including...  This article summarizes the experiences of COV...
 1  Successful outcome of pre-engraftment COVID-19...  Coronavirus disease 2019  COVID-19   caused by...
@@ -36,9 +62,11 @@ Out[2]:
 4  Clinical evaluation of nasopharyngeal  midturb...  In the setting of supply chain shortages of na...
 ```
 
+With the method `.describe()`, we create a summary for the length (number of characters) of titles and abstracts. Everything looks right. 
+
 ```
-In [3]: pd.concat([df['title'].str.len().describe(), df['abstract'].str.len().describe()], axis=1)
-Out[3]: 
+In [4]: pd.concat([df['title'].str.len().describe(), df['abstract'].str.len().describe()], axis=1)
+Out[4]: 
               title      abstract
 count  10000.000000  10000.000000
 mean     110.036300   1538.624100
@@ -52,33 +80,38 @@ max      310.000000   5236.000000
 
 ## Cosine of two vectors
 
-```
-In [4]: import numpy as np
-```
+Now, a math refresher, just in case you need it. The **cosine** of the angle determined by two vectors $\hbox{\bf x}$ and $\hbox{\bf y}$ can be calculated as
+$$\cos\big(\hbox{\bf x}, \hbox{\bf y}\big) = \frac{\displaystyle \hbox{\bf x}\cdot\hbox{\bf y}}{\|\hbox{\bf x}\|\|\hbox{\bf y}\|}.$$
 
-```
-In [5]: def cos(x, y):
-   ...:     dotproduct = sum(x*y)
-   ...:     x_norm = np.sqrt(sum(x**2))
-   ...:     y_norm = np.sqrt(sum(y**2))
-   ...:     return dotproduct/(x_norm*y_norm)
-```
+In this formula, the numerator is the **dot product** (`dotproduct()` in NumPy, `SUMPRODUCT()` in Excel) 
+$$\hbox{\bf x}\cdot \hbox{\bf y} = \sum_{i=1}^n x_i y_i$$
+and the denominator is the product of the lengths (length meaning here the distance from the origin to the endpoint, not the number of terms),
+$$\|\hbox{\bf x}\| = \sqrt{\sum_{i=1}^n x_i^2}.$$
+
+The cosine is commonly used in data mining to measure the similarity between two vectors (which represent texts, and this example, customers, products or many other possibilities, depending on the application). Mathematically, the cosine works as a correlation, so vectors pointing in the same direction have cosine 1, while orthogonal vectors have cosine 0. In the NLP context, the cosine is used as a **similarity measure**.
+
+In this example, the embedding vectors have length 1, which is the default of Cohere's method `.embed()`, so the denominator in the cosine formula is not needed, and we can use as a similarity function the NumPy function `dotproduct()`
 
 ## Cohere's embedding model
 
+We import the package `cohere`, and create a client using an API key:
+
+
 ```
-In [6]: import cohere
+In [5]: import cohere
    ...: co = cohere.Client('YOUR_API_KEY')
 ```
 
+As in lecture ML-25, we use the model `embed-english-v3.0`.
+
 ```
-In [7]: model_name = 'embed-english-v3.0'
+In [6]: model_name = 'embed-english-v3.0'
 ```
 
 ## Encoding the query
 
 ```
-In [8]: query = ['false positives in COVID test']
+In [7]: query = ['false positives in COVID test']
 ```
 
 ```
