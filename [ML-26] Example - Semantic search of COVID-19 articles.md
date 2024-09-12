@@ -81,12 +81,12 @@ max      310.000000   5236.000000
 ## Cosine of two vectors
 
 Now, a math refresher, just in case you need it. The **cosine** of the angle determined by two vectors $\hbox{\bf x}$ and $\hbox{\bf y}$ can be calculated as
-$$\cos\big(\hbox{\bf x}, \hbox{\bf y}\big) = \frac{\displaystyle \hbox{\bf x}\cdot\hbox{\bf y}}{\||\hbox{\bf x}\||\||\hbox{\bf y}\||}.$$
+$$\cos\big(\hbox{\bf x}, \hbox{\bf y}\big) = \frac{\displaystyle \hbox{\bf x}\cdot\hbox{\bf y}}{\lVert\hbox{\bf x}\rVert\lVert\hbox{\bf y}\rVert}.$$
 
 In this formula, the numerator is the **dot product** (`dotproduct()` in NumPy, `SUMPRODUCT()` in Excel) 
 $$\hbox{\bf x}\cdot \hbox{\bf y} = \sum_{i=1}^n x_i y_i$$
 and the denominator is the product of the lengths (length meaning here the distance from the origin to the endpoint, not the number of terms),
-$$\||\hbox{\bf x}\|| = \sqrt{\sum_{i=1}^n x_i^2}.$$
+$$\lVert\hbox{\bf x}\rVert = \sqrt{\sum_{i=1}^n x_i^2}.$$
 
 The cosine is commonly used in data mining to measure the similarity between two vectors (which represent texts, and this example, customers, products or many other possibilities, depending on the application). Mathematically, the cosine works as a correlation, so vectors pointing in the same direction have cosine 1, while orthogonal vectors have cosine 0. In the NLP context, the cosine is used as a **similarity measure**.
 
