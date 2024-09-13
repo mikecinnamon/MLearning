@@ -56,6 +56,7 @@ doc4 = '''Performance Reviews Frequency: We conduct informal check-ins every qua
 and formal performance reviews twice a year.'''
 docs = [doc1, doc2, doc3, doc4]
 response = co.rerank(query=query, model=model_name, documents=docs, top_n=4)
+response
 import pandas as pd
-pd.DataFrame({'index': [response[i].index for i in range(len(docs))],
-    'relevance_score': [response[i].relevance_score for i in range(len(docs))]})
+pd.DataFrame({'index': [response.results[i].index for i in range(len(docs))],
+    'relevance_score': [response.results[i].relevance_score for i in range(len(docs))]})
