@@ -2,7 +2,10 @@
 
 # Importing the data #
 import pandas as pd, numpy as np
-df = pd.read_csv('/Users/miguel/Dropbox/data/fake.csv')
+path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
+df1 = pd.read_csv(path + 'fake1.csv.zip', index_col=0)
+df2 = pd.read_csv(path + 'fake2.csv.zip', index_col=0)
+df = pd.concat([df1, df2])
 df.info()
 df.head()
 
@@ -85,4 +88,3 @@ network = [layers.Dense(128, activation='relu'), layers.Dense(2, activation='sof
 clf2 = models.Sequential(layers=network)
 clf2.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 clf2.fit(X_train, y_train, epochs=20, validation_data=(X_test, y_test));
-
