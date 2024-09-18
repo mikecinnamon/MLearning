@@ -10,7 +10,7 @@ Several data sets have been released for training and benchmarking **fake news d
 
 ## The data set
 
-The file `fake.csv` has 20,800 news articles. The columns are:
+The data set, containing 20,800 news articles, is split in two parts, `fake1.csv` and `fake2.csv` (zipped). The columns are:
 
 * `id`, unique identifier for the article. Just a counter.
 
@@ -36,11 +36,14 @@ Q4. Take a look at the distribution of the **predictive scores**.
 
 ## Importing the data
 
-We import the data as a Pandas data frame from the usual GitHub repository.
+We import the data, as two Pandas data frames, from the usual GitHub repository. Then we concatenate the two parts to get a single data frame.
 
 ```
 In [1]: import pandas as pd, numpy as np
-   ...: df = pd.read_csv('/home/cinn/Dropbox/data/fake.csv')
+   ...: path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
+   ...: df1 = pd.read_csv(path + 'fake1.csv.zip', index_col=0)
+   ...: df2 = pd.read_csv(path + 'fake2.csv.zip', index_col=0)
+   ...: df = pd.concat([df1, df2])
 ```
 
 We have data on 20,800 articles, but only the labels are complete. The articles with missing title must discarded for this example.
@@ -96,7 +99,7 @@ dtypes: int64(2), object(2)
 memory usage: 789.2+ KB
 ```
 
-With the method `.describe()`, we create a summary for the length of titles and texts. This shows that some of the articles should be filtered out if the detection were to be based on the text (homework). 
+With the method `.describe()`, we create a summary for the length (number of characters) of titles and texts. This shows that some of the articles should be filtered out if the detection were to be based on the text (homework). 
 
 ```
 In [5]: pd.concat([df['title'].str.len().describe(), df['text'].str.len().describe()], axis=1)
@@ -243,7 +246,7 @@ In [18]: from matplotlib import pyplot as plt
 
 3. Train an MLP model, with one hidden layer, to the title data. Do you get better results than with the logistic regression model?
 
-3. **Nomic Embed** is a text embedding which has recently entered the competition, being highyly praised. You can get it directly with the package `nomic`, or from Hugging Face, through the package `sentence_transformers` used in this example. To try it with the title data, you just have to replace the model definition in `In[9]` by the following. You may be requested to install the package `einops`, which you can do in the usual way, with `pip install einops`.
+4. **Nomic Embed** is a text embedding which has recently entered the competition, being highyly praised. You can get it directly with the package `nomic`, or from Hugging Face, through the package `sentence_transformers` used in this example. To try it with the title data, you just have to replace the model definition in `In[9]` by the following. You may be requested to install the package `einops`, which you can do in the usual way, with `pip install einops`.
 ```
 model = SentenceTransformer("nomic-ai/nomic-embed-text-v1", trust_remote_code=True)
 ```
