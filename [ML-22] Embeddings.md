@@ -2,7 +2,7 @@
 
 ## What is an embedding?
 
-Embedding vectors have already been mentioned in lecture ML-20. In general, an **embedding** is a representation of a piece of information, such as a word, a sentence or an image, as a vector (1D array or 1D tensor) in a space of a given dimension. Typical embedding dimensions are 512, 768 and 1,024.
+Embedding vectors have already been mentioned in lecture ML-20. In general, an **embedding** is a representation of a piece of information, such as a word, a sentence or an image, as a vector (1D array or 1D tensor) in a space of a given dimension. Typical **embedding dimensions** are 512, 768 and 1,024.
 
 For an embedding to be useful, "similar" pieces of information are represented by vectors that are close in a geometric sense (the distance between the endpoints, or the angle). For instance, in a word embedding, words with similar meanings (such as 'nice' and 'beautiful') will be represented by close vectors, and unrelated words (such as 'computer' and 'dog') will be represented by non-close vectors.
 
@@ -12,7 +12,7 @@ When we use an ML model to create embedding vectors associated to images or text
 
 Applications of embeddings have already appeared in the examples, though they were not presented in that way:
 
-* In examples ML-19, we encoded the MINST data with a CNN model. The convolutional base of that model can be seen as creating an embedding representation of dimension 576 of the digit images.
+* In example ML-19, we encoded the MINST data with a CNN model. The convolutional base of that model can be seen as creating an embedding representation of dimension 576 of the digit images.
 
 * In example ML-21, we used VGG16 as an embedding model of dimension 8,192 for the dogs and cats images.
 
