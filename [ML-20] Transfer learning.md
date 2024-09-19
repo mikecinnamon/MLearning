@@ -60,7 +60,7 @@ How this works is explained in a simple way in the Keras book. To illustrate it,
 
 We trained this model in example ML-19 with the MNIST data. In the context of this lecture, who would say that it is the pre-trained model. We can see it as composed of two parts: 
 
-* The **convolutional base**, a stack of three `Conv2D` layers and two `MaxPooling2D` layers. This part encodes the picture as a vector of length 576. This transformation is what we called an **embedding** (see lecture ML-22). Because of the pretraining the embedding generates vector that are appropriate for recognizing shapes and corners.
+* The **convolutional base**, a stack of three `Conv2D` layers and two `MaxPooling2D` layers. This part encodes the picture as a vector of length 576. This transformation is what we called an **embedding** (see lecture ML-22). Because of the pretraining the embedding generates vectors that are appropriate for recognizing shapes and corners.
 
 * The **top classifier**, which is like an MLP model with a hidden layer of 64 nodes whose input is a vector of length 576. The `Flatten` layer does not have any parameter, so it can be included in this part or in the base. This part classifies the embedding vectors as digits.
 
