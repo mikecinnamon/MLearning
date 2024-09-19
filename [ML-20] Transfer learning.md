@@ -24,7 +24,7 @@ Transfer learning makes a difference because, when training a neural network mod
 
 * **TensorFlow Hub**. It was initially part of the Keras/TensorFlow combo, but was integrated with Kaggle Models in November 2022.
 
-* **Ollama**. An open-source project that serves as a platform for running LLMs on your local machine. Not exactly user-friendly, as many open-spurce projects, but quite powerful. It is presented as if you had to manage it from the shell, but there is a Python package that provides an easy way to integrate it in your workflow.
+* **Ollama**. An open-source project that serves as a platform for running LLMs on your local machine. Not exactly user-friendly, as many open-source projects, but quite powerful. It is presented as if you had to manage it from the shell, but there is a Python package that provides an easy way to integrate it in your workflow.
 
 In this course, we use a model that can be obtained with Keras (no additional resources needed) in example ML-21. Also, in example ML-23 we use a models extracted from Hugging Face. In example ML-26, we use the Cohere API to run a big model on a remote server.
 
