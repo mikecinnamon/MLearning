@@ -1,12 +1,20 @@
 # [ML-24] Large language models
 
-## What is Natural language processing?
+## What is natural language processing?
 
-**Natural language processing** (NLP) is an interdisciplinary subfield of computer science and artificial intelligence. It is primarily concerned with providing computers the ability to process text written in a natural language. A collection of documents used to develop NLP tools is called a **corpus** (*e.g*. the Wikipedia corpus). 
+**Natural language processing** (NLP) is an interdisciplinary subfield of computer science and artificial intelligence. It is primarily concerned with providing computers the ability to process text written in a natural language. 
 
-The data unit in NLP is typically a string (this can be a long document). The data set is a collection (*e.g*. a list) of strings. The NLP toolkit discussed in this course is based on deep learning. 
+The data unit in NLP is typically a string (this can be a long document). The data set is a collection (*e.g*. a list) of strings. The NLP toolkit discussed in this course is based on deep learning. The data set used to develop NLP tools is called a **corpus** (*e.g*. the Wikipedia corpus). 
 
 The adjective *natural* is used here to refer to the languages we humans use, such as English, Spanish, etc, as opposed to computer languages like Python or Java. Nevertheless, the language models developed since 2020 have been trained so that they can also process code written in a number of computer languages, so the distinction is fading away. In this lecture, we assume that we are dealing with text written in English, with occasional comments to other languages.
+
+NLP has advanced in giant steps in the last years, as **large language models** (LLMs) took the stage. Reading anything published ealier than five years ago may be wasting time.
+
+## Tokens
+
+Even the data unit in NLP is a string, that string is not processed as a whole, but split in substrings called **tokens**. The extraction of tokens from a text corpus is called **tokenization**. Tokenization is one of the oldest problems in NLP, and different approaches have been discussed for years: words, sub-words, pairs of words, etc. Also, tokenization was a harder problem in some languages like Spanish and French with its countless verb forms, or German with its declensions, prefixes and suffixes, than in English.
+
+Nowadays, the debate has lost interest (at least for the beginners). First, there is plenty of supply of tokenization models, called **tokenizers** (right now, you can find 3,383 in Hugging Face). Second all the relevant language models come with their own tokenizers, so you don't to think about them once you have chosen your model. In these models, most of the tokens are words, and a small proportion of subwords. Also, punctuation marks can be tokens. In addition to all these, there is an "unknown" token (the vocabulary of the model is limited), a token for the start of the text and another token for the end (think on ChatGPT you will see that this is needed). So, when we input a text to one of these models, it is converted to a list of tokens, though we never see them in practice.
 
 ## NLP tasks
 
@@ -124,13 +132,6 @@ With $t = 1$, the next token probabilities are calculated with the ordinary soft
 
 * Conversion.
 
-## Tokens
-
-The term **token** refers to the smallest unit of semantic meaning created by breaking down a piece of text into smaller units. The tokens are the basic inputs for an LLM.
-
-The extraction of tokens from a **text corpus** is called **tokenization**. Tokenization is older than LLM's, since they have been used for years in **Natural Language Processing** (NLP), before LLM's were invented.
- 
-An **n-gram** is a sequence of n consecutive tokens.
 
 ## Pre-tokenization
 
