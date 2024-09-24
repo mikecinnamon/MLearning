@@ -33,6 +33,8 @@ The four cells of the confusion matrix are referred to as **true positive** (act
 | **Actual negative** | TN | FP |
 | **Actual positive** | FN | TP |
 
+<br/>
+
 The proportion of samples classified in the right way, that is, those for which the actual and the predicted values coincide, is called the **accuracy**,
 
 $$\textrm{Accuracy} = \frac{\textrm{TN}+\textrm{TP}} {\textrm{TN}+\textrm{FP}+\textrm{FN}+\textrm{TP}}\thinspace.$$
