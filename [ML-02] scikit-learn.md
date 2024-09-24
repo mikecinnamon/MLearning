@@ -20,7 +20,7 @@ The first step is to import the class you wish to use from the corresponding sub
 from sklearn.linear_model import LinearRegression
 ```
 
-Your estimator will be an **instance** of this class, that is, an object which applies the technique chosen:
+Your estimator will be an **instance** of this class, that is, an object which applies linear regression techniques:
 
 ```
 model = LinearRegression()
@@ -30,7 +30,9 @@ Here, `model` is a name chosen by the user. Note that, leaving the parenthesis e
 
 ## The three basic methods
 
-Irrespective of the type of estimator, three basic methods, namely `.fit()`, `.predict()` and `.score()`, are available. The method `fit()` performs the **training**, that is, it finds the model that works best for the data, within the class selected. Training is always based on minimizing a **loss function**. In the default option of `LinearRegression()`, and in many other regression classes in scikit-learn, the loss function is the **mean squared error** (MSE). More detail will be provided in the next lecture.
+Irrespective of the type of estimator, three basic methods, namely `.fit()`, `.predict()` and `.score()`, are available. The method `.fit()` performs the **training**, that is, it finds the model that works best for the data, within the class selected. In practice, this means that the model has a set of **parameters** (*e.g*. the coefficients of a linear regression equation), and the `.fit()` finds the **optimal parameter values**.
+
+Training is always based on minimizing a **loss function**. In the default option of `LinearRegression()`, and in many other regression classes in scikit-learn, the loss function is the **mean squared error** (MSE). More detail about this loss function will be provided in the next lecture.
 
 The analysis would start as:
 
@@ -50,7 +52,7 @@ Finally, the method `.score()` provides an assessment of the quality of the pred
 model.score(X, y)
 ```
 
-In both regression and classification, `.score()` returns a number whose maximum value is 1, which is read as *the higher the better*. Nevertheless, the mathematics are completely different. For a regression model, it is the **R-squared statistic**. For a classification model, it is the **accuracy**. Details will be given in the following lectures.
+In both regression and classification, `.score()` returns a number whose maximum value is 1, which is read as *the higher the better*. Nevertheless, the mathematics are completely different. For a regression model, `.score()` returns the **R-squared statistic**. For a classification model, it returns the **accuracy**. Details will be given in the following lectures.
 
 ## Dummy variables
 
@@ -58,13 +60,13 @@ Statisticians refer to the binary variables that take 1/0 values as **dummy vari
 
 In machine learning, **one-hot encoding** is a popular name for the process of extracting dummies from a set of a categorical features. scikit-learn has a method for encoding categorical features in a massive way, for several features in one shot. 
 
-In applications like Excel, where we explicitly create new columns for the dummies to carry out a regression analysis, the rule is that the number of dummies is equal to the number of groups minus one. We set one of the groups as the **baseline group** and create one dummy for every other group. 
+In a regression analysis in Excel, we explicitly create new columns for the dummies to carry out. Then, the rule is that the number of dummies is equal to the number of groups minus one. We set one of the groups as the **baseline group**, creating one dummy for every other group. 
 
-In Python, we do not have to care about all this. We just pack in a matrix (2D array or Pandas data frame) the categorical features that we wish to encode as dummies, applying to that matrix the appropriate method, explained below, which returns a new matrix whose columns are the dummies.
+In Python, you don't have to care about all this. We just pack in a matrix (2D array or Pandas data frame) the categorical features that we wish to encode as dummies, applying to that matrix a method which returns a new matrix whose columns are the dummies. We seen next two examples of such methods.
 
 ## One-hot encoding in scikit-learn
 
-In scikit-learn, a one-hot encoding **transformer** can be extracted from the class `OneHotEncoder()` of the subpackage `preprocessing`. Suppose that we pack the features that we wish to encode as a matrix `X2`, and the rest of the features as a separate matrix `X1`. Thus, `X2` is transformed as follows. 
+In scikit-learn, a one-hot encoding **transformer** can be extracted from the class `OneHotEncoder()` of the subpackage `preprocessing`. Suppose that the features that we wish to encode are packed in a matrix `X2`, and the rest of the features in a separate matrix `X1`. Thus, `X2` is transformed as follows. 
 
 First, we instantiate a `OneHotEncoder` transformer as usual in scikit-learn:
 
@@ -97,7 +99,7 @@ X = np.concatenate([X1, X2], axis=1)
 
 ## One-hot encoding in Pandas
 
-One-hot encoding can also be performed with the Pandas function `get_dummies()`. Suppose that the feature matrix is split in two two data frames `X1` and `X2`, as recommended in the preceding section. The code is then simpler than in scikit-learn:
+One-hot encoding can also be performed with the Pandas function `get_dummies()`. Suppose that the feature matrix is split in two data frames `X1` and `X2`, as in the preceding section. The code is then simpler than in scikit-learn:
 
 ```
 X2 = pd.get_dummies(X2)
@@ -112,9 +114,9 @@ Note that both `get_dummies()` and `concat()` take only Pandas objects, returnin
 
 How can you save your model, to use it in another session, without having to train it again? This question is capital in business applications, where you use the model to predict a target value for new samples for which the target has not yet been observed. 
 
-If your model were a simple linear regression equation, you could extract the coefficients of the regression equation, write the equation and apply it to the incoming samples. But, even if this seems feasible for a simple equation, it would not be so for the more complex models, which may look like black boxes to you. 
+If your model were a simple linear regression equation, you could extract the coefficients of the regression equation, write the equation and apply it to the incoming samples. A similar idea is used for a **neural network model**, which is like a set of equations.
 
-There are many ways to save and reload an object in Python, but the recommended method for scikit-learn models is based on the functions `dump()` and `load()` of the package `joblib`. This package uses a special file format, the **PKL file format** (extension `.pkl`).
+An alternative is to use a Python techniques for saving and reloading objects. A popular approach is based on the functions `dump()` and `load()` of the package `joblib`. This package uses a special file format, the **PKL file format** (extension `.pkl`).
 
 With `joblib`, saving your model to a PKL file is straightforward. For our model above, this would be:
 
