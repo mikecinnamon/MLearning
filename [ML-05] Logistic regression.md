@@ -28,6 +28,8 @@ In a binary setting, a visual inspection of the confusion matrix is always recom
 
 The four cells of the confusion matrix are referred to as **true positive** (actual positives predicted as positives), **false positive** (actual negatives predicted as positives), **true negative** (actual negatives predicted as negatives) and **false negative** (actual positives predicted as negatives).
 
+<br/>
+
 | | Predicted negative | Predicted positive |
 | --- | :---: | :---: |
 | **Actual negative** | TN | FP |
