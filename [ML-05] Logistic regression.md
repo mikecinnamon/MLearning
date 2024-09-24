@@ -8,9 +8,11 @@
 
 * The **predicted class** is the one with higher probability.
 
-This is the **default prediction** method. When this approach is used, the class probabilities may be hidden, so the model is presented as if it were making the predictions directly. 
+This is the **default prediction** method. When this approach is used, the class probabilities may be hidden, so the model is presented as if it were making the predictions directly. But departure from the default is not rare in many real-world applications.
 
-In some applications, the class probabilities are used in a different way. Departure from the default is not rare when the data present **class imbalance**, which will be specifically discussed in lecture ML-09.
+An important case is **class imbalance**. This occurs when the proportion of training units in one class is significantly different from the proportion of training units in the other classes. We will see this in example ML-06 in a casual way, discussing it more specifically in lecture ML-09 and example ML-10.
+
+Another important case is that of certain **large language models** like those of the GPT family. These models generate text as the response to a **prompt**. Under the hood, what they do is extract words in an iterative way, predicting every new word based on the prompt and the previous words. The prediction is based on class probabilities, but the model does not extract always the word with the highest probability. Instead, the extraction is at random, based on the class probabilities. Example: if that maximum probability is 0.6, the corresponding word will be chosen 60% of the time. Of course, you don't notice this unless you submit repeatedly the same prompt.
 
 ## Binary classification
 
@@ -41,7 +43,7 @@ The proportion of samples classified in the right way, that is, those for which 
 
 $$\textrm{Accuracy} = \frac{\textrm{TN}+\textrm{TP}} {\textrm{TN}+\textrm{FP}+\textrm{FN}+\textrm{TP}}\thinspace.$$
 
-The accuracy can be calculated directly, or extracted from the confusion matrix, as the sum of the diagonal terms divided by the sum of all terms. Although it looks as the obvious metric for the evaluation of a classifier, the accuracy is not always adequate, specially when the data present class imbalance. For instance, if you have a 90% of negative samples in your training data set, classifying all the samples as negative gives you 90% accuracy (you don't need machine learning for that!).
+The accuracy can be calculated directly, or extracted from the confusion matrix, as the sum of the diagonal terms divided by the sum of all terms. Although it looks as the obvious metric for the evaluation of a classifier, the accuracy is not always adequate, specially when the training data present class imbalance. For instance, if you have a 90% of negative training units, classifying all the training units as negative gives you 90% accuracy (you don't need machine learning for that!).
 
 In a business context, a visual inspection of the confusion matrix is always recommended. In many cases, it is useful to examine the performance of the classifier separately on the actual positives and the actual negatives. Then, the usual metrics are:
 
@@ -66,35 +68,36 @@ $$\textrm{Precision} = \frac{\textrm{TP}} {\textrm{TP}+\textrm{FP}}\thinspace.$$
 $$\textrm{Recall} = \frac{\textrm{TP}} {\textrm{TP}+\textrm{FN}}\thinspace.$$
 
 In a good model, precision and recall should be high. Some authors combine precision and recall in a single metric (in mathematical terms, it is the harmonic mean), called the **F1-score**, also available in scikit-learn:
+
 $$\textrm{F1-score} = \frac{\textrm{2}\times\textrm{Precision}\times\textrm{Recall}} {\textrm{Precision}+\textrm{Recall}}\thinspace.$$
 
 ## Logistic regression
 
-**Logistic regression** is one of the simplest classification methods. The class probabilities are calculated as follows. Note that, in spite of its name, it is a classification method, not a regression method. The explanation is that logistic regression was created by statisticians, and regression does not mean the same in statistics as in machine learning.
+**Logistic regression** is one of the simplest classification methods. In spite of its name, it is a classification method, not a regression method. The explanation is that logistic regression was created by statisticians, and regression does not mean the same in statistics as in machine learning.
 
-Suppose that $k$ numeric features $X_1, \dots, X_k$ are used to predict a target with $m$ classes. The logistic regression model is based on a set of linear equations, 
+The class probabilities are calculated as follows. Suppose that $k$ numeric features $X_1, \dots, X_k$ are used to predict a target with $m$ classes. The logistic regression model is based on a set of linear equations, 
 
 $$z = b_0 + b_1X_1 + b_2X_2 + \cdots + b_kX_k,$$
 
-one for each class. The values $z_1, \dots, z_m$ are transformed in class probabilities $p_1, \dots, p_m$ by means of the **softmap function**
+one for each class. The values $z_1, \dots, z_m$, which are called **logits**, are transformed in class probabilities $p_1, \dots, p_m$ by means of the **softmap function**
 
 $$p_i = \frac{\exp(z_i)}{\exp(z_1) + \cdots + \exp(z_m)}.$$
 
-Note that, since $p_1 + \cdots + p_m = 1$, one of the equations can be obtained from the rest. Don't worry about this, Python will take care. 
+Note that, since $p_1 + \cdots + p_m = 1$, one of the equations can be obtained from the rest, so the weights, and consequently the logits are not uniquely determined. Don't worry about this, Python will take care and, in practice, the logits are never extracted explitly.
 
-As for linear regression, in logistic regression the coefficients of the equations are optimal, meaning that a certain **loss function** attains its minimum value. Here, the loss function is the **average cross-entropy**, a formula extracted from information theory. For every sample, the cross-entropy is the negative logarithm of the predicted class probability of the actual class of that sample. scikit-learn uses binary logs, as in information theory, but other packages like Keras use natural logs. You should not be concerned by this, because you don't really use these cross-entropy values, they are just part of mathematical apparatus.
+As for linear regression, in logistic regression the parameter values are optimal, meaning that a certain **loss function** attains its minimum value. Here, the loss function is the **average cross-entropy**, a formula extracted from information theory. For every data unit, the cross-entropy is the negative logarithm of the predicted class probability of the actual class of that sample. scikit-learn uses binary logs, as in information theory, but other libraries, like **Keras**, use natural logs. You should not be concerned by this, because you don't really use these cross-entropy values, they are just part of mathematical apparatus.
 
 Let us show, explicitly, how the cross-entropy is calculated in a binary setting, using natural logs:
 
-* Take a positive sample whose predicted class probabilities are $0.2$ (for the negative class) and $0.8$ (for the positive class). Then, the cross-entropy for this sample is $-\log 0.8 = 0.2231$. 
+* Take a positive sample whose predicted class probabilities are $0.2$ (for the negative class) and $0.8$ (for the positive class). Then, the cross-entropy for this sample is $-\log\thinspace 0.8 = 0.2231$. 
 
-* Take a negative sample whose class probabilities are $0.7$ and $0.3$, respectively. Then, the cross-entropy for this sample is $-\log 0.7 = 0.3567$. 
+* Take a negative sample whose class probabilities are $0.7$ and $0.3$, respectively. Then, the cross-entropy for this sample is $-\log\thinspace 0.7 = 0.3567$. 
 
-The average of these values for the all the training units is the loss. What is the logic of using this loss function? As shown in Figure 1, the negative log function is decreasing, with the minimum value $-\log 1 = 0$, so that by minimizing the cross-entropy, we are pushes the class probabilities of the negative units towards $(1, 0)$ and those of the positive units towards $(0, 1)$, that would be the perfect predictions.
+The average of these values for the all the training units is the loss. What is the logic of using this loss function? As shown in Figure 1, the negative log function is decreasing, with the minimum value $-\log\thinspace 1 = 0$, so that by minimizing the cross-entropy, we are pushing the class probabilities of the negative units towards $(1, 0)$ and those of the positive units towards $(0, 1)$, that would be the perfect predictions.
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/05-1.png)
 
-In linear regression, we have formulas for the optimal parameter values, which are simple enough to be implemented in a spreadsheet. This is no longer true for other ML models, in particular for logistic regression. Here, the optimal parameter values are obtained by means of an **optimization algorithm**, which starts with a set of random values and changes these values in a sequence of steps or **iterations**, decreasing the loss at every step. The iterative process goes on until the loss falls below a certain **tolerance** or until a **maximum number of iterations** has been achieved. 
+In linear regression, we have formulas for the optimal parameter values, which are simple enough to be implemented in a spreadsheet. This is no longer true for other ML models, in particular for logistic regression. Here, the optimal parameter values are obtained by means of an **optimization algorithm**, which starts with a set of random values and changes these values in a sequence of steps or **iterations**, decreasing the loss at every step. The iterative process goes on until the loss falls below a certain **tolerance** or until a **maximum number of iterations** has been attained. Then we say that the process has achieved **convergence**. When the feature scales are diverse, this process is slower, and the number of iterations needed to converge is higher. We will see this in the examples.
 
 ## Classification in scikit-learn
 
