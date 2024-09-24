@@ -2,10 +2,12 @@
 
 ## Linear regression
 
-In machine learning, the term **regression** applies to the prediction of a numeric target ($Y$) in terms of a collection of features ($X_1, X_2, \dots, X_k$). In scikit-learn, the features must be numeric (or Boolean). We have already seen in the preceding lecture (ML-02) how to deal with categorical features. This will be illustrated in the example that follows (ML-04). 
+In machine learning, the term **regression** applies to the prediction of a numeric target ($Y$) in terms of a collection of features ($X_1, X_2, \dots, X_k$). In scikit-learn, the features must be numeric (or Boolean). We have already seen in lecture ML-02 how to deal with categorical features. This will be illustrated in example ML-04. 
 
 Regression models are not necessarily related to a mathematical equation, as in statistical analysis, although an equation is the first idea that comes to our mind as a potential  predictive model. When the model is based on a linear equation, such as
+
 $$Y = b_0 + b_1X_1 + b_2X_2 + \cdots + b_kX_k,$$
+
 we have **linear regression**. Statisticians call $b_0$ intercept and $b_1, b_2, \dots, b_k$ regression coefficients. In machine learning, the bias is usually called **bias**, while the regression coefficients are called **weights**.
 
 Though the predictions of a linear regression model can usually be improved with more advanced techniques, most analysts start there, because it helps them to understand the data. This may be interesting in some applications, in which the **interpretability** of the model is relevant. 
@@ -13,6 +15,7 @@ Though the predictions of a linear regression model can usually be improved with
 ## Prediction error
 
 In general, regression models are evaluated through their **prediction errors**. The basic schema is
+
 $$\textrm{Prediction\ error} = \textrm{Actual\ value} - \textrm{Predicted\ value}.$$
 
 In a linear regression context, prediction errors are called **residuals**. In the standard approach to linear regression, the regression coefficients are calculated so that the **mean squared error** (MSE) is minimum. This is called the **least squares method**. The errors of a linear equation obtained by means of the least squares method have an important property, that their sum is zero, which is no longer true in regression models obtained in other ways. 
