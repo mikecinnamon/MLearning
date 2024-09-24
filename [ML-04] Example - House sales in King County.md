@@ -56,15 +56,17 @@ Q4. Add a dummy for every zipcode to the feature collection and run the analysis
 
 ## Importing the data
 
-Although scikit-learn is described in the technical documentation as managing the data in NumPy array format, you can equally input data in Pandas format. Using Pandas format makes processing slower, but importing the data and adapting them for the learning process will be easier for you. Nevertheless, remember that, in machine learning, preprocessing is a previous step. The learning step is made when the data are already clean and prepared (no missing values, no duplicates, binary columns for every possible outcome of a categorical feature, etc)., so the Pandas tools are no longer needed. Nevertheless, even if scikit-learn estimators can take Pandas data containers, they always return NumPyarrays. 
+Although scikit-learn is described in the technical documentation as managing the data in NumPy array format, you can equally input data in Pandas format. Nevertheless, even if scikit-learn estimators can take Pandas data containers, they always return NumPy arrays. 
 
-We use here the Pandas function `read_csv()` to import the data. First, we import the package:
+Using Pandas format makes processing slower, but importing the data and adapting them for the learning process is easier. But, note that in machine learning preprocessing is a previous step. The learning step is made when the data are already clean and prepared (no missing values, no duplicates, binary columns for every possible outcome of a categorical feature, etc), so the Pandas tools are no longer needed. 
+
+We use here the Pandas function `read_csv()` to import the data. First, we import the Pandas library:
 
 ```
 In [1]: import pandas as pd
 ```
 
-The source file is stored in a GitHub repository, so we can use a remote path to get access.
+In the examples of this course, the source files are stored in a GitHub repository, so we can use a remote path to get access. The path will always the same.
 
 ```
 In [2]: path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
@@ -78,7 +80,7 @@ In [3]: df = pd.read_csv(path + 'king.csv', index_col=0)
 
 ## Exploring the data
 
-`df` is a Pandas data frame. A report of the content, printed by the method `.info()`, does not show anything wrong. Note that there are no **missing values**. Also, note that `id` is not among the columns of this data frame (it is the index).
+`df` is a Pandas data frame. A report of the content, printed by the method `.info()`, does not show anything wrong. Note that there are no **missing values**. Also, note that `id` is not one the columns of this data frame (it is the index).
 
 ```
 In [4]: df.info()
@@ -108,6 +110,7 @@ memory usage: 2.6+ MB
 
 A different view of the data is provided by the method `.head()`, which extracts the first (five) rows.
 
+```
 In [5]: df.head()
 Out[5]: 
                        date  zipcode      lat     long  bedrooms  bathrooms   
@@ -133,7 +136,7 @@ id
 5631500400          3      1933             0  180000  
 2487200875          5      1965             0  604000  
 1954400510          3      1987             0  510000  
-
+```
  
  We rescale the sale price to the thousands, to have simpler numbers. 
 
@@ -167,7 +170,7 @@ First, we import `matplotlib.pyplot`.
 In [8]: from matplotlib import pyplot as plt
 ```
 
-Now, we plot create the visualization. The size has been chosen for a good fit in a webpage. The argument `edgecolor='white'` creates the white lines separating the bars, which improves the visualization. The default of `plt.hist()` takes the same value for `color` and `edgecolor`. The final semicolon stops some irrelevant output to be printed.
+Now, we create the visualization. The size has been chosen for a good fit in a webpage. The argument `edgecolor='white'` creates the white lines separating the bars, which improves the visualization. The default of the function `hist()` takes the same value for both parameters `color` and `edgecolor`. The final semicolon stops some irrelevant output to be printed.
 
 ```
 In [9]: plt.figure(figsize=(7,5))
@@ -199,7 +202,7 @@ We create an instance of this class, calling it `reg`, to remind us of the job i
 In [12]: reg = LinearRegression()
 ```
 
-The method `.fit()` calculates the optimal equation, that is, the bias and the weights for which the **loss** is minimum. Since we are using the default of `LinearRegression()`, which is **least squares** regression, the loss function is the MSE (mean squared error).
+The method `.fit()` calculates the optimal equation, that is, the parameter values for which the **loss** is minimum. Since we are using the default of `LinearRegression()`, which is **least squares** regression, the loss function is the MSE (mean squared error).
 
 ```
 In [13]: reg.fit(X, y)
@@ -272,7 +275,7 @@ To create the dummies, we use the Pandas function `get_dummies()`, which returns
 In [20]: X2 = pd.get_dummies(df['zipcode'])
 ```
 
-Now, `X2` has 70 columns (as many as different zipcodes in the data set). The column names are the zipcode values. The advantage of `get_dummies()`, versus an alternative system included in scikit-learn, is that the columns have names, so you know what is what. The drawback is that, when a categorical feature is numeric, the column names are numbers, which is not accepted by scikit-learn. We will handle this below.
+Now, `X2` has 70 columns (as many as different zipcodes in the data set). The column names are the zipcode values. With `get_dummies()`, the dummy columns get names, so you know what is what. The drawback is that, when a categorical feature is numeric, the column names are numbers, which is not accepted by scikit-learn. We will handle this below.
 
 ```
 In [21]: X2.head()
@@ -366,10 +369,10 @@ Out[29]: 16
 
 1. The role of longitude and latitude in the prediction of real estate prices is unclear. Do they really contribute to get better predictions in the first model of this example? If we keep them in the second model, do we get a better model? 
 
-2. Evaluate in dollar terms the predictive performance of the two models presented in this example. For instance, you can use the mean (or median) absolute error. Can you make a statement like "the value of *x*% of the houses can be predicted with an error below *y* thousand dollars"?
+2. Evaluate in dollar terms the predictive performance of the two models presented in this example. For instance, you can use the mean (or median) absolute error. Setting a threshold which makes sense for housing prices (such as $100,000, or $200,000), can you make a statement about the percentage of houses whose price can be predicted with an error below the threshold?
 
-3. Is it better to use the percentage error in the above assessment?
+3. Is it better to use the percentage error in the above assessment? Setting the threshold in percentage terms, can you make a statement about the percentage of houses with a prediction error below the threshold?
 
-4. Can the strong correlation be an artifact created by the extreme values? Trim the data set, dropping the houses beyond a certain threshold of price and/or size. Do you get a better model?
+4. Can the strong correlation obtained for the models of this example be an artifact created by the extreme values? Trim the data set, dropping the houses beyond a certain threshold of price and/or size. Do you get a better model?
 
 5. The distribution of the price is quite skewed, which is a fact of life in real state. The extreme values in the right tail of the distribution can exert an undesired influence on the regression coefficients. Develop and evaluate a model for predicting the price that is based on a linear regression equation which has the logarithm of the price on the left side. 
