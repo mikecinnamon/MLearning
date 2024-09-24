@@ -6,15 +6,15 @@ The objective of **artificial intelligence** (AI) is create agents that perform 
 
 **Machine learning** (ML) takes place when the AI agent learns from data how to perform its task. We operationalize the learning process as follows. We design a **model**, which can be as simple as a single equation, or as complex as **GPT-4**. This model has a set of **parameters**. The number of parameters can be high (GPT-4 is said to have 1.76 trillion parameters), so it is often unclear what their specific role is. Then the learning process consists in using the data to find the **optimal values** for the parameters. 
 
-Instead of talking about "learning", a statistician would say that he is **fitting** the model to the data, or **estimating** the parameters of the model. This terminology is used in the Python package that we will use in the first part of this course, **scikit-learn**. 
+Instead of talking about "learning", a statistician would say that he is **fitting** the model to the data, or **estimating** the parameters of the model. This terminology is used in the Python library that we will use in the first part of this course, **scikit-learn**. 
 
 Finding the optimal parameter values is also called **training**. The data used for training the model are then the **training data**. A major issue with training a model is that the parameter values that are optimal on the training data may be suboptimal on data that have not been involved in the training, so that the model underperforms in real applications. This is the **overfitting** problem.
 
-To assess the potential overfitting, the model is tested on different data, which are then called **test data**. This is **model validation**. Validation is needed for models whose complexity allows them to overfit the data. Overfitting is a fact of life for many machine learning algorithms, *e.g*. for those used to develop **neural network models**. So, validation is integrated in the learning process of those models.
+To assess the potential overfitting, the model is tested on different data, which are then called **test data**. This is **model validation**. Validation is needed for models whose complexity allows them to overfit the data. Overfitting is a fact of life for many machine learning algorithms, *e.g*. for those used to develop **neural network models**. So, validation is integrated in the learning process for these models.
 
 ## Supervised and unsupervised learning
 
-In machine learning, based on the structure of the data used in the training process, it is usual to distinguish between supervised and unsupervised learning. Roughly speaking, **supervised learning** is what the statisticians call prediction, that is, the description of one variable ($Y$), in terms of other variables (the $X$'s). In the ML context, $Y$ is called the **target**, and the $X$'s are called **features**. The units (they can be customers, products, etc) on which the features and the target are observed are called **samples** (this term has a different meaning in statistics).
+In machine learning, it is usual to distinguish between supervised and unsupervised learning. Roughly speaking, **supervised learning** is what the statisticians call prediction, that is, the description of one variable ($Y$) in terms of other variables (the $X$'s). In the ML context, $Y$ is called the **target**, and the $X$'s are called the **features**. The units (they can be customers, products, etc) on which the features and the target are observed are called **samples** (this term has a different meaning in statistics).
 
 The term **regression** applies to the prediction of a (more or less continuous) numeric target, and the term **classification** to the prediction of a categorical target. In **binary classification**, there are only two target values or **classes**, while, in **multi-class classification**, there can be three or more. A **classifier**, or classification model, predicts a probability for every class.
 
@@ -26,7 +26,7 @@ In **unsupervised leaning**, there is no target to be predicted (only $X$'s). Th
 
 In a classification context, distinction is frequently made between labeled and unlabeled data. The **labels** are the target values. With labeled data, one takes a supervised learning approach and, with unlabeled data, an unsupervised learning approach. For instance, in image classification, the data ususally consist in a set of pictures. The pictures can be human-labeled, which makes the training data more expensive, or unlabeled.
 
-In-between supervised and unsupervised learning, we have **semi-supervised learning**, which combines supervised and unsupervised learning, requiring only a small portion of the learning data be labeled. An alternative approach is **self-supervised learning**, which uses only unlabeled data. A well known example of self-supervised learning is Google's **word2vec**, a technique which learns word associations to generate a representation of words as vectors in a multidimensional space. This representation, called **embedding**, can be used later in a supervised learning process.
+In-between supervised and unsupervised learning, we have **semi-supervised learning**, which combines supervised and unsupervised learning, requiring only a small portion of the learning data be labeled. An alternative approach is **self-supervised learning**, which uses only unlabeled data. A well known example of self-supervised learning is Google's **Word2Vec**, a technique which learns word associations to generate a representation of words as vectors in a multidimensional space. This representation, called **embedding**, can be used later in a supervised learning process.
 
 From the point of view of the practical implementation, we can also distinguish between batch and on-line learning. In **batch learning**, the model is trained and tested on given data sets and applied for some time without modification. In **on-line training**, it is continuously retrained with the incoming data. The choice between batch and continuous learning depends on practical issues, rather than on theoretical arguments.
 
@@ -38,9 +38,9 @@ In reinforcement learning, an AI agent takes actions or make decisions in a cert
 
 ## Generative AI
 
-The term **generative** is used, in this context, for models that generate new data. This could be pictures with nobody's faces, fake videos or the text outputted by the popular **ChatGPT**. Generative AI models use techniques, which are very close to supervised learning, to identify the patterns within existing data, *i.e*. for an unsupervised learning task. These patterns can then be used to generate new and original content. 
+The term **generative** is used, in this context, for models that generate new data. These could be pictures with nobody's faces, fake videos or the text outputted by the popular **ChatGPT**. Generative AI models use techniques, which are very close to supervised learning, to identify the patterns within existing data, *i.e*. for an unsupervised learning task. These patterns can then be used to generate new and original content. 
 
-The impact of generative AI (when this is written) is difficult to assess right now, but it is going to be relevant, since some generative models, called **large language models** have been found to be able to carry out unexpected tasks. For instance, **GitHub Copilot** can write code in many languages, which has changed completely coding practices.
+The impact of generative AI is difficult to assess right now, but it is going to be relevant, since some generative models, called **large language models** have been found to be able to carry out unexpected tasks. For instance, **GitHub Copilot** can write code in many languages, which has changed completely coding practices.
 
 
 ## References
