@@ -34,7 +34,7 @@ Language models were oriented, during many years, to perform specific tasks. The
 
 ## What are large language models?
 
-Large language models are not only large (they often go beyond 1B parameters), but a new generation of neural network models. They are based on a novel architecture, the **transformer**, published in 2016. LLM's can be used directly, or taken as **pre-trained model** for transfer learning, which in this context is called **fine-tuning**. Transfer learning is very common in LLM's. The original pre-trained models are called **foundation models**, and the task for which they are fine-tuned is called the **downstream task**.
+Large language models are not only large (they often go beyond 1B parameters), but a new generation of neural network models. They are based on a novel architecture, the **transformer**, published in 2017. LLM's can be used directly, or taken as **pre-trained model** for transfer learning, which in this context is called **fine-tuning**. Transfer learning is very common in LLM's. The original pre-trained models are called **foundation models**, and the task for which they are fine-tuned is called the **downstream task**.
 
 There are just a few relevant foundation models, but thousands of fine-tuned versions of them. You can find most of these in Hugging Face. The two classics are **BERT** (Bidirectional Encoder Representations from Transformers), developd by Google, and **GPT** (Generative Pre-trained Transformer), developed by OpenAI. 
 
