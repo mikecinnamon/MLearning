@@ -4,7 +4,7 @@
 
 The term **churn** is used in marketing to refer to a customer leaving the company in favor of a competitor. Churning is a common concern of **Customer Relationship Management** (CRM). A key step in proactive churn management is to predict whether a customer is likely to churn, since an early detection of the potential churners helps to plan the retention campaigns.
 
-This example deals with a churn model based on a **logistic regression model**, for a company called *Omicron Mobile*, which provides mobile phone services. The data set is based on a random sample of 5,000 customers whose accounts were still alive by September 30, and have been monitored during the fourth quarter. 968 of those customers churned during the fourth quarter, a **churning rate** of 19.4%.
+This example presents a churn model based on a **logistic regression model**, for a company called *Omicron Mobile*, which provides mobile phone services. The data set is based on a random sample of 5,000 customers whose accounts were still alive by September 30, and have been monitored during the fourth quarter. 968 of those customers churned during the fourth quarter, a **churning rate** of 19.4%.
 
 ## The data set
 
@@ -58,7 +58,7 @@ As in the preceding example, we use the Pandas funcion `read_csv()` to import th
 In [1]: import pandas as pd
    ...: path = 'https://raw.githubusercontent.com/cinnData/MLearning/main/Data/'
    ...: df = pd.read_csv(path + 'churn.csv', index_col=0)
-````
+```
 
 ## Exploring the data
 
@@ -90,14 +90,14 @@ memory usage: 546.9+ KB
 
 ## Q1. Logistic regression model
 
-We use scikit-learn to obtain our logistic regression model, so we start by creating a **target vector** and a **feature matrix**. Here, the target vector is the last column (`churn`), and the feature matrix is made of the other columns.
+We use scikit-learn to obtain our logistic regression model. We start by creating a **target vector** and a **feature matrix**. The target vector is the last column (`churn`), and the feature matrix is made of the other columns.
 
 ```
 In [3]: y = df['churn']
    ...: X = df.drop(columns='churn')
 ```
 
-Alternatively, we could have used `.iloc` specifications here. Now, we import the **estimator class** `LogisticRegression()` from the scikit-learn subpackage `linear_model`. We instantiate an estimator from this class, calling it `clf`. Instead of accepting the default parameter values, as we did in example ML-04, we increase the **maximum number of iterations**. Using the default `max_iter=100` would have raised a warning indicating that the optimization process has not converged.
+Alternatively, we could have used `.iloc` specifications here. Next, we import the **estimator class** `LogisticRegression()` from the scikit-learn subpackage `linear_model`, instantiating an estimator from this class, which we calling `clf` (to remind us that it is a classifier). Instead of accepting the default parameter values, as we did in example ML-04, we increase the **maximum number of iterations**. Using the default `max_iter=100` would have raised a warning indicating that the optimization process has not converged.
 
 ```
 In [4]: from sklearn.linear_model import LogisticRegression
@@ -118,13 +118,13 @@ In [6]: clf.score(X, y).round(3)
 Out[6]: 0.842
 ```
 
-84.2% of rigth prediction may look like an achievement, but it is not so in this case, since the data show **class imbalance**. With only 19.4% positive cases, 80.6% accuracy can be obtained in a trivial way. So let us take a closer look at the performance of this model.
+At first sight, 84.2% of rigth prediction may look like a feat, but not so if we take into account, the degree of **class imbalance** in these data. With only 19.4% positive cases, 80.6% accuracy can be obtained in a trivial way. So let us take a closer look at the performance of this model.
 
 As given by the method `.predict(), the `**predicted target values** are obtained as follows:
 
-* A **class probability** is calculated for each target value. In this example, this means two complementary probabilities, one for churning (`y == 1`) and one for not churning (`y == 0`). These probabilities can be extracted with the method `.predict_proba()`.
+* **Class probabilities** are calculated for each training unit. In this example, this means two complementary probabilities, one for churning (`y == 1`) and one for not churning (`y == 0`). These probabilities can be extracted with the method `.predict_proba()`.
 
-* For every sample, the predicted target value is the one with higher probability. In scikit-learn, the class probabilities are extracted as:
+* For every unit, the predicted target value is the one with higher probability. In scikit-learn, the class probabilities are extracted as:
 
 ```
 In [7]: clf.predict_proba(X)
@@ -139,9 +139,7 @@ array([[0.95309927, 0.04690073],
 
 ```
 
-Mind that Python orders the target values alphabetically. In the binary case, thie means that the negative class comes first. 
-
-In binary classification, the probability of the positive class is taken as a **predictive score** (as in credit scoring). Then the predicted class is chosen based on a **threshold value**: the predicted class is positive when the score exceeds the threshold, and negative otherwise. 
+Mind that Python sorts the classes alphabetically. In the binary case, this means that the negative class comes first. The probability of the positive class is taken as a **predictive score** (as in credit scoring). Then the predicted class is chosen based on a **threshold value**: the predicted class is positive when the score exceeds the threshold, and negative otherwise. 
 
 The scores are extracted as:
 
@@ -149,7 +147,7 @@ The scores are extracted as:
 In 8]: df['score'] = clf.predict_proba(X)[:, 1]
 ```
 
-Note that we have added the scores as a column to our data set, which is just an option, since we can manage it as a separate vector. The actual class and the predictive score are now the last two columns in `df`.
+Note that we have added the scores as a column to our data set, which is just an option, since we can also manage it as a separate vector. The actual class and the predictive score are now the last two columns in `df`.
 
 ```
 In [9]: df[['churn', 'score']]
@@ -173,7 +171,7 @@ id
 
 ## Q2. Distribution of the churn scores
 
-We can take a look at the distribution of the predictive scores through a histogram. In this case, we plot separately the scores for the churners (968) and the non-churners (4,032) groups.
+We can visualize the distribution of the predictive scores through a histogram. In this case, we plot separately the scores for the churners (968) and the non-churners (4,032).
 
 We import `matplotlib.pyplot` as usual:
 
@@ -181,7 +179,7 @@ We import `matplotlib.pyplot` as usual:
 In [10]: from matplotlib import pyplot as plt
 ```
 
-You can find see in `In [11]` a code chunk for plotting the two histograms side-by-side. The `plt.figure()` line specifies the total size of the figure. Then, `plt.subplot(1, 2, 1)` and `plt.subplot(1, 2, 2)` start the two parts of this chunk, one for each subplot. These parts are easy to read after our previous experience with the histogram in the preceding example (ML-04). The argument `range=(0,1)` is used to get intervals of length 0.1 (the default is `bins=10`), which are easier to read. The argument `edgecolor=white` improves the picture. 
+You can find see in `In [11]` a code chunk for plotting the two histograms side-by-side. The `plt.figure()` line specifies the total size of the figure. Then, `plt.subplot(1, 2, 1)` and `plt.subplot(1, 2, 2)` start the two parts of this chunk, one for each subplot. These parts are easy to read after our previous experience with the histogram in example ML-04. The argument `range=(0,1)` is used to get intervals of length 0.1 (the default of ´hist()´ split the range of the data in 10 intervals), which are easier to read. The argument `edgecolor=white` improves the picture. 
 
 Note that `plt.subplot(1, 2, i)` refers to the $i$-th subplot in a grid of one row and two columns. The subplots are ordered by row, from left to righ and from top to bottom.
 
@@ -202,19 +200,19 @@ In [11]: # Set the size of the figure
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/06-1.png)
 
-You can now imagine the cutoff as a vertical line, and move it, right or left from the default threshold 0.5. The customers falling on the right of that vertical line would be classified as positive, and those falling on the left as negative.
+You can now imagine the threshold as a vertical line, and move it, right or left from the default threshold value 0.5. The customers falling on the right of that vertical line would be classified as positive, and those falling on the left as negative.
 
 ## Q3. Set a threshold for the churn scores
 
-The default threshold, used by the method `.predict()`, is 0.5. The class predicted with this threshold can be obtained as:
+The method `.predict()` uses the default threshold. The predicted class can be obtained as:
 
 ```
 In [12]: y_pred = clf.predict(X)
 ```
 
-It is plainly seen, in Figure 1.a, that, with this threshold, we are missing more than one half of the churners. So, in spite of its accuracy, our model would not be adequate for the actual business application. 
+It is plainly seen in Figure 1.a, that, in this way, we are missing more than one half of the churners. So, in spite of its accuracy, our model would not be adequate for the actual business application. 
 
-The **confusion matrix** resulting from the cross tabulation of the actual and the predicted target values, confirms this visual intuition. Confusion matrices can be obtained in many ways. For instance, with the function `confusion_matrix` of the scikit-learn subpackage `metrics`:
+The **confusion matrix**, resulting from the cross tabulation of the actual and the predicted target values, confirms this visual intuition. Confusion matrices can be obtained in many ways. For instance, with the function `confusion_matrix` of the scikit-learn subpackage `metrics`:
 
 ```
 In [13]: from sklearn.metrics import confusion_matrix
@@ -271,8 +269,10 @@ Out[19]: 0.215
 
 ### Homework
 
-1. There is no formula to calculate the optimal parameter values of a logistic regression model, as it happens with linear regression. So, the best thing you can get is an approximation to the optimal values by means of an iterative method, which is called the **solver**. There are many options for the solver, and we have used here the scikit-learn default, to make it simple. But it turns out that the default maximum number of **iterations** is not enough in many cases and you get a warning from Python. To grasp this point, try different values for `max_iter` in the specification of the `LogisticRegression()`. Examine how the maximum number of iterations affects the model accuracy in this case.
+1. In this data set, we find a mix of scales that can be visualized with the method ´.describe()´. This slowns down convergence in the  method `.fit()`, so we had the increase the parameter `max_iter`. This is not relevant in a model as simple as the one used in this example, but it will be in the complex that will appear later in this course. Try different values for `max_iter` in the specification of the `LogisticRegression()` and examine how the maximum number of iterations affects the model accuracy in this case.
 
-2. Assume that the Omicron management plans to offer a **20% discount** to the customers that the model classifies as potential churners, and that this offer is going to have a 100% success, so the company will retain all the churners detected. Evaluate the benefit produced by this **retention policy** with the two models presented in this example.
+2. Rescale all the features which are not dummies and train the logistic regression classifier with the deafult number of iterations. Do you get a warning about non-convergence now?
 
-3. Define a Python function which gives the benefit in terms of the threshold and find an **optimal threshold** for this retention policy.
+3. Assume that the Omicron management plans to offer a **20% discount** to the customers that the model classifies as potential churners, and that this offer is going to have a 100% success, so the company will retain all the churners detected. Evaluate the benefit produced by this **retention policy** with the two models presented in this example.
+
+4. Define a Python function which gives the benefit in terms of the threshold and find an **optimal threshold** for this retention policy.
