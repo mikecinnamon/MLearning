@@ -269,7 +269,7 @@ Out[19]: 0.215
 
 ### Homework
 
-1. In this data set, we find a mix of scales that can be visualized with the method ´.describe()´. This slowns down convergence in the  method `.fit()`, so we had the increase the parameter `max_iter`. This is not relevant in a model as simple as the one used in this example, but it will be in the complex that will appear later in this course. Try different values for `max_iter` in the specification of the `LogisticRegression()` and examine how the maximum number of iterations affects the model accuracy in this case.
+1. In this data set, we find a mix of scales that can be visualized with the method `.describe()`. This slowns down convergence in the  method `.fit()`, so we had the increase the parameter `max_iter`. This is not relevant in a model as simple as the one used in this example, but it will be in the complex that will appear later in this course. Try different values for `max_iter` in the specification of the `LogisticRegression()` and examine how the maximum number of iterations affects the model accuracy in this case.
 
 2. Rescale all the features which are not dummies and train the logistic regression classifier with the deafult number of iterations. Do you get a warning about non-convergence now?
 
