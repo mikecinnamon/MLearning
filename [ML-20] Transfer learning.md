@@ -12,7 +12,7 @@ Transfer learning has two components:
 
 * The new data. These data have to be specific of the new task, called the **downstream task**.
 
-Transfer learning makes a difference because, when training a neural network model from scratch, we start with random parameter values. These initial values don't make any sense for the task on which we are training the model. Starting with the parameter values learned in a previous training, we are much closer to the optimal values.
+When can transfer learning help you? Whenyou find a pre-trained model with the same kind of inputs, and there is a commonality in the tasks of the two models. It makes a difference because, when training a neural network model from scratch, we start with random parameter values. These initial values don't make any sense for the task on which we are training the model. Starting with the parameter values learned in a previous training, we are much closer to the optimal values. 
 
 ## Sources of pre-trained models
 
