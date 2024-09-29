@@ -271,8 +271,8 @@ Out[19]: 0.215
 
 1. In this data set, we find a mix of scales that can be visualized with the method `.describe()`. This slowns down convergence in the  method `.fit()`, so we had the increase the parameter `max_iter`. This is not relevant in a model as simple as the one used in this example, but it will be in the complex that will appear later in this course. Try different values for `max_iter` in the specification of the `LogisticRegression()` and examine how the maximum number of iterations affects the model accuracy in this case.
 
-2. Rescale all the features which are not dummies and train the logistic regression classifier with the deafult number of iterations. Do you get a warning about non-convergence now?
+2. Rescale all the features that are not dummies and train the logistic regression classifier with the default number of iterations. Do you get a warning about non-convergence now?
 
 3. Assume that the Omicron management plans to offer a **20% discount** to the customers that the model classifies as potential churners, and that this offer is going to have a 100% success, so the company will retain all the churners detected. Evaluate the benefit produced by this **retention policy** with the two models presented in this example.
 
-4. Define a Python function which gives the benefit in terms of the threshold and find an **optimal threshold** for this retention policy.
+4. Write a Python function which gives the benefit in terms of the threshold and find an **optimal threshold** for this retention policy.
