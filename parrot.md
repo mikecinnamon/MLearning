@@ -1,0 +1,1 @@
+I'm happy for him and his wife and I will see him in a couple of days I just want you know I am so sorry I can't do anything for him but I'm so glad you got your shot I know that he is very much appreciated I hope he is feeling well I hope he is very proud
