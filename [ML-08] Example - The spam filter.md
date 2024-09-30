@@ -2,13 +2,13 @@
 
 ## Introduction
 
-A **spam filter** is an algorithm which classifies e-mail messages as either spam or non-spam, based on a collection of **numeric features** such as the frequency of certain words or characters. In a spam filter, the **false positive rate**, that is, the proportion of non-spam messages wrongly classified as spam, must be very low.
+A **spam filter** is an AI agent which classifies e-mail messages as either spam or non-spam, based on a collection of **numeric features** such as the frequency of certain words or characters. In a spam filter, the **false positive rate**, that is, the proportion of non-spam messages wrongly classified as spam, must be very low.
+
+Data for trainimng a spam filter were gathered at Hewlett-Packard by merging: (a) a collection of spam e-mail from the company postmaster and the individuals who had filed spam, and (b) a collection of non-spam e-mail, extracted from filed work and personal e-mail. The proportions of spam and legal e-mail in this data set were arbitrary, not based in the proportions found in the real world.
 
 ## The data set
 
-The file `spam.csv` contains data on 4,601 e-mail messages. Among these messages, 1,813 have been classified as spam. The data were gathered at Hewlett-Packard by merging: (a) a collection of spam e-mail from the company postmaster and the individuals who had filed spam, and (b) a collection of non-spam e-mail, extracted from filed work and personal e-mail.
-
-Every row in the data set corresponds to an e-mail message. The columns are:
+The file `spam.csv` contains data on 4,601 e-mail messages. Among these messages, 1,813 have been classified as spam. Every row in the data set corresponds to an e-mail message. The columns are:
 
 * 48 numeric features whose names start with `word_`, followed by a word. They indicate the frequency, in percentage scale, with which that word appears in the message. Example: for a particular message, a value 0.21 for `word_make` means that 0.21% of the words in the message match the word 'make'.
 
@@ -16,7 +16,7 @@ Every row in the data set corresponds to an e-mail message. The columns are:
 
 * A dummy indicating whether that e-mail message is spam (`spam`).
 
-Source: Hewlett-Packard. Taken from T Hastie, R Tibshirani & JH Friedman (2001), *The Elements of Statistical Learning*, Springer.
+Source: T Hastie, R Tibshirani & JH Friedman (2001), *The Elements of Statistical Learning*, Springer.
 
 ## Questions
 
@@ -49,7 +49,7 @@ In [2]: df.shape
 Out[2]: (4601, 52)
 ```
 
-We also take a look at the first rows (of some columns),with the method `.head()`. 
+We also take a look at the first rows (of some columns), with the method `.head()`. 
 
 ```
 In [3]: df.head()
@@ -84,7 +84,7 @@ Out[3]:
 
 [5 rows x 52 columns]
 ```
-Everything looks right. We also check the **spam rate** in this data set, which agrees with the description (1,813/4,601).
+Everything looks right. We also check the **spam rate** in this data set, which agrees with the description (1,813/4,601). Note that this spam rate is not representative of the actual spam activity at the company.
 
 ```
 In [4]: df['spam'].mean().round(3)
@@ -108,13 +108,13 @@ To develop a decision tree classifier, we use the **estimator class** `DecisionT
 In [6]: from sklearn.tree import DecisionTreeClassifier
 ```
 
-We instantiate a first estimator from this class, setting `max_depth=2`, which limits the **depth**, that is, the length of the longest branch of the tree. As explained in lecture ML-08, we use the **cross-entropy** loss function. This is set with the argument `criterion='entropy'` (not the default). 
+We instantiate a first estimator from this class, setting `max_depth=2`, which limits the **depth**, that is, the length of the longest branch of the tree. As explained in lecture ML-07, we use the **cross-entropy** loss function. This, which is not the default, is specified with the argument `criterion='entropy'`. 
 
 ```
 In [7]: clf1 = DecisionTreeClassifier(criterion='entropy', max_depth=2)
 ```
 
-The method `.fit()` finds the optimal tree under this specification. This tree can be seen at Figure 2 of lecture ML-08. It has four leaves and uses only three of the 51 features available.
+The method `.fit()` finds the optimal decision tree under this specification. Figure 2 in lecture ML-07 is a visualization of this tree. It has four leaves and uses only three of the 51 features available.
 
 ```
 In [8]: clf1.fit(X, y)
@@ -128,7 +128,7 @@ In [9]: clf1.score(X, y).round(3)
 Out[9]: 0.834
 ```
 
-83.4% accuracy looks promising for a spam filter, but we have been warned about the false positive rate. Also, we know that the training data are a mix of spam and legal mail in arbitrary proportions. Therefore, this 83.4% does not apply to the real world, it is just a weighted average of the accuracy of the model with spam mail and the accuracy with legal mail, but with arbitray weights. 
+83.4% accuracy looks promising for a spam filter, but we have been warned about the false positive rate. Also, we know that the training data are a mix of spam and legal mail in arbitrary proportions. Therefore, this 83.4% does not apply to the real world, it is just a weighted average of the accuracy of the model with spam mail and the accuracy with legal mail, but with arbitrary weights. 
 
 So, we take a closer look at the predictions of this model, by means of the **confusion matrix**. First, we extract a vector with the predicted class, with the method `.predict()`.
 
@@ -168,7 +168,7 @@ In [13]: clf2 = DecisionTreeClassifier(criterion='entropy', max_depth=3)
 Out[13]: DecisionTreeClassifier(criterion='entropy', max_depth=3)
 ```
 
-Right now, we have two estimators from the class `DecisionTreeClassifier()` , namely `clf1` and `clf2`, both fitted to our training data. Alternatively, we could have continued with `clf1`, setting `clf1.max_depth = 3`. Anyway, don't forget that, every time you refit a model, the previous results are wiped off.
+Right now, we have two estimators from the class `DecisionTreeClassifier()`, namely `clf1` and `clf2`, both trained on our data. Alternatively, we could have retrained `clf1`, setting `clf1.max_depth = 3`. Anyway, don't forget that, every time you refit a scikit-learn estimator, the previous results are wiped off.
 
 The confusion matrix gets better, specially the false negatives:
 
@@ -190,11 +190,11 @@ In [15]: tp2 = conf2[1, 1]/sum(conf2[1, :])
 Out[15]: (0.691, 0.054)
 ```
 
-The additional branching has, at most, added four decision nodes, so this decision tree may be using seven features, out of the fifty-odd available features. To address question Q3, we allow the tree some extra growth.
+The additional branching has, at most, added four decision nodes, so this decision tree may be using, at most, seven different features, out of the fifty-odd available features.
 
 ## Q3. Decision tree classifier (max depth = 4)
 
-We fit a new decision tree classifier, with `max_depth=4`.
+To address question Q3, we allow the tree some extra growth. So, we set now `max_depth=4`.
 
 ```
 In [16]: clf3 = DecisionTreeClassifier(criterion='entropy', max_depth=4)
@@ -213,7 +213,7 @@ array([[2627,  161],
        [ 341, 1472]])
 ```
 
-Though the true positive rate is getting attractive, the false positive rate is too high. This tree may be using 15 features.
+Though the true positive rate is getting attractive, the false positive rate is still too high. This tree may be using 15 features.
 
 ```
 In [18]: tp3 = conf3[1, 1]/sum(conf3[1, :])
@@ -224,7 +224,7 @@ Out[18]: (0.883, 0.109)
 
 ## Q4. Decision tree classifier (max depth = 5)
 
-In a final assault, we fit a new decision tree classifier, with `max_depth=5`.
+In a final assault, we train a new decision tree classifier, with `max_depth=5`.
 
 ```
 In [19]: clf4 = DecisionTreeClassifier(criterion='entropy', max_depth=5)
@@ -243,7 +243,7 @@ array([[2630,  158],
        [ 289, 1524]])
 ```
 
-Now, the false positive rate gets better, while the true positive rate remains acceptable. We stop here, leaving another approach for the homework section.
+Now, the false positive rate gets better, while the true positive rate remains acceptable. We stop here, leaving an alternative approach for the homework section.
 
 ```
 In [21]: tp4 = conf4[1, 1]/sum(conf4[1, :])
@@ -254,7 +254,7 @@ Out[21]: (0.841, 0.057)
 
 ## Q5. Feature relevance
 
-One of the most attractive traits of the algorithm used in scikit-learn for training a decision tree model is that it produces, as a by-product, a ranking of the features by their contribution to the predictive power of the model (more specifically, for the reduction of the loss). In scikit-learn, this is the estimator's attribute `.feature_importances_`. It is extracted as a 1D array, in which each term is the **importance** of one of the features. The importance is measured as the **percentage of loss reduction** due to the splits in which the feature is involved. Zero importance means that the corresponding feature is not involved in any split, so it is not used by the decision tree.
+One of the most attractive traits of the algorithm used in scikit-learn for training a decision tree model is that it produces, as a by-product, a ranking of the features by their contribution to the predictive power of the model (more specifically, for the reduction of the loss). In scikit-learn, this is the attribute `.feature_importances_`. It is extracted as a 1D array, in which each term is the **importance** of one of the features. The importance is measured as the **percentage of loss reduction** due to the splits in which the feature is involved. Zero importance means that the corresponding feature is not involved in any split, so it is not used by the decision tree.
 
 We take a look at feature importance in the biggest of our trees. In spite of the allowance for depth 5, only 15 features are involved in the splits. 
 
@@ -305,8 +305,6 @@ dtype: float64
 
 ## Homework
 
-1. Train a **logistic regression** classifier with the data from the file `spam.csv` and compare its performance to the classifiers developed in this example.
+1. Train a **logistic regression** classifier on the data of this example and compare its performance to that of the classifiers presented.
 
-2. Change the features matrix by: (a) dropping the three `cap_` variables and (b) **binarizing** all the `word_` variables, transforming every column into a dummy for the occurrence of the corresponding word, taking value 1 if the word occurs in the message and 0 otherwise. Based on this new features matrix, develop two spam filters, one based on a logistic regression model and the other one based on a decision tree model, using the binarized data set.
-
-3. Evaluate these classifiers based on their respective confusion matrices.
+2. Change the features matrix by: (a) dropping the three `cap_` features and (b) **binarizing** all the `word_` features, transforming every column into a dummy for the occurrence of the corresponding word, taking value 1 if the word occurs in the message and 0 otherwise. Based on this new features matrix, train two new spam filters, one based on a logistic regression model and the other one based on a decision tree model, using the binarized data set. Evaluate these classifiers based on their respective confusion matrices and compare all the available filters.
