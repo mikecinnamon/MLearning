@@ -2,13 +2,13 @@
 
 ## What is a decision tree?
 
-A **decision tree** is a collection of **decision nodes**, connected by branches, extending downwards from the **root node**, until terminating in the **leaf nodes**. The usual graphical representation of a decision tree puts the root on top and the leaves at the bottom, as in Figures 1 and 2, which have been created with a scikit-learn function.
+A **decision tree** is a collection of **decision nodes**, connected by branches, extending downwards from the **root node**, until terminating in the **leaf nodes**. The usual visualization of a decision tree puts the root on top and the leaves at the bottom, as in Figures 1 and 2, which have been created with the scikit-learn function `plot_tree`.
 
 Decision trees can be used for both regression and classification purposes. A decision tree creates a partition of the data set into a collection of subsets, one for each leaf. In a predictive model based on a decision tree, the predicted target value is the same for all the data units of the same leaf. More specifically:
 
 * In a **decision tree regressor**, the predicted target value is the average target value in that leaf. 
 
-* In a **decision tree classifier**, the predicted probability class is the proportion of that class in the leaf. Under the **default prediction rule**, the predicted class is the one that occurs more frequently in that leaf.
+* In a **decision tree classifier**, a predicted probability class is the proportion of that class in the leaf. Under the **default prediction rule**, the predicted class is the one that occurs more frequently in that leaf.
 
 ## Decision trees in scikit-learn
 
@@ -23,11 +23,11 @@ Figure 1 shows a decision tree regressor, developed to predict the price of a ho
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/07-2.png)
 
-In a decision tree classifier, the default loss function is **Gini impurity measure**. Nevertheless, to present a more consistent approach to classification models along this course, we use everywhere the **average cross-entropy**, which in the class `DecisionTreeClassifier()` is specified with the argument `criterion='entropy'`). Figure 2 shows a decision tree intended to be used in a spam filter (example ML-08). At every leaf, you find the number of units (`samples`), the average cross-entropy (`entropy`) and the number of negative and positive units (in alphabetical order, so negative first) in that leaf. The predicted class probabilities in each leaf are the class proportions. In a binary setting, we can say that the predicted score for a data unit is the proportion of positive units in the leaf where that unit is. The tree is optimal in the sense that the overall average cross-entropy (the weighted average of the cross-entropies at the leaf nodes) is minimum.
+In scikit-learn decision tree classifiers, the default loss function is **Gini impurity measure**. Nevertheless, to present a more consistent approach to classification models along this course, we use everywhere the **average cross-entropy**, which, in the class `DecisionTreeClassifier()`, is specified with the argument `criterion='entropy'`. Figure 2 shows a decision tree intended to be used in a spam filter (example ML-08). At every leaf, you find the number of units (`samples`), the average cross-entropy (`entropy`) and the number of negative and positive units (in alphabetical order, so negative first) in that leaf. As the predicted class probabilities in a leaf, the model takes the class proportions in that leaf. In a binary setting, we can say that the predicted score for a data unit is the proportion of positive units in the leaf where that unit falls. The tree is optimal in the sense that the overall average cross-entropy (the weighted average of the cross-entropies at the leaf nodes) is minimum.
 
 ## Controlling the growth of the tree
 
-Predictive models based on decision trees are prone to **overfitting**. Even with a moderate number of features, a tree whose growth is not stopped can lead to a complex model with overfitting problems. In scikit-learn, the classes `DecisionTreeRegressor()` and `DecisionTreeClassifier()` have many parameters for controlling the growth of the tree: `max_depth`, `max_leaf_nodes`, `min_samples_split`, `min_samples_leaf`, `min_impurity_decrease`, etc. Only the first two will appear in these course:
+The predictive models based on decision trees are prone to **overfitting**. Even with a moderate number of features, a tree model whose growth is not stopped can lead to a complex model with overfitting problems. In scikit-learn, the classes `DecisionTreeRegressor()` and `DecisionTreeClassifier()` have several parameters for controlling the growth of the tree: `max_depth`, `max_leaf_nodes`, `min_samples_split`, `min_samples_leaf`, `min_impurity_decrease`, etc. Only the first two will appear in these course:
 
 * The parameter `max_depth` controls the **depth**, that is, the number of nodes in the longest branch. The trees of Figures 1 and 2 have been obtained by setting `max_depth=2`.
 
