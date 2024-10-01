@@ -209,8 +209,8 @@ In [17]: y_pred3 = clf3.predict(X)
     ...: conf3 = confusion_matrix(y, y_pred3)
     ...: conf3
 Out[17]: 
-array([[2627,  161],
-       [ 341, 1472]])
+array([[2483,  305],
+       [ 213, 1600]], dtype=int64)
 ```
 
 Though the true positive rate is getting attractive, the false positive rate is still too high. This tree may be using 15 features.
