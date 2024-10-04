@@ -1,79 +1,73 @@
-# [ML-14] Clothing store marketing promotion
+# [ML-10]  Example - Direct marketing of term deposits
 
 ## Introduction
 
-A clothing store chain in Boston is designing its marketing campaign, wishing to predict which customers will respond to a **direct mail promotion**. The promotion is going to be based on the existing customers database, which contains information on 14,857 customers. The database, built from a direct mail campaign conducted past year, integrates a collection of fields related to **consumption habits**. There is detailed information on the franchises visited, the money spent, the products purchased, the margin left and participation on sales and promotions. The proportion of respondents to the previous campaign in database (`resp`) is about a 17%.
+There are two main approaches for companies to promote products and/or services: through mass campaigns, targeting general indiscriminate public, or through **direct marketing**, targeting a specific set of contacts. Nowadays, in a global competitive world, positive responses to mass campaigns are typically very low. Alternatively, direct marketing focuses on targets that assumably will be keener to that specific product/service, making these campaigns more efficient. But the increasingly vast number of marketing campaigns has reduced their effect on the general public. Furthermore, economical pressures and competition has led marketing managers to invest on direct campaigns with a strict and rigorous selection of contacts.
 
-The campaign designers want to predict the response, but they look at the prediction model with a business perspective: not all the wrong predictions are equally bad, nor all the right predictions equally good. Their **cost/benefit analysis** is based on the following two points:
+Due to the internal competition and the current financial crisis, there are huge pressures for European banks to increase their financial assets. One strategy is to offer attractive **long-term deposit** applications with good interest rates, in particular through direct marketing. A Portuguese institution has been offering term deposits to its clients for the past two years, but in a way that the board finds disorganized and inefficient. It looks as if too many contacts were made, for the subscriptions obtained.
 
-* The cost of mailing is estimated at $5.00 per promotion unit.
+The bank has been using its own contact-center to carry out direct marketing campaigns. The telephone was the dominant marketing channel, although sometimes with an auxiliary use of the Internet online banking channel (*e.g*. by showing information to a specific targeted client). Furthermore, each campaign was managed in an integrated fashion and the results for all channels were outputted together.
 
-* To estimate the average benefit for the customer that responds to the campaign, they calculate the average spent per visit by the customers in the database, $122.44. Since the average gross margin percentage is about 50% and usually one half of it can be taken as net profit, they set the net profit per respondent at $30.61.
+The manager in charge of the next campaign is expected to optimize the effort. His objective is to find a **predictive model**, based on data of the preceding campaign, for the success of a contact, *i.e*. whether the client subscribes the deposit. That model would increase the campaign's efficiency by identifying the main characteristics that affect success, helping in a better management of the available resources (*e.g*. human effort, phone calls and time) and the selection of a high quality and affordable set of potential clients. To be useful for the direct campaign, a predictive model must allow reducing the number of calls in a relevant way without losing a relevant number of subscribers.
 
 ## The data set
 
-The variables included in the data set (file `clothing.csv`) are:
+The data for this example come from the previous phone campaign of the bank, which involved a total of 45,211 contacts. During that campaign, an attractive long-term deposit application, with good interest rates, was offered. The contacts led to 5,289 subscriptions, a 11.7% **conversion rate**.
 
-* `id`, a customer ID (encripted).
+The data set combines demographic data with data about the interaction of the client and the bank. Some of the categorical variables (the type of job, the marital status, etc) have been transformed into **dummy variables** (1/0) so they can enter an equation:
 
-* `phone` a dummy for having a valid phone number on file.
+* The client's account number (`accnum`).
 
-* `web`, a dummy for being a web shopper.
+* The client's  age in years (`age`).
 
-* `visit`, the number of purchase visits.
+* The client's type of job (`job`). The values are 'admin', 'blue-collar', 'entrepreneur', 'housemaid', 'management', 'retired', 'self-employed', 'student', 'technician', 'unknown' and 'unemployed'. Converted to twelve dummies.
 
-* `money`, the total net sales in US dollars.
+* The client's marital status (`marital`). The values are 'married', 'divorced' and 'single'. Converted to three dummies.
 
-* `beacon`, the expense in the Beacon Street store in US dollars.
+* The client's education level (`education`). The values are 'unknown', 'secondary', 'primary' and 'tertiary'. Converted to four dummies.
 
-* `hann`, the expense in the Hannover St store in US dollars.
+* Whether the client has credit in default (`default`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
 
-* `mass`, the expense in the Massachusetts Avenue store in US dollars.
+* The client's average yearly balance in euros (`balance`).
 
-* `newbury`, the expense in the Newbury Street store in US dollars.
+* Whether the client has a housing loan (`housing`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
 
-* `sweather`, `ktop`, `kdress`, `blouse`, `jacket`, `crpant`, `cspant`, `shirt`, `dress`, `fashion`, `suit`, `outwear`, `jewel`, `lwear` and `coll`, the percentage spent in sweaters, knit tops, knit dresses, blouses, jackets, career pants, casual pants, shirts, dresses, suits, outerwear, jewelry, fashion, legwear and the collectibles line.
+* Whether the client has a personal loan (`loan`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
 
-* `omon`, the expense in the last month in US dollars.
+* The usual communication channel with the client (`contact`). The values are 'unknown', 'telephone' and 'cellular'. Converted to three dummies.
 
-* `tmon`, the expense in the last 3 months in US dollars.
+* The duration of last contact with the client before the campaign in seconds (`duration`). 
 
-* `smon`, the expense in the last 6 months in US dollars.
+* The number of days passed by after the client was last contacted from a previous campaign (`pdays`). The entry is -1 when the client has not been previously contacted.
 
-* `gmp`, the gross margin percentage.
+* Number of contacts performed before this campaign and for this client (`previous`).
 
-* `mdown`, the percentage of expense in merchandise marked down.
+* Outcome of the previous marketing campaign wuth the client (`poutcome`). The values are 'unknown', 'other', 'failure' and 'success'. Converted to four dummies.
 
-* `promomail`, the number of promotions mailed past year.
+* Whether the client has subscribed a term deposit (`deposit`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
 
-* `promoresp`, the number of promotions responded past year.
-
-* `produnif`, a measure of product uniformity (low = diverse).
-
-* `dbetween`, the mean time between visits in days.
-
-* `return`, percentage of merchandise returned.
-
-* `resp`, a dummy for responding to the promotion.
-
-Source: DT Larose (2006), *Data Mining Methods and Models*, Wiley.
+Source: S Moro, P Cortez & P Rita (2014), A data-driven approach to predict the success of bank telemarketing, *Decision Support Systems* **62**, 22-31.
 
 ## Questions
 
-Q1. After leaving aside a 20% of the data for testing, train the following classifiers: (a) a logistic regression model, (b) a decision tree model with maximum depth 4, (c) a random forest model with the same maximum depth, and (d) a grading boosting model with the same maximum depth. For the ensemble models, use a number of trees high enough to allow for overfitting, it it occurs.
+Q1. Develop a **logistic regression model** to predict the response to the campaign (`deposit`) from the other variables.
 
-Q2. Calculate a vector of **predictive scores** for each model and compare the distributions, taking into account the cost-benefit analysis proposed in the introduction.
+Q2. Use your model to assign, to every client, a **predictive score** for suscribing the deposit. How is the distribution of the scores? Is it different for the subscribers and the non-subscribers?
 
-Q3. Select the best two models and use them to calculate predictive scores for the test data. Apply a **threshold** of your choice to the scores, and calculate the corresponding **confusion matrices**. Which model is better? Why?
+Q3. Set a **threshold** for the scores to adequate the model to your business purpose.
+
+Q4. Based on your model, if a **target** of 4,000 subscriptionshas been set, how many calls would we need, to hit the target?
+
+Q5. Setting a **budget** 10,000 calls, how would you select the clients to be called? How many subscriptions would you get?
 
 ## Importing the data
 
-As in the preceding examples, we use the Pandas funcion `read_csv()` to import the data from a GitHub repository. In this case, we take the column `id` as the index (`index_col=0`).
+As in the preceding examples, we use the Pandas funcion `read_csv()` to import the data from a GitHub repository. In this case, we take the column `accnum` as the index (`index_col=0`).
 
 ```
 In [1]: import pandas as pd
    ...: path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
-   ...: df = pd.read_csv(path + 'clothing.csv', index_col=0)
+   ...: df = pd.read_csv(path + 'deposit.csv', index_col=0)
 ```
 
 ## Exploring the data
@@ -83,215 +77,337 @@ We print a report of the content of `df` with the method `.info()`. Everything i
 ```
 In [2]: df.info()
 <class 'pandas.core.frame.DataFrame'>
-Index: 14857 entries, 9955600066402 to 9955636073885
-Data columns (total 34 columns):
- #   Column     Non-Null Count  Dtype  
----  ------     --------------  -----  
- 0   phone      14857 non-null  int64  
- 1   ccard      14857 non-null  int64  
- 2   web        14857 non-null  int64  
- 3   visit      14857 non-null  int64  
- 4   money      14857 non-null  float64
- 5   beacon     14857 non-null  float64
- 6   hann       14857 non-null  float64
- 7   mass       14857 non-null  float64
- 8   newbury    14857 non-null  float64
- 9   sweather   14857 non-null  float64
- 10  ktop       14857 non-null  float64
- 11  kdress     14857 non-null  float64
- 12  blouse     14857 non-null  float64
- 13  jacket     14857 non-null  float64
- 14  crpant     14857 non-null  float64
- 15  cspant     14857 non-null  float64
- 16  shirt      14857 non-null  float64
- 17  dress      14857 non-null  float64
- 18  suit       14857 non-null  float64
- 19  outwear    14857 non-null  float64
- 20  jewel      14857 non-null  float64
- 21  fashion    14857 non-null  float64
- 22  lwear      14857 non-null  float64
- 23  coll       14857 non-null  float64
- 24  omon       14857 non-null  float64
- 25  tmon       14857 non-null  float64
- 26  smon       14857 non-null  float64
- 27  gmp        14857 non-null  float64
- 28  mdown      14857 non-null  float64
- 29  promomail  14857 non-null  int64  
- 30  promoresp  14857 non-null  int64  
- 31  produnif   14857 non-null  float64
- 32  dbetween   14857 non-null  float64
- 33  resp       14857 non-null  int64  
-dtypes: float64(27), int64(7)
-memory usage: 4.0 MB
+Index: 45211 entries, 2065031284 to 2086934257
+Data columns (total 35 columns):
+ #   Column               Non-Null Count  Dtype
+---  ------               --------------  -----
+ 0   age                  45211 non-null  int64
+ 1   job_admin            45211 non-null  int64
+ 2   job_blue-collar      45211 non-null  int64
+ 3   job_entrepreneur     45211 non-null  int64
+ 4   job_housemaid        45211 non-null  int64
+ 5   job_management       45211 non-null  int64
+ 6   job_retired          45211 non-null  int64
+ 7   job_self-employed    45211 non-null  int64
+ 8   job_services         45211 non-null  int64
+ 9   job_student          45211 non-null  int64
+ 10  job_technician       45211 non-null  int64
+ 11  job_unemployed       45211 non-null  int64
+ 12  job_unknown          45211 non-null  int64
+ 13  marital_divorced     45211 non-null  int64
+ 14  marital_married      45211 non-null  int64
+ 15  marital_single       45211 non-null  int64
+ 16  education_primary    45211 non-null  int64
+ 17  education_secondary  45211 non-null  int64
+ 18  education_tertiary   45211 non-null  int64
+ 19  education_unknown    45211 non-null  int64
+ 20  default              45211 non-null  int64
+ 21  balance              45211 non-null  int64
+ 22  housing              45211 non-null  int64
+ 23  loan                 45211 non-null  int64
+ 24  channel_cellular     45211 non-null  int64
+ 25  channel_telephone    45211 non-null  int64
+ 26  channel_unknown      45211 non-null  int64
+ 27  duration             45211 non-null  int64
+ 28  pdays                45211 non-null  int64
+ 29  previous             45211 non-null  int64
+ 30  poutcome_failure     45211 non-null  int64
+ 31  poutcome_other       45211 non-null  int64
+ 32  poutcome_success     45211 non-null  int64
+ 33  poutcome_unknown     45211 non-null  int64
+ 34  deposit              45211 non-null  int64
+dtypes: int64(35)
+memory usage: 12.4 MB
 ```
 
-The **conversion rate** is 17%, so we have **class imbalance** here. Moreover, given the cost/benefit analysis suggested in the introduction, we have to pay more attention to false negatives than to false positives.
+We also display the first five rows:
 
 ```
-In [3]: df['resp'].mean().round(3)
-Out[3]: 0.17
+In [3]: df.head()
+Out[3]: 
+            age  job_admin  job_blue-collar  job_entrepreneur  job_housemaid   
+accnum                                                                         
+2065031284   58          0                0                 0              0  \
+2051283096   44          0                0                 0              0   
+2029034586   33          0                0                 1              0   
+2070859436   47          0                1                 0              0   
+2098635102   33          0                0                 0              0   
+
+            job_management  job_retired  job_self-employed  job_services   
+accnum                                                                     
+2065031284               1            0                  0             0  \
+2051283096               0            0                  0             0   
+2029034586               0            0                  0             0   
+2070859436               0            0                  0             0   
+2098635102               0            0                  0             0   
+
+            job_student  ...  channel_telephone  channel_unknown  duration   
+accnum                   ...                                                 
+2065031284            0  ...                  0                1       261  \
+2051283096            0  ...                  0                1       151   
+2029034586            0  ...                  0                1        76   
+2070859436            0  ...                  0                1        92   
+2098635102            0  ...                  0                1       198   
+
+            pdays  previous  poutcome_failure  poutcome_other   
+accnum                                                          
+2065031284     -1         0                 0               0  \
+2051283096     -1         0                 0               0   
+2029034586     -1         0                 0               0   
+2070859436     -1         0                 0               0   
+2098635102     -1         0                 0               0   
+
+            poutcome_success  poutcome_unknown  deposit  
+accnum                                                   
+2065031284                 0                 1        0  
+2051283096                 0                 1        0  
+2029034586                 0                 1        0  
+2070859436                 0                 1        0  
+2098635102                 0                 1        0  
+
+[5 rows x 35 columns]
 ```
 
-## Train-test split
-
-We split the data as suggested in question Q1, leaving a 20% of the data for testing.
+Finally, we check the conversion rate:
 
 ```
-In [4]: from sklearn.model_selection import train_test_split
-   ...: df_train, df_test = train_test_split(df, test_size=0.2)
+In [4]: df['deposit'].mean().round(3)
+Out[4]: 0.117
 ```
 
-So, these are the numbers. With 2,972 testing units, the 17% conversion rate gives us about 500 positives in the testing data set.
+*Note*. The value -1 in the column `pdays` when a client has not been previously contacted may look strange, but it is irrelevant in this case, since this situation is covered by the dummy `poutcome_unknown`. It can be proved, with a bit of algebra, that changing the value imputed to the missing values in `pdays` leads to equations with exactly the same predicted values.
+
+## Q1. Logistic regression model
+
+We create a target vector and a feature matrix. The target vector is the last column (`deposit`) and the feature matrix integrates the other columns.
 
 ```
-In [5]: df_train.shape, df_test.shape
-Out[5]: ((11885, 34), (2972, 34))
+In [5]: y = df['deposit']
+   ...: X = df.drop(columns='deposit')
 ```
 
-## Target vectors and feature matrices
-
-Next, we define a target vector and a feature matrix for both training and test data.
+To develop our logistic regression model with scikit-learn, we instantiate an estimator from the class `LogisticRegression()`, from the subpackage `linear_model`, applying the method `.fit()` as in the previous example. We also increase here the maximum number of iterations. 
 
 ```
-In [6]: y_train, X_train = df_train['resp'], df_train.drop(columns='resp')
-   ...: y_test, X_test = df_test['resp'], df_test.drop(columns='resp')
+In [6]: from sklearn.linear_model import LogisticRegression
+   ...: clf = LogisticRegression(max_iter=2000)
+   ...: clf.fit(X, y)
+Out[6]: LogisticRegression(max_iter=2000)
 ```
 
-## Q1. Training the four models
-
-Our first candidate will be a logistic regression model. The maximum number of iterations has been set after some trial and error.
+The default predictions and the corresponding confusion matrix are obtained as in the previous example. We use now the Pandas function `crosstab()`. 
 
 ```
-In [7]: from sklearn.linear_model import LogisticRegression
-   ...: logclf = LogisticRegression(max_iter=5000)
-   ...: logclf.fit(X_train, y_train)
-Out[7]: LogisticRegression(max_iter=5000)
+In [7]: y_pred = clf.predict(X)
+   ...: conf = pd.crosstab(y, y_pred)
+   ...: conf
+Out[7]: 
+col_0        0     1
+deposit             
+0        38968   954
+1         3570  1719
 ```
 
-Second, a decision tree model, with maximum depth 4. As we did in example ML-08, we specify the cross-entropy as the loss function, by means of the parameter `criterion`.
+On one side, these results look fine, since, using this model, we will call only 2,673 clients, capturing 1,719 subscriptions (64.3% conversion rate). On the other side, we are missing 3,570 potential subscribers (70.9%). The total accuracy can be extracted from the confusion matrix, or calculated directly:
 
 ```
-In [8]: from sklearn.tree import DecisionTreeClassifier
-   ...: treeclf = DecisionTreeClassifier(criterion='entropy', max_depth=4)
-   ...: treeclf.fit(X_train, y_train)
-Out[8]: DecisionTreeClassifier(criterion='entropy', max_depth=4)
+In [8]: acc = (y == y_pred).mean().round(3)
 ```
 
-Third, a random forest model with the same loss function and the same maximum depth. The default for the number of trees (parameter `n_estimators`) is 100, but, following the suggestion of question Q1, we raise this to 200.
+The accuracies on the two groups are: 
 
 ```
-In [9]: from sklearn.ensemble import RandomForestClassifier
-   ...: rfclf = RandomForestClassifier(criterion='entropy', max_depth=4, n_estimators=200)
-   ...: rfclf.fit(X_train, y_train)
-Out[9]: RandomForestClassifier(criterion='entropy', max_depth=4, n_estimators=200)
+In [9]: acc1 = y_pred[y == 1].mean().round(3)
+   ...: acc0 = (1 - y_pred[y == 0]).mean().round(3)
 ```
 
-Finally, the gradient boosting model. We set the maximum depth and the number of trees as for the random forest model (no defaults). The **learning rate** 0.1 is a typical one (no default). The deafult loss function (parameter `objective`) is the cross-entropy, so we specify nothing here, to make it simpler, focusing on the number of trees and their size.
+We can print them together as:
 
 ```
-In [10]: from xgboost import XGBClassifier
-    ...: xgbclf = XGBClassifier(learning_rate=0.1, max_depth=4, n_estimators=200)
-    ...: xgbclf.fit(X_train, y_train)
-Out[10]: 
-XGBClassifier(base_score=None, booster=None, callbacks=None,
-              colsample_bylevel=None, colsample_bynode=None,
-              colsample_bytree=None, device=None, early_stopping_rounds=None,
-              enable_categorical=False, eval_metric=None, feature_types=None,
-              gamma=None, grow_policy=None, importance_type=None,
-              interaction_constraints=None, learning_rate=0.1, max_bin=None,
-              max_cat_threshold=None, max_cat_to_onehot=None,
-              max_delta_step=None, max_depth=4, max_leaves=None,
-              min_child_weight=None, missing=nan, monotone_constraints=None,
-              multi_strategy=None, n_estimators=200, n_jobs=None,
-              num_parallel_tree=None, random_state=None, ...)
+In [10]: acc, acc1, acc0
+Out[10]: (0.9, 0.325, 0.976)
 ```
 
-## Plotting function
-
-To plot the scores, separately for positive and negative training units, we will use the same code as in examples ML-06 and ML-10. First, we import `matplotlib.pyplot` in the usual way.
-
-```
-In [11]: from matplotlib import pyplot as plt
-```
-
-We pack the code chunk for the plots as a Python function, so we will not repeat the same again and again. 
-
-```
-In [12]: def score_plot(score):
-    ...:     # Set the size of the figure
-    ...:     plt.figure(figsize=(12,5))
-    ...:     # First subplot
-    ...:     plt.subplot(1, 2, 1)
-    ...:     plt.hist(score[y_train == 1], range=(0,1), color='gray', edgecolor='white')
-    ...:     plt.title('Figure a. Scores (positives)')
-    ...:     plt.xlabel('Predictive score')
-    ...:     # Second subplot
-    ...:     plt.subplot(1, 2, 2)
-    ...:     plt.hist(score[y_train == 0], range=(0,1), color='gray', edgecolor='white')
-    ...:     plt.title('Figure b. Scores (negatives)')
-    ...:     plt.xlabel('Predictive score');
-```
+So, we have very high accuracy on the negative group, but a very poor accuracy on the positive group. This is typical of imbalanced training data. Let us see how this may change if we use the predictive scores. 
 
 ## Q2. Predictive scores
 
-```
-In [13]: log_score = logclf.predict_proba(X_train)[:, 1]
-    ...: score_plot(log_score)
-```
-
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-1.png)
+The predictive scores come as the second column of the 2D array returned by the method `.predict_proba()`. We add them to the current data set.
 
 ```
-In [14]: tree_score = treeclf.predict_proba(X_train)[:, 1]
-    ...: score_plot(tree_score)
-```
-
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-2.png)
-
-```
-In [15]: rf_score = rfclf.predict_proba(X_train)[:, 1]
-    ...: score_plot(rf_score)
-```
-
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-3.png)
-
-```
-In [16]: xgb_score = xgbclf.predict_proba(X_train)[:, 1]
-    ...: score_plot(xgb_score)
-```
-
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-4.png)
-
-## Q3. Testing
-
-```
-In [17]: log_score_train, log_score_test = logclf.predict_proba(X_train)[:, 1], logclf.predict_proba(X_test)[:, 1]
-    ...: y_pred_train, y_pred_test = log_score_train > 0.2, log_score_test > 0.2
-    ...: conf_train, conf_test = pd.crosstab(y_train, y_pred_train), pd.crosstab(y_test, y_pred_test)
-    ...: conf_train, conf_test
-Out[17]: 
-(col_0  False  True 
- resp               
- 0       7240   2612
- 1        464   1569,
- col_0  False  True 
- resp               
- 0       1752    724
- 1        106    390)
+In [11]: df['score'] = clf.predict_proba(X)[:, 1]
 ```
 
 ```
-In [18]: xgb_score_train, xgb_score_test = xgbclf.predict_proba(X_train)[:, 1], xgbclf.predict_proba(X_test)[:, 1]
-    ...: y_pred_train, y_pred_test = xgb_score_train > 0.2, xgb_score_test > 0.2
-    ...: conf_train, conf_test = pd.crosstab(y_train, y_pred_train), pd.crosstab(y_test, y_pred_test)
-    ...: conf_train, conf_test
+In [12]: df[['deposit', 'score']]
+Out[12]: 
+            deposit     score
+accnum                       
+2065031284        0  0.020247
+2051283096        0  0.012138
+2029034586        0  0.003953
+2070859436        0  0.008954
+2098635102        0  0.050026
+...             ...       ...
+2027086314        1  0.699955
+2028473156        1  0.344148
+2026897134        1  0.992496
+2091483260        0  0.194690
+2086934257        0  0.261455
+```
+
+On average, the scores are correct, and have a skewed distribution (nothing wrong with this).
+
+```
+In [13]: df['score'].describe()
+Out[13]: 
+count    45211.000000
+mean         0.118695
+std          0.179120
+min          0.001720
+25%          0.022626
+50%          0.052807
+75%          0.118823
+max          1.000000
+Name: score, dtype: float64
+```
+
+We can have a better view with separate histograms. The code has already been used in the previous example.
+
+```
+In [14]: from matplotlib import pyplot as plt
+    ...: # Set the size of the figure
+    ...: plt.figure(figsize=(12,5))
+    ...: # First subplot
+    ...: plt.subplot(1, 2, 1)
+    ...: plt.hist(df['score'][y == 1], color='gray', edgecolor='white')
+    ...: plt.title('Figure 1.a. Scores (subscribers)')
+    ...: plt.xlabel('Subscription score')
+    ...: # Second subplot
+    ...: plt.subplot(1, 2, 2)
+    ...: plt.hist(df['score'][y == 0], color='gray', edgecolor='white')
+    ...: plt.title('Figure 1.b. Scores (non-subscribers)')
+    ...: plt.xlabel('Subscription score');
+```
+
+![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/10-1.png)
+
+These figures show what is wrong with the threshold 0.5. In order to capture at least 2/3 of the potential subscribers, we have to set the threshold within the range 10-20%.
+
+## Q3. Set a threshold for the scores
+
+Let us take the actual conversion rate (rounded) as the threshold.
+
+```
+In [15]: y_pred = (df['score'] > 0.11).astype(int)
+```
+
+The  new confusion matrix is:
+
+```
+In [16]: conf = pd.crosstab(y, y_pred)
+    ...: conf
+Out[16]: 
+score        0     1
+deposit             
+0        32696  7226
+1         1022  4267
+```
+
+We would call now 11,493 clients, capturing 4,267 subscribers (37.1% conversion rate), which is 4/5 of the potential subscribers. The accuracies are similar for the two groups:
+
+```
+In [17]: acc = (y == y_pred).mean().round(3)
+    ...: acc1 = y_pred[y == 1].mean().round(3)
+    ...: acc0 = (1 - y_pred[y == 0]).mean().round(3)
+    ...: acc, acc1, acc0
+Out[17]: (0.818, 0.807, 0.819)
+```
+
+## Q4. Target of 4,000 subscriptions
+
+The manager can decide that he does not need to worry about the threshold once he has the scores. He can set a target of a reasonable number of subscriptions and use the scores to select the clients to be contacted. This can be managed easily in a spreadsheet, though we continue here with Python.
+
+The manager would sort the data by the scores, in descending order.
+
+```
+In [18]: df = df.sort_values('score', ascending=False)
+    ...: df[['deposit', 'score']]
 Out[18]: 
-(col_0  False  True 
- resp               
- 0       7892   1960
- 1        265   1768,
- col_0  False  True 
- resp               
- 0       1836    640
- 1        126    370)
+            deposit     score
+accnum                       
+2084617209        0  1.000000
+2054970681        0  0.999984
+2096318570        1  0.999983
+2064903718        0  0.999963
+2078910432        0  0.999958
+...             ...       ...
+2038624917        0  0.002003
+2041538627        0  0.001960
+2037089126        0  0.001908
+2009467351        0  0.001746
+2024137560        0  0.001720
+
+[45211 rows x 2 columns]
 ```
+
+Then, the manager would start contacting the top scored clients, until getting the desired 4,000 subscriptions. This can be controlled by adding a column with the cumulative number of subscriptions, which can be created with the method `.cumsum()`.
+
+```
+In [19]: df['cum_subscription'] = df['deposit'].cumsum()
+    ...: df[['deposit', 'score', 'cum_subscription']]
+Out[19]: 
+            deposit     score  cum_subscription
+accnum                                         
+2084617209        0  1.000000                 0
+2096318570        1  0.999990                 1
+2054970681        0  0.999987                 1
+2064903718        0  0.999972                 1
+2078910432        0  0.999970                 1
+...             ...       ...               ...
+2064928371        0  0.002513              5289
+2038624917        0  0.002434              5289
+2032496851        0  0.002398              5289
+2024137560        0  0.002370              5289
+2009467351        0  0.002308              5289
+
+[45211 rows x 3 columns]
+```
+
+The first row where the column `cum_subscription` attains 40,000 will correspond to the last client contacted. In total, 9,788 clients would be contacted.
+
+```
+In [20]: (df['cum_subscription'] < 4000).sum() + 1
+Out[20]: 9788
+```
+
+## Q5. Budget 10,000 calls
+
+Suppose now that, instead of setting an objective, the budget for the campaign allows for a certain number of contacts , for instance 10,000. The manager would pick now the first 10,000 rows of the data set. The account numbers of the selected clients are provided by the index labels:
+
+```
+In [21]: call_list = df.index[:10000]
+    ...: call_list
+Out[21]: 
+Int64Index([2084617209, 2096318570, 2054970681, 2064903718, 2078910432,
+            2041730862, 2071098526, 2037940512, 2032450716, 2095471620,
+            ...
+            2084203519, 2052019348, 2095170348, 2073864012, 2036520178,
+            2072640359, 2057328940, 2079536840, 2082357614, 2051370426],
+           dtype='int64', name='accnum', length=10000)
+```
+
+The last of these account numbers would be the label `call_list[9999]` (2051370426). The number of subscriptions achieved is now: 
+
+```
+In [22]: df['cum_subscription'][call_list[9999]]
+Out[22]: 4031
+```
+
+## Homework
+
+1. Perform a **random split** of the data set, taking one half for training and the other half for testing. You will use this partition for all the questions of this assignment. Suppose that we use our predictive model as suggested in question Q5 of example MLE-04, but calling 20% of the clients. How would you validate the model for that application, based on your train-test split?
+
+2. **Undersample** the training subset, by randomly dropping as many negative units as needed to match the positive units, so that you end up with a pefectly balanced training data set. Leave the test data set as it is, without correcting there the class imbalance. Train a logistic regression model on the undersampled training data set and evaluate it on the test data set, based on a confusion matrix. 
+
+3. **Oversample** the training subset, by randomly adding as many duplicates of the positive units as needed to match the negative units, so that you end up with a pefectly balanced training data set. Leave the test data set as it is, without correcting there the class imbalance. Train a logistic regression model on oversampled training data set and evaluate it on the test data set, based on a confusion matrix.
