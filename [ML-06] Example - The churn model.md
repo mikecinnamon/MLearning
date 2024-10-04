@@ -56,7 +56,7 @@ As in the preceding example, we use the Pandas funcion `read_csv()` to import th
 
 ```
 In [1]: import pandas as pd
-   ...: path = 'https://raw.githubusercontent.com/cinnData/MLearning/main/Data/'
+   ...: path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
    ...: df = pd.read_csv(path + 'churn.csv', index_col=0)
 ```
 
