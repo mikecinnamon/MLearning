@@ -2,13 +2,13 @@
 
 ## Introduction
 
-There are two main approaches for companies to promote products and/or services: through mass campaigns, targeting general indiscriminate public, or through **direct marketing**, targeting a specific set of contacts. Nowadays, in a global competitive world, positive responses to mass campaigns are typically very low. Alternatively, direct marketing focuses on targets that assumably will be keener to that specific product/service, making these campaigns more efficient. But the increasingly vast number of marketing campaigns has reduced their effect on the general public. Furthermore, economical pressures and competition has led marketing managers to invest on direct campaigns with a strict and rigorous selection of contacts.
+There are two main approaches for companies to promote products and/or services: through **mass campaigns**, targeting a general indiscriminate public, or through **direct marketing**, targeting a specific set of contacts. Nowadays, in a global competitive world, positive responses to mass campaigns are typically very low. Alternatively, direct marketing focuses on targets that assumably will be keener to that specific product/service, making these campaigns more efficient. But the increasingly vast number of marketing campaigns has reduced their effect on the general public. Furthermore, economical pressures and competition has led marketing managers to invest on direct campaigns with a strict and rigorous selection of contacts.
 
-Due to the internal competition and the current financial crisis, there are huge pressures for European banks to increase their financial assets. One strategy is to offer attractive **long-term deposit** applications with good interest rates, in particular through direct marketing. A Portuguese institution has been offering term deposits to its clients for the past two years, but in a way that the board finds disorganized and inefficient. It looks as if too many contacts were made, for the subscriptions obtained.
+Ten years ago, due to the internal competition and the current financial crisis, there were huge pressures for European banks to increase their financial assets. One strategy is to offer attractive **long-term deposit** applications with good interest rates, in particular through direct marketing. A Portuguese institution had been offering term deposits to its clients for the last two years, but in a way that the board finds disorganized and inefficient. It looked as if too many contacts were made, for the subscriptions obtained.
 
-The bank has been using its own contact-center to carry out direct marketing campaigns. The telephone was the dominant marketing channel, although sometimes with an auxiliary use of the Internet online banking channel (*e.g*. by showing information to a specific targeted client). Furthermore, each campaign was managed in an integrated fashion and the results for all channels were outputted together.
+A Portuguese bank had been using its own contact-center to carry out direct marketing campaigns. The telephone was the dominant marketing channel, although sometimes with an auxiliary use of the Internet online banking channel (*e.g*. by showing information to a specific targeted client). Furthermore, each campaign was managed in an integrated fashion and the results for all channels were outputted together.
 
-The manager in charge of the next campaign is expected to optimize the effort. His objective is to find a **predictive model**, based on data of the preceding campaign, for the success of a contact, *i.e*. whether the client subscribes the deposit. That model would increase the campaign's efficiency by identifying the main characteristics that affect success, helping in a better management of the available resources (*e.g*. human effort, phone calls and time) and the selection of a high quality and affordable set of potential clients. To be useful for the direct campaign, a predictive model must allow reducing the number of calls in a relevant way without losing a relevant number of subscribers.
+The manager in charge of the next campaign was expected to optimize the effort. His objective was to find a **predictive model**, based on data of the preceding campaign, for the success of a contact, *i.e*. whether the client subscribes the deposit. That model would increase the campaign's efficiency by identifying the main characteristics that affected success, helping in a better management of the available resources (*e.g*. human effort, phone calls and time) and the selection of a high quality and affordable set of potential clients. To be useful for the direct campaign, a predictive model must allow reducing the number of calls in a relevant way without losing a relevant number of subscribers.
 
 ## The data set
 
@@ -26,25 +26,25 @@ The data set combines demographic data with data about the interaction of the cl
 
 * The client's education level (`education`). The values are 'unknown', 'secondary', 'primary' and 'tertiary'. Converted to four dummies.
 
-* Whether the client has credit in default (`default`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
+* Whether the client had credit in default (`default`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
 
 * The client's average yearly balance in euros (`balance`).
 
-* Whether the client has a housing loan (`housing`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
+* Whether the client had a housing loan (`housing`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
 
-* Whether the client has a personal loan (`loan`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
+* Whether the client had a personal loan (`loan`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
 
 * The usual communication channel with the client (`contact`). The values are 'unknown', 'telephone' and 'cellular'. Converted to three dummies.
 
-* The duration of last contact with the client before the campaign in seconds (`duration`). 
+* The duration of the last contact with the client before the campaign in seconds (`duration`). 
 
-* The number of days passed by after the client was last contacted from a previous campaign (`pdays`). The entry is -1 when the client has not been previously contacted.
+* The number of days passed by after the client was last contacted from a previous campaign (`pdays`). The entry is -1 when the client had not been previously contacted.
 
-* Number of contacts performed before this campaign and for this client (`previous`).
+* The number of contacts performed before this campaign and for this client (`previous`).
 
-* Outcome of the previous marketing campaign wuth the client (`poutcome`). The values are 'unknown', 'other', 'failure' and 'success'. Converted to four dummies.
+* OThe outcome of the previous marketing campaign with the client (`poutcome`). The values are 'unknown', 'other', 'failure' and 'success'. Converted to four dummies.
 
-* Whether the client has subscribed a term deposit (`deposit`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no').
+* Whether the client had subscribed a term deposit (`deposit`). The values are 'yes' and 'no'. Converted to a dummy (1 for 'yes' and 0 for 'no'). This is the target of the predictive model to be developed.
 
 Source: S Moro, P Cortez & P Rita (2014), A data-driven approach to predict the success of bank telemarketing, *Decision Support Systems* **62**, 22-31.
 
@@ -56,9 +56,9 @@ Q2. Use your model to assign, to every client, a **predictive score** for suscri
 
 Q3. Set a **threshold** for the scores to adequate the model to your business purpose.
 
-Q4. Based on your model, if a **target** of 4,000 subscriptionshas been set, how many calls would we need, to hit the target?
+Q4. Based on your model, if a **target** of 4,000 subscriptions has been set, how many calls would be needed to hit the target?
 
-Q5. Setting a **budget** 10,000 calls, how would you select the clients to be called? How many subscriptions would you get?
+Q5. Setting a **budget** of 10,000 calls, how would you select the clients to be called? How many subscriptions would be achieved?
 
 ## Importing the data
 
@@ -72,7 +72,7 @@ In [1]: import pandas as pd
 
 ## Exploring the data
 
-We print a report of the content of `df` with the method `.info()`. Everything is as expected, so far. There are no missing values.
+We print a report of the content of `df` with the method `.info()`. Everything comes as expected, so far. There are no missing values.
 
 ```
 In [2]: df.info()
@@ -175,7 +175,7 @@ In [4]: df['deposit'].mean().round(3)
 Out[4]: 0.117
 ```
 
-*Note*. The value -1 in the column `pdays` when a client has not been previously contacted may look strange, but it is irrelevant in this case, since this situation is covered by the dummy `poutcome_unknown`. It can be proved, with a bit of algebra, that changing the value imputed to the missing values in `pdays` leads to equations with exactly the same predicted values.
+*Note*. The value -1 in the column `pdays`, when a client has not been previously contacted, may look strange, but it is irrelevant in this case, since this situation is covered by the dummy `poutcome_unknown`. It can be proved, with a bit of algebra, that replacing the imputed value -1 by a different choice would lead to a model with exactly the same predicted values.
 
 ## Q1. Logistic regression model
 
@@ -186,7 +186,7 @@ In [5]: y = df['deposit']
    ...: X = df.drop(columns='deposit')
 ```
 
-To develop our logistic regression model with scikit-learn, we instantiate an estimator from the class `LogisticRegression()`, from the subpackage `linear_model`, applying the method `.fit()` as in the previous example. We also increase here the maximum number of iterations. 
+To develop our logistic regression model with scikit-learn, we instantiate an estimator from the class `LogisticRegression()`, from the subpackage `linear_model`, applying the method `.fit()` as in example ML-06. We also increase here the maximum number of iterations. 
 
 ```
 In [6]: from sklearn.linear_model import LogisticRegression
@@ -195,7 +195,7 @@ In [6]: from sklearn.linear_model import LogisticRegression
 Out[6]: LogisticRegression(max_iter=2000)
 ```
 
-The default predictions and the corresponding confusion matrix are obtained as in the previous example. We use now the Pandas function `crosstab()`. 
+The default predictions and the corresponding confusion matrix are obtained as in example ML-06. We use here (for a change) the Pandas function `crosstab()`. 
 
 ```
 In [7]: y_pred = clf.predict(X)
@@ -228,7 +228,7 @@ In [10]: acc, acc1, acc0
 Out[10]: (0.9, 0.325, 0.976)
 ```
 
-So, we have very high accuracy on the negative group, but a very poor accuracy on the positive group. This is typical of imbalanced training data. Let us see how this may change if we use the predictive scores. 
+So, we have a very high accuracy on the negative group, but a very poor accuracy on the positive group. This is typical of imbalanced training data. Let us see how this may change if we use the predictive scores. 
 
 ## Q2. Predictive scores
 
@@ -272,7 +272,7 @@ max          1.000000
 Name: score, dtype: float64
 ```
 
-We can have a better view with separate histograms. The code has already been used in the previous example.
+We can have a better view with separate histograms. The code has already been used in example ML-06.
 
 ```
 In [14]: from matplotlib import pyplot as plt
@@ -314,7 +314,7 @@ deposit
 1         1022  4267
 ```
 
-We would call now 11,493 clients, capturing 4,267 subscribers (37.1% conversion rate), which is 4/5 of the potential subscribers. The accuracies are similar for the two groups:
+We would now call 11,493 clients, getting 4,267 subscriptions (a 37.1% conversion rate), which represents 4/5 of the potential subscriptions. The accuracies are now similar for the two groups:
 
 ```
 In [17]: acc = (y == y_pred).mean().round(3)
@@ -328,7 +328,7 @@ Out[17]: (0.818, 0.807, 0.819)
 
 The manager can decide that he does not need to worry about the threshold once he has the scores. He can set a target of a reasonable number of subscriptions and use the scores to select the clients to be contacted. This can be managed easily in a spreadsheet, though we continue here with Python.
 
-The manager would sort the data by the scores, in descending order.
+We would sort the data by the scores, in descending order:
 
 ```
 In [18]: df = df.sort_values('score', ascending=False)
@@ -351,7 +351,7 @@ accnum
 [45211 rows x 2 columns]
 ```
 
-Then, the manager would start contacting the top scored clients, until getting the desired 4,000 subscriptions. This can be controlled by adding a column with the cumulative number of subscriptions, which can be created with the method `.cumsum()`.
+Then, the bank would start contacting the top scored clients, until getting the desired 4,000 subscriptions. This could be controlled by adding a column with the cumulative number of subscriptions, which can be created with the method `.cumsum()`.
 
 ```
 In [19]: df['cum_subscription'] = df['deposit'].cumsum()
@@ -374,16 +374,16 @@ accnum
 [45211 rows x 3 columns]
 ```
 
-The first row where the column `cum_subscription` attains 40,000 will correspond to the last client contacted. In total, 9,788 clients would be contacted.
+The first row in which the column `cum_subscription` attains the target value 40,000 corresponds to the last client contacted. In total, 9,788 clients would be contacted.
 
 ```
 In [20]: (df['cum_subscription'] < 4000).sum() + 1
 Out[20]: 9788
 ```
 
-## Q5. Budget 10,000 calls
+## Q5. Budget of 10,000 calls
 
-Suppose now that, instead of setting an objective, the budget for the campaign allows for a certain number of contacts , for instance 10,000. The manager would pick now the first 10,000 rows of the data set. The account numbers of the selected clients are provided by the index labels:
+Suppose now that, instead of setting an objective, the budget for the campaign allows for a certain number of contacts , for instance 10,000. We would pick then the first 10,000 rows of the data set. The account numbers of the selected clients are provided by the index labels:
 
 ```
 In [21]: call_list = df.index[:10000]
@@ -406,8 +406,6 @@ Out[22]: 4031
 
 ## Homework
 
-1. Perform a **random split** of the data set, taking one half for training and the other half for testing. You will use this partition for all the questions of this assignment. Suppose that we use our predictive model as suggested in question Q5 of example MLE-04, but calling 20% of the clients. How would you validate the model for that application, based on your train-test split?
+1. **Undersample** the data, by randomly dropping as many negative units as needed to match the positive units, so that you end up with a pefectly balanced training data set. Train a logistic regression model on this undersampled training data set and evaluate it, based on a confusion matrix. 
 
-2. **Undersample** the training subset, by randomly dropping as many negative units as needed to match the positive units, so that you end up with a pefectly balanced training data set. Leave the test data set as it is, without correcting there the class imbalance. Train a logistic regression model on the undersampled training data set and evaluate it on the test data set, based on a confusion matrix. 
-
-3. **Oversample** the training subset, by randomly adding as many duplicates of the positive units as needed to match the negative units, so that you end up with a pefectly balanced training data set. Leave the test data set as it is, without correcting there the class imbalance. Train a logistic regression model on oversampled training data set and evaluate it on the test data set, based on a confusion matrix.
+2. **Oversample** the data, by randomly adding as many duplicates of the positive units as needed to match the negative units, so that you end up with a pefectly balanced training data set. Train a logistic regression model on this oversampled training data set and evaluate it, based on a confusion matrix.
