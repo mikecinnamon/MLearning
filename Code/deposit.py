@@ -56,7 +56,7 @@ df['cum_subscription'] = df['deposit'].cumsum()
 df[['deposit', 'score', 'cum_subscription']]
 (df['cum_subscription'] < 4000).sum() + 1
 
-# Q5. Budget 10,000 calls #
+# Q5. Budget of 10,000 calls #
 call_list = df.index[:10000]
 call_list
 df['cum_subscription'][call_list[9999]]
