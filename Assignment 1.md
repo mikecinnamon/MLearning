@@ -18,4 +18,4 @@ Q2. Change the features matrix by: (a) dropping the three `cap_` features and (b
 
 ## Deadline
 
-October 14 (Sunday), 24:00.
+October 13 (Sunday), 24:00.
