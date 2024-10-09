@@ -169,7 +169,7 @@ In [11]: title_embed = model.encode(title, output_value='sentence_embedding')
 Out[11]: (20203, 768)
 ```
 
-## Logistic regression model
+## Q3. Logistic regression model
 
 We specify the target vector and the feature matrix as suggested.
 
@@ -209,7 +209,7 @@ array([[9443,  944],
        [ 644, 9172]])
 ```
 
-## Distribution of the predictive scores
+## Q4. Distribution of the predictive scores
 
 This section does not contain anything new from a methodological point of view. We already know how to extract the predictive scores with the method `.predict_proba()`:
 
