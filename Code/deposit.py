@@ -1,4 +1,4 @@
-## [ML-11]  Example - Direct marketing of term deposits ##
+## [ML-10]  Example - Direct marketing of term deposits ##
 
 # Importing the data #
 import pandas as pd
