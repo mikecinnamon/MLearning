@@ -6,9 +6,9 @@ This assignment is a continuation of the analysis performed in the example ML-10
 
 ## Questions
 
-Q1. **Undersample** the data, by randomly dropping as many negative units as needed to match the positive units, so that you end up with a pefectly balanced training data set. Train a logistic regression model on this undersampled training data set and evaluate it, based on a confusion matrix. 
+Q1. **Undersample** the data, by randomly dropping as many negative units as needed to match the positive units, so that you end up with a perfectly balanced training data set. Train a logistic regression model on this undersampled training data set and evaluate it, based on a confusion matrix. 
 
-Q2. **Oversample** the data, by randomly adding as many duplicates of the positive units as needed to match the negative units, so that you end up with a pefectly balanced training data set. Train a logistic regression model on this oversampled training data set and evaluate it, based on a confusion matrix.
+Q2. **Oversample** the data, by randomly adding as many duplicates of the positive units as needed to match the negative units, so that you end up with a perfectly balanced training data set. Train a logistic regression model on this oversampled training data set and evaluate it, based on a confusion matrix.
 
 Q3. Compare these two models to the one obtained in the example to address question Q3. What do you think?
 
