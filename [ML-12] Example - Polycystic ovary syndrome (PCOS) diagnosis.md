@@ -4,7 +4,7 @@
 
 The **polycystic ovary syndrome** (PCOS) is a disorder involving infrequent, irregular or prolonged menstrual periods, and often excess male hormone (androgen) levels. The ovaries develop numerous small collections of fluid (called follicles) and may fail to regularly release eggs.
 
-The most common PCOS symptoms are missed, irregular, infrequent, or prolonged periods. Other symptoms include hair loss, or hair in places you don't want it, acne, darkened skin, mood changes, weight gain and others.
+The most common PCOS symptoms are missed, irregular, infrequent, or prolonged periods. Other symptoms include hair loss, or hair in places you don't want it, acne, darkened skin, mood changes, weight gain and others. Irregular periods, usually with a lack of ovulation, can make it difficult to become pregnant. PCOS is a leading cause of infertility.
 
 This example is concerned with the prediction of PCOS from a set of physical and clinical parameters. The data have been collected from 10 different hospitals across Kerala, India.
 
@@ -175,16 +175,18 @@ In [3]: df['pcos'].mean().round(3)
 Out[3]: 0.327
 ```
 
-## Feature matrix and target vector
+## Target vector and features matrix
 
-We create a target vector and a feature matrix. The target vector is the first column (`pcos`). Among the features, `blood` is categorical, so we have to replace it by a collection of dummies. We create a submatrix integrating all the columns, except `blood`.
+We create a target vector and a feature matrix. The target vector is the first column (`pcos`). Note that one of the features, `blood`, is categorical, so we have to replace it by a collection of dummies. 
+
+On one side, we create a submatrix integrating all the columns, except `blood`.
 
 ```
 In [4]: y = df['pcos']
    ...: X1 = df.drop(columns=['blood', 'pcos'])
 ```
 
-Next, we apply the Pandas function `get_dummies()` to the categorical feature.
+On the other side, we apply the Pandas function `get_dummies()` to the categorical feature.
 
 ```
 In [5]: X2 = pd.get_dummies(df['blood'])
@@ -192,13 +194,13 @@ In [5]: X2 = pd.get_dummies(df['blood'])
 Out[5]: Index([11, 12, 13, 14, 15, 16, 17, 18], dtype='int64')
 ```
 
-The column names of this matrix are integers, so we have to change that, which is easy.
+The column names of this matrix are integers, which are not accepted by scikit-learn. This is easy to fix, since, in Pandas, the current column names can be directly replaced by a new list of names.
 
 ```
 In [6]: X2.columns = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
 ```
 
-With the Pandas function `concat()`, we join the two parts of the new feature matrix, as we did in example ML-04.
+Now, we join `X1` and `X2` with the Pandas function `concat()`, , as we did in example ML-04, to get the new feature matrix.
 
 ```
 In [7]: X = pd.concat([X1, X2], axis=1)
@@ -206,11 +208,11 @@ In [7]: X = pd.concat([X1, X2], axis=1)
 
 ## Q1. Decision tree classifier
 
-We train a decision tree classifier, as requested. Given the dimensions of the feature matrix, we allow for maximum depth 5.
+To address question Q1, we train a decision tree classifier on tis data set. Given the dimensions of the features matrix, we start with maximum depth 5.
 
 ```
 In [8]: from sklearn.tree import DecisionTreeClassifier
-   ...: clf = DecisionTreeClassifier(max_depth=5)
+   ...: clf = DecisionTreeClassifier(criterion='entropy', max_depth=5)
    ...: clf.fit(X, y)
 Out[8]: DecisionTreeClassifier(max_depth=5)
 ```
@@ -218,44 +220,41 @@ Out[8]: DecisionTreeClassifier(max_depth=5)
 The accuracy is quite high. Note this applies to a very specific population.
 
 ```
-In [9]: clf.score(X, y).round(3)
-Out[9]: 0.941
+In [9]: round(clf.score(X, y), 3)
+Out[9]: 0.933
 ```
 
-Nevertheless, the confusion matrix warns us that the accuracy is not that high for the PCOS patients (84.1%).
+Nevertheless, the confusion matrix warns us that the accuracy is not that high for the PCOS patients (83.5%).
 
 ```
 In [10]: y_pred = clf.predict(X)
     ...: from sklearn.metrics import confusion_matrix
     ...: confusion_matrix(y, y_pred)
 Out[10]: 
-array([[358,   4],
-       [ 28, 148]])
+array([[357,   5],
+       [ 231, 145]])
 ```
 
-The relevance of the features involved in this tree is obtained as in example ML-08.
+A report on the importance of the features involved in this tree can be obtained as in example ML-08.
 
 ```
 In [11]: importance = pd.Series(clf.feature_importances_, index=X.columns)
     ...: importance[importance > 0].sort_values(ascending=False).round(3)
 Out[11]: 
-rfollicle      0.537
-weight_gain    0.103
-hair_growth    0.090
-lfollicle      0.072
-cyclelen       0.037
-lh             0.028
-lsize          0.022
-fsize          0.019
-waist          0.014
-amh            0.014
-endometrium    0.012
-pimples        0.011
-fastfood       0.011
-tsh            0.010
-marriage       0.009
-prg            0.007
-hip            0.002
+rfollicle      0.442
+hair_growth    0.109
+weight_gain    0.099
+lfollicle      0.084
+amh            0.048
+cyclelen       0.046
+lsize          0.044
+lh             0.030
+endometrium    0.020
+fastfood       0.019
+beta_hcg1      0.017
+fsize          0.015
+weight         0.013
+age            0.013
 dtype: float64
 ```
 
@@ -263,7 +262,7 @@ So far, it is pretty obvious which are the relevant features.
 
 ## Q2. Extra features
 
-We add the extra features suggested to the current feature matrix.
+We add now the extra features suggested in question Q2 to the current features matrix.
 
 ```
 In [12]: X['bmi'] = df['weight']/df['height']**2
@@ -271,38 +270,37 @@ In [12]: X['bmi'] = df['weight']/df['height']**2
     ...: X['hip_waist'] = df['hip']/df['waist']
 ```
 
-We train again the decision tree classifier.
+We train again the decision tree classifier with the enlarged features matrix.
 
 ```
 In [13]: clf.fit(X, y)
-    ...: clf.score(X, y).round(3)
-Out[13]: 0.952
+    ...: round(clf.score(X, y), 3)
+Out[13]: 0.942
 ```
 
-So, the new model is a bit better. The hip waist seems to be reponsible for the improvement.
+So, the accuracy of the new model isa bit higher. The LH/FSH ratio seems to be responsible for the improvement.
 
 ```
 In [14]: importance = pd.Series(clf.feature_importances_, index=X.columns)
     ...: importance[importance > 0].sort_values(ascending=False).round(3)
 Out[14]: 
-rfollicle      0.529
-weight_gain    0.101
-hair_growth    0.088
-lfollicle      0.061
-lh_fsh         0.033
-cyclelen       0.027
-endometrium    0.024
-lsize          0.022
-fsize          0.019
-marriage       0.017
-height         0.016
-hip_waist      0.014
-lh             0.012
-tsh            0.010
-rbs            0.009
-hb             0.008
-amh            0.008
-hip            0.002
+rfollicle      0.430
+hair_growth    0.106
+weight_gain    0.096
+lfollicle      0.081
+lh_fsh         0.059
+amh            0.040
+lsize          0.035
+cyclelen       0.024
+endometrium    0.019
+fastfood       0.019
+beta_hcg1      0.017
+weight         0.016
+bmi            0.015
+fsh            0.014
+marriage       0.012
+B-             0.009
+waist          0.008
 dtype: float64
 ```
 
@@ -313,7 +311,7 @@ We address now the validation of the decision tree classifier. We use the functi
 ```
 In [15]: from sklearn.model_selection import cross_val_score
     ...: cross_val_score(clf, X, y, cv=3).round(3)
-Out[15]: array([0.689, 0.799, 0.827])
+Out[15]: array([0.861, 0.732, 0.855])
 ```
 
 We have a clear case of **overfitting**. Let us try with a smaller tree.
@@ -325,21 +323,63 @@ We set now the maximum depth at 4, which will potentially halve the number of le
 ```
 In [16]: clf = DecisionTreeClassifier(max_depth=4)
     ...: clf.fit(X, y)
-    ...: clf.score(X, y).round(3)
-Out[16]: 0.931
+    ...: round(clf.score(X, y), 3)
+Out[16]: 0.916
 ```
 
-We still have an overfitting problem here, though not so extreme. We leave further analysis for the homework.
+So far, we still have an overfitting issue. Though the accuracies calculated on the three folds are more homogeneous, which is good news.
 
 ```
 In [17]: cross_val_score(clf, X, y, cv=3).round(3)
-Out[17]: array([0.833, 0.754, 0.832])
+Out[17]: array([0.833, 0.765, 0.849])
 ```
+
+The decision tree models trained so far have an average accuracy of 81.5% in the cross-validation analysis. Let us accept this and try a small tree, which will have the advantage of being easier to use as an **expert system**, to help the doctor's diagnosis. We try now a different approach to the control of the growth of the tree, based on the **maximum number of leaves**.
+
+```
+In [18]: clf = DecisionTreeClassifier(criterion='entropy', max_leaf_nodes=6)
+    ...: clf.fit(X, y)
+    ...: round(clf.score(X, y), 3)
+Out[18]: 0.859
+```
+
+This looks more realistic. The features involved in this tree are identified in the importance report.
+
+```
+In [19]: importance = pd.Series(clf.feature_importances_, index=X.columns)
+    ...: importance[importance > 0].sort_values(ascending=False).round(3)
+Out[19]: 
+rfollicle      0.613
+weight_gain    0.149
+hair_growth    0.120
+amh            0.061
+lfollicle      0.057
+dtype: float64
+```
+
+The cross-validation does not give us a surprise. We have an average accuracy of 82%, and the three folds have produce similar scores.
+
+```
+In [20]: cross_val_score(clf, X, y, cv=3).round(3)
+Out[20]: array([0.828, 0.821, 0.81 ])
+```
+
+## Plotting the tree
+
+The interpretability of such a simple model can be enhanced by plotting the tree as explained in lecture ML-07. The function `plot_tree` of the module `tree` can be combined with `matplotlib.pyplot` specifications.
+
+```
+In [21]: from matplotlib import pyplot as plt
+    ...: from sklearn.tree import plot_tree
+    ...: plt.figure(figsize=(13,7))
+    ...: plot_tree(clf, fontsize=10)
+    ...: plt.title('Figure 1. PCOS diagnosis tree', fontsize=16);
+```
+
+![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/12-1.png)
 
 ## Homework
 
-1. Try a new decision tree classifier, with less depth, to see whether you can so fix the overfitting problem.
+1. Apply the same cross-validation approach to a logistic regression model. Do you get better results?
 
-2. Apply the same cross-validation approach to a logistic regression model. Do you get better results?
-
-3. Cross-validation in scikit-learn uses a non-random specific splitting strategy called `StratifiedKFold`. So you get the same results across calls of `cross_val_score`. You can change this easily by replacing `X` and `y` by "shuffled" versions, which can be created with the method `.sample()`. Try that and see what happens. Take care of shuffling `X` and `y` in the same way, by giving the same value to the parameter `random_state` of `.sample()`.
+2. Cross-validation in scikit-learn uses a non-random specific splitting strategy called `StratifiedKFold`. So you get the same results across calls of `cross_val_score`. You can change this easily by replacing `X` and `y` by "shuffled" versions, which can be created with the method `.sample()`. Try that and see what happens. Take care of shuffling `X` and `y` in the same way, by giving the same value to the parameter `random_state` of `.sample()`.
