@@ -44,7 +44,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 clf = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=6)
 ```
 
-**XGBoost** (extreme gradient boosting) is an implementation of gradient boosting designed for speed and performance. For many years, it has often been top-ranked in applied machine learning competitions. For Python, it is available in the package `xgboost`, which can be used as if it were a scikit-learn subpackage (though other API's are available). Gradient boosting optimization takes less time in `xgboost` than in scikit-learn. The defaults are `n_estimators=100`, `learning_rate=0.3` and `max_depth=6`.
+**XGBoost** (extreme gradient boosting) is an implementation of gradient boosting designed for speed and performance. For many years, it has often been top-ranked in applied machine learning competitions. For Python, it is available in the package `xgboost`, which can be used as if it were a scikit-learn subpackage, with the **Scikit-Learn Estimator Interface** (see `https://xgboost.readthedocs.io/en/stable/python/sklearn_estimator.html`). Gradient boosting optimization takes less time in `xgboost` than in scikit-learn. The defaults are `n_estimators=100`, `learning_rate=0.3` and `max_depth=6`.
 
 The `xgboost` version of the preceding example would be:
 
@@ -53,4 +53,4 @@ from xgboost import XGBClassifier
 clf = XGBClassifier(n_estimators=100, learning_rate=0.1, max_depth=6)
 ```
 
-*Note*. `xgboost` can be installed from the shell or the console, with `pip install xgboost`. A few years ago, the installation raised conflicts of versions in many computers. These problems seem to have disappeared. The last versions do not seem to present installation problems. It is already available in Google Colab, so no installation is needed there.
+*Note*. `xgboost` can be installed from the shell or the console, with `pip install xgboost`. A few years ago, the installation raised conflicts of versions in many computers. These problems seem to have disappeared, and the last versions do not seem to present installation problems. It is already available in Google Colab, so no installation is needed there.
