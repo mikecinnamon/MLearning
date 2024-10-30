@@ -148,9 +148,9 @@ In [5]: df_train.shape, df_test.shape
 Out[5]: ((11885, 34), (2972, 34))
 ```
 
-## Target vectors and feature matrices
+## Target vectors and features matrices
 
-Next, we define a target vector and a feature matrix for both training and test data.
+Next, we define a target vector and a features matrix for both training and test data.
 
 ```
 In [6]: y_train, X_train = df_train['resp'], df_train.drop(columns='resp')
