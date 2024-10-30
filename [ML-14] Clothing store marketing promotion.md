@@ -2,13 +2,13 @@
 
 ## Introduction
 
-A clothing store chain in Boston is designing its marketing campaign, wishing to predict which customers will respond to a **direct mail promotion**. The promotion will be based on the existing customers database, which contains information on 14,857 customers. The database, built from a direct mail campaign conducted past year, integrates a collection of fields related to **consumption habits**. There is detailed information on the franchises visited, the money spent, the products purchased, the margin left, and the participation on sales and promotions. In the database, the proportion of respondents to the previous campaign is about a 17%.
+A clothing store chain in Boston is planning a marketing campaign, based on a **direct mail promotion**. The promotion will use the existing customer database, which contains information on 14,857 customers. The database, built from a direct mail campaign conducted past year, integrates a collection of fields related to **consumption habits**. There is detailed information on the franchises visited, the money spent, the products purchased, the margin left, and the participation on sales and promotions. In the database, the proportion of respondents to the previous campaign is about 17%.
 
-The campaign designers consider the prediction model from a business perspective: not all the wrong predictions are equally bad, nor all the right predictions equally good. Their **cost/benefit analysis** is based on the following two points:
+The campaign manager would like to have a model for predicting which customers would respond to the promotion, so that a target sample could be extracted, getting more focus. To help herself in the selection of the adequate predictive model, she develops a **cost/benefit analysis** based on the following two points:
 
 * The cost of mailing is estimated at $5.00 per promotion unit.
 
-* To estimate the average benefit for the customer that responds to the campaign, they calculate the average spent per visit by the customers in the database, $122.44. Since the average gross margin percentage is about 50%, and usually one half of it can be taken as net profit, they set the net profit per respondent at $30.61.
+* To estimate the average benefit for the customer that responds to the campaign, she calculates the average spent per visit by the customers in the database, $122.44. Since the average gross margin percentage is about 50%, and usually one half of it can be taken as net profit, she sets the net profit per respondent at $30.61.
 
 ## The data set
 
@@ -60,11 +60,11 @@ Source: DT Larose (2006), *Data Mining Methods and Models*, Wiley.
 
 ## Questions
 
-Q1. After leaving aside a 20% of the data for testing, train the following classifiers: (a) a **logistic regression model**, (b) a **decision tree model** with maximum depth 4, (c) a **random forest model** with the same maximum depth, and (d) a **grading boosting model** with the same maximum depth. For the ensemble models, use a number of trees high enough to allow **overfitting**.
+Q1. Leaving aside a 20% of the data for testing, train the following classifiers: (a) a **logistic regression model**, (b) a **decision tree model** with maximum depth 4, (c) a **random forest model** with the same maximum depth, and (d) a **grading boosting model** with the same maximum depth. For the ensemble models, use a number of trees high enough to allow for **overfitting**.
 
-Q2. Calculate a vector of **predictive scores** for each model and compare the distributions, taking into account the cost-benefit analysis proposed in the introduction.
+Q2. Calculate a **predictive score** for each training unit, based on these four models. Compare the distributions of the scores across models. taking into account the cost-benefit analysis proposed in the introduction, which makes false negatives more relevant than false positives. What would be your choice? What **threshold** would you apply to the scores to classify the training units?
 
-Q3. Select the best two models and use them to calculate predictive scores for the test data. Apply a **threshold** of your choice to the scores, and calculate the corresponding **confusion matrices**. Which model is better? Why?
+Q3. Calculate predictive scores for the test data with the models that have survived the screening of Q2. Apply the threshold and calculate the corresponding **true positive rate** and **false positive rate**. Which model is better? Why?
 
 ## Importing the data
 
@@ -78,7 +78,7 @@ In [1]: import pandas as pd
 
 ## Exploring the data
 
-We print a report of the content of the data frame `df` with the method `.info()`. We find everything as expected. There are no missing values.
+We print a report of the content of the data frame `df` with the method `.info()`. In this report, everything looks as expected. There are no missing values.
 
 ```
 In [2]: df.info()
@@ -134,11 +134,11 @@ Out[3]: 0.17
 
 ## Train-test split
 
-We split the data as suggested in question Q1, keeping a 20% of the data for testing.
+We split the data as suggested in question Q1, keeping a 20% of the data for testing. The argument `random_state=0` ensures the reproducibility of the split.
 
 ```
 In [4]: from sklearn.model_selection import train_test_split
-   ...: df_train, df_test = train_test_split(df, test_size=0.2)
+   ...: df_train, df_test = train_test_split(df, test_size=0.2, random_state=0)
 ```
 
 So, these are the numbers. With 2,972 testing units, the 17% conversion rate gives us about 500 positives in the testing data set.
@@ -157,9 +157,9 @@ In [6]: y_train, X_train = df_train['resp'], df_train.drop(columns='resp')
    ...: y_test, X_test = df_test['resp'], df_test.drop(columns='resp')
 ```
 
-## Q1. Training the four models
+## Q1. Training the models
 
-Our first candidate will be a logistic regression model. The maximum number of iterations has been set after some trial and error (not shown here).
+Our first candidate will be the logistic regression model. The maximum number of iterations has been set after some trial and error (not shown here).
 
 ```
 In [7]: from sklearn.linear_model import LogisticRegression
@@ -168,7 +168,7 @@ In [7]: from sklearn.linear_model import LogisticRegression
 Out[7]: LogisticRegression(max_iter=5000)
 ```
 
-Second, a decision tree model, with maximum depth 4. As we did in example ML-08, we specify the cross-entropy as the loss function, by means of the parameter `criterion`.
+Second, a decision tree model, with maximum depth 4. As we did in examples ML-08 and ML-11, we specify the cross-entropy as the loss function, in the parameter `criterion`.
 
 ```
 In [8]: from sklearn.tree import DecisionTreeClassifier
@@ -177,7 +177,7 @@ In [8]: from sklearn.tree import DecisionTreeClassifier
 Out[8]: DecisionTreeClassifier(criterion='entropy', max_depth=4)
 ```
 
-Third, a random forest model with the same loss function and the same maximum depth. The default for the number of trees (parameter `n_estimators`) is 100, but, following the suggestion of question Q1, we raise this to 200.
+Third, a random forest model with the same loss function and the same maximum depth. The default for the number of trees (parameter `n_estimators`) is 100, but, following the suggestion in Q1, we have raised this to 200.
 
 ```
 In [9]: from sklearn.ensemble import RandomForestClassifier
@@ -186,7 +186,7 @@ In [9]: from sklearn.ensemble import RandomForestClassifier
 Out[9]: RandomForestClassifier(criterion='entropy', max_depth=4, n_estimators=200)
 ```
 
-Finally, the gradient boosting model. We set the maximum depth and the number of trees as for the random forest model (no defaults). The **learning rate** 0.1 is a typical one (no default). The deafult loss function (parameter `objective`) is the cross-entropy, so we specify nothing here, to make it simpler, focusing on the number of trees and their size.
+Finally, the gradient boosting model. We set the maximum depth and the number of trees as for the random forest model (there is no default here). The **learning rate** 0.1 is a typical one (the default rate is 0.3). The default loss function (parameter `objective`) is the cross-entropy, so we specify nothing here, to make it shorter, focusing on the number of trees and their size.
 
 ```
 In [10]: from xgboost import XGBClassifier
@@ -206,7 +206,7 @@ XGBClassifier(base_score=None, booster=None, callbacks=None,
               num_parallel_tree=None, random_state=None, ...)
 ```
 
-## Plotting function
+## Q2. Predictive scores
 
 To plot the scores, separately for positive and negative training units, we will use the same code as in examples ML-06 and ML-10. First, we import `matplotlib.pyplot` in the usual way.
 
@@ -214,10 +214,11 @@ To plot the scores, separately for positive and negative training units, we will
 In [11]: from matplotlib import pyplot as plt
 ```
 
-We pack the code chunk for the plots as a Python function, for coding efficiency. 
+We pack a code chunk that calculates the scores and plots the histograms as a Python function, for efficiency. 
 
 ```
-In [12]: def score_plot(score):
+In [12]: def score_plot(mod):
+    ...:     score = mod.predict_proba(X_train)[:, 1]
     ...:     # Set the size of the figure
     ...:     plt.figure(figsize=(12,5))
     ...:     # First subplot
@@ -232,13 +233,10 @@ In [12]: def score_plot(score):
     ...:     plt.xlabel('Predictive score');
 ```
 
-## Q2. Predictive scores
-
 We calculate now the predictive scores for each model, applying the plotting function just defined to get the histograms. First, the logistic regression model.
 
 ```
-In [13]: log_score = logclf.predict_proba(X_train)[:, 1]
-    ...: score_plot(log_score)
+In [13]: score_plot(logclf)
 ```
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-1.png)
@@ -246,19 +244,17 @@ In [13]: log_score = logclf.predict_proba(X_train)[:, 1]
 Based on these histograms, a theshold about 0.2 or a bit less looks reasonable. We take a look now to the scores of the decision tree model.
 
 ```
-In [14]: tree_score = treeclf.predict_proba(X_train)[:, 1]
-    ...: score_plot(tree_score)
+In [14]: score_plot(treeclf)
 ```
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-2.png)
 
-These histograms look a bit awkward at first sight, but their shape can be explained by the fact that a decision tree model produces a *discrete score*, with as many different values as the number of leaf nodes. This number, with maximum depth 4, cannot exceed 16. Thresholds don't make much sense for the scores of a decision tree model.
+These histograms look a bit awkward at first sight, but their shape can be explained by the fact that a decision tree model produces a *discrete score*, with as many different values as the number of leaf nodes. This number, with maximum depth 4, cannot exceed 16. Given this discrete structure of the scores, thresholds don't make much sense here.
 
 Next, we take the random forest model, which, compared to the logistic regression model, does not look as a serious competitor. Note that, by averaging the trees that integrate the forest, we no longer have a discrete score, with just a few different values.
 
 ```
-In [15]: rf_score = rfclf.predict_proba(X_train)[:, 1]
-    ...: score_plot(rf_score)
+In [15]: score_plot(rfclf)
 ```
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-3.png)
@@ -267,56 +263,55 @@ In [15]: rf_score = rfclf.predict_proba(X_train)[:, 1]
 Finally, the gradient boosting model, which looks superior to the other three. Since we have been warned that gradient boosting models are prone to overfitting, we postpone our conclusions until we have tested this approach.
 
 ```
-In [16]: xgb_score = xgbclf.predict_proba(X_train)[:, 1]
-    ...: score_plot(xgb_score)
+In [16]: score_plot(xgbclf)
 ```
 
 ![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-4.png)
 
-## Q3. Testing
+## Q3. Testing the models
 
-In the preceding section, we have trained four models. On the training data, the gradient boosting model is the top performer, followed by the logistic regression model. So, we pick these two for the testing step. Mind that, while logistic regression is, essentially, a single thing, we can obtain different gradient boosting models by changing the parameters `max_depth` and `n_estimators`. What we say in this section about gradient boosting refers only to the specific choice we have made (`max_depth=4` and `n_estimators=200`). Trying a few alternatives is proposed as part of the homework. 
-
-First, the logistic regression model. We set the threshold at 0.2 (you can also try variations on this), extracting two confusion matrices, one for the training data and another one for the testing data. 
+As we did in the preceding section, we pack here a sequence of calculations as a function, for efficiency. This function will return, foe each model, the true positive and false positive rates, for both the training and the test data. We set the threshold at 0.2 (you can try variations on this).
 
 ```
-In [17]: log_score_train, log_score_test = logclf.predict_proba(X_train)[:, 1], logclf.predict_proba(X_test)[:, 1]
-    ...: y_pred_train, y_pred_test = log_score_train > 0.2, log_score_test > 0.2
-    ...: conf_train, conf_test = pd.crosstab(y_train, y_pred_train), pd.crosstab(y_test, y_pred_test)
-    ...: conf_train, conf_test
-Out[17]: 
-(col_0  False  True 
- resp               
- 0       7240   2612
- 1        464   1569,
- col_0  False  True 
- resp               
- 0       1752    724
- 1        106    390)
+In [17]: def test(mod):
+    ...:     score_train, score_test = mod.predict_proba(X_train)[:, 1], mod.predict_proba(X_test)[:, 1]
+    ...:     y_pred_train, y_pred_test = score_train > 0.2, score_test > 0.2
+    ...:     tp_train = y_pred_train[y_train == 1].mean().round(3)
+    ...:     fp_train = y_pred_train[y_train == 0].mean().round(3)
+    ...:     tp_test = y_pred_test[y_test == 1].mean().round(3)
+    ...:     fp_test = y_pred_test[y_test == 0].mean().round(3)
+    ...:     return (tp_train, fp_train), (tp_test, fp_test)
 ```
 
-A visual inspection is enough here to conclude that there is not evidence of overfitting for the logistic regression approach. For instance, the true positive rates are 77.1% and 78.6%, respectively. Let us repeat the exercise with our gradient boosting model.
+In the preceding section, we have trained four models, discarding the decision tree model for the current analysis. When comparing the histograms, the gradient boosting model looks as the top performer on the training data, followed by the other two models. Mind that, while logistic regression is, essentially, a single thing, we can obtain different ensemble models by changing the parameters `max_depth` and `n_estimators`. What we say in this section about these models refers only to the specific choice we have made (`max_depth=4` and `n_estimators=200`). We left further exploration for the homework. 
+
+First, we test the logistic regression model. There is not evidence of overfitting. 
 
 ```
-In [18]: xgb_score_train, xgb_score_test = xgbclf.predict_proba(X_train)[:, 1], xgbclf.predict_proba(X_test)[:, 1]
-    ...: y_pred_train, y_pred_test = xgb_score_train > 0.2, xgb_score_test > 0.2
-    ...: conf_train, conf_test = pd.crosstab(y_train, y_pred_train), pd.crosstab(y_test, y_pred_test)
-    ...: conf_train, conf_test
-Out[18]: 
-(col_0  False  True 
- resp               
- 0       7892   1960
- 1        265   1768,
- col_0  False  True 
- resp               
- 0       1836    640
- 1        126    370)
+In [18]: test(logclf)
+Out[18]: ((0.774, 0.269), (0.772, 0.26))
 ```
 
-Overfitting is evident here. For instance, the true positive rate is 87% on the training data and 74.6% on the test data, which makes a difference from a business perspective. For this model, the performance on the test data should be taken as the only valid evaluation. Given the cost/benefit analysis suggested in the introduction, the comparison between the two models would favor the logistic regression model. You can explore this a bit more in the homework.
+Let us repeat the exercise with our random forest model. This seems to be slightly overfitting the training data, but should be confirmed with more splits (changing the `random_state` value). Anyway, compared to the logistic regression model, this model shows a lower true positive rate, so it will be left aside, given the cost/benefit estimates provided.
+
+```
+In [19]: test(rfclf)
+Out[19]: ((0.726, 0.228), (0.71, 0.22))
+```
+
+Finally, the gradient boosting model. Overfitting is evident here. For instance, the true positive rate is 87% on the training data and 74.6% on the test data, which makes a difference from a business perspective. For this model, the performance on the test data should be taken as the only valid evaluation. Given the cost/benefit analysis suggested in the introduction, the comparison between the two models would favor the logistic regression model. You can explore this a bit more in the homework.
+
+```
+In [20]: test(xgbclf)
+Out[20]: ((0.857, 0.199), (0.727, 0.211))
+```
 
 ## Homework
 
-1. Switch to `max_depth=5` in the random forest model, to see whether it becomes competitive.
+1. Try other values of the parameter `random_state` in train/test split, to see the extent to which the results may change. 
 
-2. Intuition suggests that too may iterations in the gradient boosting process may lead to a model with very performance on the training data but, at the same time, may have a negative impact on the performance on test data. To explore this question, try different values of `n_estimators`, such as 25, 50, 100 and 150, to monitor the overfitting and its potential negative impact on the performance of the gradient boosting model on the test data.
+2. Switch to `max_depth=5` in the random forest model, to see whether it becomes competitive.
+
+3. Intuition suggests that too may iterations in the gradient boosting process may lead to a model with very performance on the training data but, at the same time, may have a negative impact on the performance on test data. To explore this question, try different values of `n_estimators`, such as 25, 50, 100 and 150, to monitor the overfitting and its potential negative impact on the performance of the gradient boosting model on the test data.
+
+4. Evaluate in dollar terms the models that you find interesting.
