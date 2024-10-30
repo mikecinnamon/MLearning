@@ -11,7 +11,7 @@ df['resp'].mean().round(3)
 
 # Train-test split #
 from sklearn.model_selection import train_test_split
-df_train, df_test = train_test_split(df, test_size=0.2)
+df_train, df_test = train_test_split(df, test_size=0.2, random_state=0)
 df_train.shape, df_test.shape
 
 # Target vectors and feature matrices #
@@ -38,9 +38,10 @@ from xgboost import XGBClassifier
 xgbclf = XGBClassifier(learning_rate=0.1, max_depth=4, n_estimators=200)
 xgbclf.fit(X_train, y_train)
 
-# Plotting function #
+# Q2a. Plotting function #
 from matplotlib import pyplot as plt
-def score_plot(score):
+def score_plot(mod):
+    score = mod.predict_proba(X_train)[:, 1]
     # Set the size of the figure
     plt.figure(figsize=(12,5))
     # First subplot
@@ -54,47 +55,23 @@ def score_plot(score):
     plt.title('Figure b. Scores (negatives)')
     plt.xlabel('Predictive score');
 
-# Q2a. Logistic regression scores #
-log_score = logclf.predict_proba(X_train)[:, 1]
-score_plot(log_score)
+# Q2b. Comparing distributions #
+score_plot(logclf)
+score_plot(treeclf)
+score_plot(rfclf)
+score_plot(xgbclf)
 
-# Q2b. Decision tree scores #
-tree_score = treeclf.predict_proba(X_train)[:, 1]
-score_plot(tree_score)
+# Q3a. Testing function #
+def test(mod):
+    score_train, score_test = mod.predict_proba(X_train)[:, 1], mod.predict_proba(X_test)[:, 1]
+    y_pred_train, y_pred_test = score_train > 0.2, score_test > 0.2
+    tp_train = y_pred_train[y_train == 1].mean().round(3)
+    fp_train = y_pred_train[y_train == 0].mean().round(3)
+    tp_test = y_pred_test[y_test == 1].mean().round(3)
+    fp_test = y_pred_test[y_test == 0].mean().round(3)
+    return (tp_train, fp_train), (tp_test, fp_test)
 
-# Q2c. Random forest scores #
-rf_score = rfclf.predict_proba(X_train)[:, 1]
-score_plot(rf_score)
-
-# Q2d. XGBoost scores #
-xgb_score = xgbclf.predict_proba(X_train)[:, 1]
-score_plot(xgb_score)
-
-# Q3a. Testing the logistic regression model #
-log_score_train, log_score_test = logclf.predict_proba(X_train)[:, 1], logclf.predict_proba(X_test)[:, 1]
-y_pred_train, y_pred_test = log_score_train > 0.2, log_score_test > 0.2
-conf_train, conf_test = pd.crosstab(y_train, y_pred_train), pd.crosstab(y_test, y_pred_test)
-conf_train, conf_test
-
-# Q3b. Testing the XGBoost model #
-xgb_score_train, xgb_score_test = xgbclf.predict_proba(X_train)[:, 1], xgbclf.predict_proba(X_test)[:, 1]
-y_pred_train, y_pred_test = xgb_score_train > 0.2, xgb_score_test > 0.2
-conf_train, conf_test = pd.crosstab(y_train, y_pred_train), pd.crosstab(y_test, y_pred_test)
-conf_train, conf_test
-
-
-# XGBoost model #
-from xgboost import XGBClassifier
-xgbclf = XGBClassifier(max_depth=4, n_estimators=200)
-xgbclf.fit(X_train, y_train)
-y_pred = xgbclf.predict(X_test)
-conf = pd.crosstab(y_test, y_pred)
-conf
-
-# Logistic regression classifier #
-from sklearn.linear_model import LogisticRegression
-logclf = LogisticRegression(max_iter=2000)
-logclf.fit(X_train, y_train)
-y_pred = logclf.predict(X_test)
-conf = pd.crosstab(y_test, y_pred)
-conf
+# Q3b. Comparing stats #
+test(logclf)
+test(rfclf)
+test(xgbclf)
