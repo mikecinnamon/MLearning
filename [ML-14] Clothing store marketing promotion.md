@@ -127,7 +127,7 @@ memory usage: 4.0 MB
 
 We rescale all the money columns to facilitate the convergence of the logistic regression model. The relevance of normalization for the equation-based models will appear again in later examples.
 
-````
+```
 In [3]: df[list(df.columns[4:9]) + list(df.columns[24:27])] = df[list(df.columns[4:9]) + list(df.columns[24:27])]/1000
 ```
 
