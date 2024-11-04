@@ -125,9 +125,9 @@ In [3]: df['sat'].mean().round(3)
 Out[3]: 0.467
 ```
 
-## Target vector and feature matrix
+## Target vector and features matrix
 
-As in other examples of supervised learning, we create a target vector and a feature matrix. The target vector is the last column (`sat`) and the feature matrix is made of the other columns.
+As in other examples of supervised learning, we create a target vector and a features matrix. The target vector is the last column (`sat`) and the features matrix is made of the other columns.
 
 ```
 In [4]: y = df['sat']
@@ -157,7 +157,7 @@ Out[6]: RandomForestClassifier(max_depth=5, n_estimators=200, random_state=0)
 Then, we evaluate the model on both the training and the test subsets, which comes easily in scikit-learn.
 
 ```
-In [7]: rf.score(X_train, y_train).round(3), rf.score(X_test, y_test).round(3)
+In [7]: round(rf.score(X_train, y_train), 3), round(rf.score(X_test, y_test), 3)
 Out[7]: (0.913, 0.911)
 ```
 
@@ -188,7 +188,7 @@ XGBClassifier(base_score=None, booster=None, callbacks=None,
 Overfitting, whis is typical of gradient boosting models, is moderate in this case. We can take the accuracy 95% as the benchmark for other models. This is a **shallow model**, which takes the actual features as they come, with no **feature engineering**
 
 ```
-In [9]: xgb.score(X_train, y_train).round(3), xgb.score(X_test, y_test).round(3)
+In [9]: round(xgb.score(X_train, y_train), 3), round(xgb.score(X_test, y_test), 3)
 Out[9]: (0.969, 0.953)
 ```
 
@@ -199,28 +199,28 @@ In a predictive model based on decision trees, the relevance of the different fe
 ```
 In [10]: pd.Series(xgb.feature_importances_, index=X.columns).sort_values(ascending=False)
 Out[10]: 
-online_board    0.380214
-business        0.149885
-wifi            0.082065
-busclass        0.078103
-first           0.074857
-entertain       0.034292
-checkin         0.031343
-seat            0.023297
-clean           0.020647
-baggage         0.020112
-gate            0.018233
-leg_room        0.017903
-in_flight       0.015224
-on_board        0.013118
-time            0.008011
-age             0.007870
-online_book     0.007446
-arrdelay        0.005196
-food            0.003832
-distance        0.003288
-depdelay        0.002653
-female          0.002411
+online_board    0.380
+business        0.150
+wifi            0.082
+busclass        0.078
+first           0.075
+entertain       0.034
+checkin         0.031
+seat            0.023
+clean           0.021
+baggage         0.020
+gate            0.018
+leg_room        0.018
+in_flight       0.015
+on_board        0.013
+time            0.008
+age             0.008
+online_book     0.007
+arrdelay        0.005
+food            0.004
+distance        0.003
+depdelay        0.003
+female          0.002
 dtype: float32
 ```
 
@@ -288,7 +288,7 @@ Out[19]: 0.907
 
 ## Q5. Multilayer perceptron model (normalized data)
 
-Though scikit-learn has a method for normalizing all the columns of the feature matrix in one shot, it is not dificult to do it in Pandas. First we define a **min-max normalization** function:
+Though scikit-learn has a method for normalizing all the columns of the features matrix in one shot, it is not dificult to do it in Pandas. First we define a **min-max normalization** function:
 
 ```
 In [20]: def normalize(x): 
@@ -301,7 +301,7 @@ Now, we apply this function by column with the method `.apply()`.
 In [21]: XN = X.apply(normalize)
 ```
 
-We have now a new feature matrix, that we split exactly in the same way as we did with `X` and `y` (the argument `random_state=0` does the trick).
+We have now a new features matrix, that we split exactly in the same way as we did with `X` and `y` (the argument `random_state=0` does the trick).
 
 ```
 In [22]: XN_train, XN_test = train_test_split(XN, test_size=0.2, random_state=0)
