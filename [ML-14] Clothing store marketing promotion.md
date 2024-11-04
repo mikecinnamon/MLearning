@@ -1,317 +1,317 @@
-# [ML-14] Clothing store marketing promotion
+# [ML-16] Example - Airline passenger satisfaction
 
 ## Introduction
 
-A clothing store chain in Boston is planning a marketing campaign, based on a **direct mail promotion**. The promotion will use the existing customer database, which contains information on 14,857 customers. The database, built from a direct mail campaign conducted past year, integrates a collection of fields related to **consumption habits**. There is detailed information on the franchises visited, the money spent, the products purchased, the margin left, and the participation on sales and promotions. In the database, the proportion of respondents to the previous campaign is about 17%.
+The data for this example, published by Mysar Ahmad Bhat, provide details of customers who have already flown with an **airline company**. The feedback of the customers on various contexts and their flight data has been consolidated.
 
-The campaign manager would like to have a model for predicting which customers would respond to the promotion, so that a target sample could be extracted, getting more focus. To help herself in the selection of the adequate predictive model, she develops a **cost/benefit analysis** based on the following two points:
-
-* The cost of mailing is estimated at $5.00 per promotion unit.
-
-* To estimate the average benefit for the customer that responds to the campaign, she calculates the average spent per visit by the customers in the database, $122.44. Since the average gross margin percentage is about 50%, and usually one half of it can be taken as net profit, she sets the net profit per respondent at $30.61.
+The main objective of the data could be to predict whether a future customer would be satisfied with the service given by this company, from the features evaluated in the study. A second objective could be to explore which aspects of the services offered have to be emphasized to generate more satisfied customers.
 
 ## The data set
 
-The variables included in the data set (file `clothing.csv`) are:
+The file `airsat.csv` contains data on 113,485 customers. The columns are:
 
-* `id`, a customer ID (encripted).
+* `female`, gender of the passenger (Female=1, Male=0).
 
-* `phone` a dummy for having a valid phone number on file.
+* `age`, age of the passenger. Only passengers older than 15 were included in the data collection.
 
-* `web`, a dummy for being a web shopper.
+* `first`, type of airline customer (First-time=1, Returning=0).
 
-* `visit`, the number of purchase visits.
+* `business`, purpose of the flight (Business=1, Personal=0).
 
-* `money`, the total net sales in US dollars.
+* `busclass`, travel class for the passenger seat (Business=1, Economy=0).
 
-* `beacon`, the expense in the Beacon Street store in US dollars.
+* `distance`, flight distance in miles.
 
-* `hann`, the expense in the Hannover Street store in US dollars.
+* `depdelay`, flight departure delay in minutes.
 
-* `mass`, the expense in the Massachusetts Avenue store in US dollars.
+* `arrdelay`, flight arrival delay in minutes.
 
-* `newbury`, the expense in the Newbury Street store in US dollars.
+* `time`, satisfaction with the convenience of the flight departure and arrival times from 1 (lowest) to 5 (highest). 
 
-* `sweather`, `ktop`, `kdress`, `blouse`, `jacket`, `crpant`, `cspant`, `shirt`, `dress`, `fashion`, `suit`, `outwear`, `jewel`, `lwear` and `coll`, the percentage spent in sweaters, knit tops, knit dresses, blouses, jackets, career pants, casual pants, shirts, dresses, suits, outerwear, jewelry, fashion, legwear and the collectibles line.
+* `online_book`, satisfaction with the online booking experience from 1 (lowest) to 5 (highest). 
 
-* `omon`, the expense in the last month in US dollars.
+* `checkin`, satisfaction with the check-in service from 1 (lowest) to 5 (highest). 
 
-* `tmon`, the expense in the last 3 months in US dollars.
+* `online_board`, satisfaction with the online boarding experience from 1 (lowest) to 5 (highest). 
 
-* `smon`, the expense in the last 6 months in US dollars.
+* `gate`, satisfaction with the gate location in the airport from 1 (lowest) to 5 (highest). 
 
-* `gmp`, the gross margin percentage.
+* `on_board`, satisfaction with the on-boarding service in the airport from 1 (lowest) to 5 (highest).
 
-* `mdown`, the percentage of expense in merchandise marked down.
+* `seat`, satisfaction with the comfort of the airplane seat from 1 (lowest) to 5 (highest). 
 
-* `promomail`, the number of promotions mailed past year.
+* `leg_room`, satisfaction with the leg room of the airplane seat from 1 (lowest) to 5 (highest). 
 
-* `promoresp`, the number of promotions responded past year.
+* `clean`, satisfaction with the cleanliness of the airplane from 1 (lowest) to 5 (highest). 
 
-* `produnif`, a measure of product uniformity (low = diverse).
+* `food`, satisfaction with the food and drinks on the airplane from 1 (lowest) to 5 (highest). 
 
-* `dbetween`, the mean time between visits in days.
+* `in_flight`, satisfaction with the in-flight service from 1 (lowest) to 5 (highest). 
 
-* `return`, percentage of merchandise returned.
+* `wifi`, satisfaction with the in-flight Wifi service from 1 (lowest) to 5 (highest). 
 
-* `resp`, a dummy for responding to the promotion.
+* `entertain`, satisfaction with the in-flight entertainment from 1 (lowest) to 5 (highest). 
 
-Source: DT Larose (2006), *Data Mining Methods and Models*, Wiley.
+* `baggage`, satisfaction with the baggage handling from the airline from 1 (lowest) to 5 (highest). 
+
+* `sat`, overall satisfaction with the airline (Satisfied=1, Neutral or unsatisfied=0).
+
+Source of the data: Kaggle. Rows with missing data have been deleted. The option 'Not applicable' was available in the questionnaire for the satisfaction levels measured in 1-5 range, but it was encoded as 3.
 
 ## Questions
 
-Q1. Leaving aside a 20% of the data for testing, train the following classifiers: (a) a **logistic regression model**, (b) a **decision tree model** with maximum depth 4, (c) a **random forest model** with the same maximum depth, and (d) a **grading boosting model** with the same maximum depth. For the ensemble models, use a number of trees high enough to allow for **overfitting**.
+Q1. Develop a **random forest** model for predicting the passenger satisfaction.
 
-Q2. Calculate a **predictive score** for each training unit, based on these four models. Compare the distributions of the scores across models. taking into account the cost-benefit analysis proposed in the introduction, which makes false negatives more relevant than false positives. What would be your choice? What **threshold** would you apply to the scores to classify the training units?
+Q2. The same for a **XGBoost** model. Is the improvement relevant?
 
-Q3. Calculate predictive scores for the test data with the models that have survived the screening of Q2. Apply the threshold and calculate the corresponding **true positive rate** and **false positive rate**. Which model is better? Why?
+Q3. Which features are most relevant for predicting the passenger satisfaction?
+
+Q4. Try a **multilayer perceptron** model. Is it better than the ensemble models? 
+
+Q5. Does the MLP model get better after **normalizing** the features?
 
 ## Importing the data
 
-As in the preceding examples, we use the Pandas funcion `read_csv()` to import the data from a GitHub repository. In this case, we take the column `id` as the index (`index_col=0`).
+As in other examples, we use the Pandas funcion `read_csv()` to import the data from a GitHub repository. Since the passengers don't have an identifier, we let the index be a `RangeIndex`. 
 
 ```
 In [1]: import pandas as pd
    ...: path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
-   ...: df = pd.read_csv(path + 'clothing.csv', index_col=0)
+   ...: df = pd.read_csv(path + 'airsat.csv')
 ```
 
 ## Exploring the data
 
-We print a report of the content of the data frame `df` with the method `.info()`. In this report, everything looks as expected. There are no missing values.
+The data report printed by the method `.info()` does not contradict the description given above. There are no null values.
 
 ```
 In [2]: df.info()
 <class 'pandas.core.frame.DataFrame'>
-Index: 14857 entries, 9955600066402 to 9955636073885
-Data columns (total 34 columns):
- #   Column     Non-Null Count  Dtype  
----  ------     --------------  -----  
- 0   phone      14857 non-null  int64  
- 1   ccard      14857 non-null  int64  
- 2   web        14857 non-null  int64  
- 3   visit      14857 non-null  int64  
- 4   money      14857 non-null  float64
- 5   beacon     14857 non-null  float64
- 6   hann       14857 non-null  float64
- 7   mass       14857 non-null  float64
- 8   newbury    14857 non-null  float64
- 9   sweather   14857 non-null  float64
- 10  ktop       14857 non-null  float64
- 11  kdress     14857 non-null  float64
- 12  blouse     14857 non-null  float64
- 13  jacket     14857 non-null  float64
- 14  crpant     14857 non-null  float64
- 15  cspant     14857 non-null  float64
- 16  shirt      14857 non-null  float64
- 17  dress      14857 non-null  float64
- 18  suit       14857 non-null  float64
- 19  outwear    14857 non-null  float64
- 20  jewel      14857 non-null  float64
- 21  fashion    14857 non-null  float64
- 22  lwear      14857 non-null  float64
- 23  coll       14857 non-null  float64
- 24  omon       14857 non-null  float64
- 25  tmon       14857 non-null  float64
- 26  smon       14857 non-null  float64
- 27  gmp        14857 non-null  float64
- 28  mdown      14857 non-null  float64
- 29  promomail  14857 non-null  int64  
- 30  promoresp  14857 non-null  int64  
- 31  produnif   14857 non-null  float64
- 32  dbetween   14857 non-null  float64
- 33  resp       14857 non-null  int64  
-dtypes: float64(27), int64(7)
-memory usage: 4.0 MB
+RangeIndex: 113485 entries, 0 to 113484
+Data columns (total 23 columns):
+ #   Column        Non-Null Count   Dtype
+---  ------        --------------   -----
+ 0   female        113485 non-null  int64
+ 1   age           113485 non-null  int64
+ 2   first         113485 non-null  int64
+ 3   business      113485 non-null  int64
+ 4   busclass      113485 non-null  int64
+ 5   distance      113485 non-null  int64
+ 6   depdelay      113485 non-null  int64
+ 7   arrdelay      113485 non-null  int64
+ 8   time          113485 non-null  int64
+ 9   online_book   113485 non-null  int64
+ 10  checkin       113485 non-null  int64
+ 11  online_board  113485 non-null  int64
+ 12  gate          113485 non-null  int64
+ 13  on_board      113485 non-null  int64
+ 14  seat          113485 non-null  int64
+ 15  leg_room      113485 non-null  int64
+ 16  clean         113485 non-null  int64
+ 17  food          113485 non-null  int64
+ 18  in_flight     113485 non-null  int64
+ 19  wifi          113485 non-null  int64
+ 20  entertain     113485 non-null  int64
+ 21  baggage       113485 non-null  int64
+ 22  sat           113485 non-null  int64
+dtypes: int64(23)
+memory usage: 19.9 MB
 ```
 
-The **conversion rate** is 17%, so we have **class imbalance** here. Moreover, given the cost/benefit analysis suggested in the introduction, we have to pay more attention to the false negatives than to the false positives.
+The proportion of satisfied passengers is quite close to 50%, so class imbalance is not an issue here. We will use the accuracy to evaluate the models obtained.
 
 ```
-In [3]: df['resp'].mean().round(3)
-Out[3]: 0.17
+In [3]: df['sat'].mean().round(3)
+Out[3]: 0.467
+```
+
+## Target vector and features matrix
+
+As in other examples of supervised learning, we create a target vector and a features matrix. The target vector is the last column (`sat`) and the features matrix is made of the other columns.
+
+```
+In [4]: y = df['sat']
+   ...: X = df.drop(columns='sat')
 ```
 
 ## Train-test split
 
-We split the data as suggested in question Q1, keeping a 20% of the data for testing. The argument `random_state=0` ensures the reproducibility of the split.
+For validation, the data set is randomly split, keeping a 20% of the data units for testing. The argument `random_state=0` ensures the reproducibility of the split.
 
 ```
-In [4]: from sklearn.model_selection import train_test_split
-   ...: df_train, df_test = train_test_split(df, test_size=0.2, random_state=0)
+In [5]: from sklearn.model_selection import train_test_split
+   ...: X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 ```
 
-So, these are the numbers. With 2,972 testing units, the 17% conversion rate gives us about 500 positives in the testing data set.
+## Q1. Random forest model
+
+Our first predictive model is a random forest model. We instantiate an estimator from the scikit-learn class `ensemble.RandomForestClassifier()`, setting the number of trees to 200 and the maximum depth to 5. As usual, the model is trained on the training data.
 
 ```
-In [5]: df_train.shape, df_test.shape
-Out[5]: ((11885, 34), (2972, 34))
+In [6]: from sklearn.ensemble import RandomForestClassifier
+   ...: rf = RandomForestClassifier(max_depth=5, n_estimators=200, random_state=0)
+   ...: rf.fit(X_train, y_train)
+Out[6]: RandomForestClassifier(max_depth=5, n_estimators=200, random_state=0)
 ```
 
-## Target vectors and features matrices
-
-Next, we define a target vector and a features matrix for both training and test data.
+Then, we evaluate the model on both the training and the test subsets, which comes easily in scikit-learn.
 
 ```
-In [6]: y_train, X_train = df_train['resp'], df_train.drop(columns='resp')
-   ...: y_test, X_test = df_test['resp'], df_test.drop(columns='resp')
+In [7]: round(rf.score(X_train, y_train), 3), round(rf.score(X_test, y_test), 3)
+Out[7]: (0.913, 0.911)
 ```
 
-## Q1. Training the models
+The accuracy is about 91%. The test data do not provide evidence of overfitting.
 
-Our first candidate will be the logistic regression model. The maximum number of iterations has been set after some trial and error (not shown here).
+## Q2. XGBoost model
 
-```
-In [7]: from sklearn.linear_model import LogisticRegression
-   ...: logclf = LogisticRegression(max_iter=5000)
-   ...: logclf.fit(X_train, y_train)
-Out[7]: LogisticRegression(max_iter=5000)
-```
-
-Second, a decision tree model, with maximum depth 4. As we did in examples ML-08 and ML-11, we specify the cross-entropy as the loss function, in the parameter `criterion`.
+We repeat the exercise with an XGBoost model, from the class `XGBClassifier()` of the package `xgboost`. We use the same arguments as in the preceding section, leaving the learning rate at the default value. 
 
 ```
-In [8]: from sklearn.tree import DecisionTreeClassifier
-   ...: treeclf = DecisionTreeClassifier(criterion='entropy', max_depth=4)
-   ...: treeclf.fit(X_train, y_train)
-Out[8]: DecisionTreeClassifier(criterion='entropy', max_depth=4)
-```
-
-Third, a random forest model with the same loss function and the same maximum depth. The default for the number of trees (parameter `n_estimators`) is 100, but, following the suggestion in Q1, we have raised this to 200.
-
-```
-In [9]: from sklearn.ensemble import RandomForestClassifier
-   ...: rfclf = RandomForestClassifier(criterion='entropy', max_depth=4, n_estimators=200)
-   ...: rfclf.fit(X_train, y_train)
-Out[9]: RandomForestClassifier(criterion='entropy', max_depth=4, n_estimators=200)
-```
-
-Finally, the gradient boosting model. We set the maximum depth and the number of trees as for the random forest model (there is no default here). The **learning rate** 0.1 is a typical one (the default rate is 0.3). The default loss function (parameter `objective`) is the cross-entropy, so we specify nothing here, to make it shorter, focusing on the number of trees and their size.
-
-```
-In [10]: from xgboost import XGBClassifier
-    ...: xgbclf = XGBClassifier(learning_rate=0.1, max_depth=4, n_estimators=200)
-    ...: xgbclf.fit(X_train, y_train)
-Out[10]: 
+In [8]: from xgboost import XGBClassifier
+   ...: xgb = XGBClassifier(max_depth=5, n_estimators=200, random_state=0)
+   ...: xgb.fit(X_train, y_train)
+Out[8]: 
 XGBClassifier(base_score=None, booster=None, callbacks=None,
               colsample_bylevel=None, colsample_bynode=None,
               colsample_bytree=None, device=None, early_stopping_rounds=None,
               enable_categorical=False, eval_metric=None, feature_types=None,
               gamma=None, grow_policy=None, importance_type=None,
-              interaction_constraints=None, learning_rate=0.1, max_bin=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
               max_cat_threshold=None, max_cat_to_onehot=None,
-              max_delta_step=None, max_depth=4, max_leaves=None,
+              max_delta_step=None, max_depth=5, max_leaves=None,
               min_child_weight=None, missing=nan, monotone_constraints=None,
               multi_strategy=None, n_estimators=200, n_jobs=None,
-              num_parallel_tree=None, random_state=None, ...)
+              num_parallel_tree=None, random_state=0, ...)
 ```
 
-## Q2. Predictive scores
-
-To plot the scores, separately for positive and negative training units, we will use the same code as in examples ML-06 and ML-10. First, we import `matplotlib.pyplot` in the usual way.
+Overfitting, whis is typical of gradient boosting models, is moderate in this case. We can take the accuracy 95% as the benchmark for other models. This is a **shallow model**, which takes the actual features as they come, with no **feature engineering**
 
 ```
-In [11]: from matplotlib import pyplot as plt
+In [9]: round(xgb.score(X_train, y_train), 3), round(xgb.score(X_test, y_test), 3)
+Out[9]: (0.969, 0.953)
 ```
 
-We pack a code chunk that calculates the scores and plots the histograms as a Python function, for efficiency. 
+## Q3. Relevant features
+
+In a predictive model based on decision trees, the relevance of the different features for predicting the target can be assessed with the attribute `.feature_importances_`, which works in `xgboost` as in scikit-learn. Since the outcome of this method is a plain 1D array, without index labels, we convert it to a Pandas series, using the column names as the index. Sorting by values, we get a clear report.
 
 ```
-In [12]: def score_plot(mod):
-    ...:     score = mod.predict_proba(X_train)[:, 1]
-    ...:     # Set the size of the figure
-    ...:     plt.figure(figsize=(12,5))
-    ...:     # First subplot
-    ...:     plt.subplot(1, 2, 1)
-    ...:     plt.hist(score[y_train == 1], range=(0,1), color='gray', edgecolor='white')
-    ...:     plt.title('Figure a. Scores (positives)')
-    ...:     plt.xlabel('Predictive score')
-    ...:     # Second subplot
-    ...:     plt.subplot(1, 2, 2)
-    ...:     plt.hist(score[y_train == 0], range=(0,1), color='gray', edgecolor='white')
-    ...:     plt.title('Figure b. Scores (negatives)')
-    ...:     plt.xlabel('Predictive score');
+In [10]: pd.Series(xgb.feature_importances_, index=X.columns).sort_values(ascending=False)
+Out[10]: 
+online_board    0.380
+business        0.150
+wifi            0.082
+busclass        0.078
+first           0.075
+entertain       0.034
+checkin         0.031
+seat            0.023
+clean           0.021
+baggage         0.020
+gate            0.018
+leg_room        0.018
+in_flight       0.015
+on_board        0.013
+time            0.008
+age             0.008
+online_book     0.007
+arrdelay        0.005
+food            0.004
+distance        0.003
+depdelay        0.003
+female          0.002
+dtype: float32
 ```
 
-We calculate now the predictive scores for each model, applying the plotting function just defined to get the histograms. First, the logistic regression model.
+Online boarding looks that the most relevant feature. Also, the model reveals a difference between flying for business and the overall satisfaction, although it does not show in which direction. Popular wisdom tells us that people flying for personal issues (and also paying) are usually less tolerant with things not working properly. Indeed, this is what cross tabulation tells us:
 
 ```
-In [13]: score_plot(logclf)
+In [11]: pd.crosstab(df['business'], df['sat'])
+Out[11]: 
+sat           0      1
+business              
+0         27387   3129
+1         33150  49819
 ```
 
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-1.png)
+## Q4. MLP model
 
-Based on these histograms, a theshold about 0.2 or a bit less looks reasonable. We take a look now to the scores of the decision tree model.
-
-```
-In [14]: score_plot(treeclf)
-```
-
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-2.png)
-
-These histograms look a bit awkward at first sight, but their shape can be explained by the fact that a decision tree model produces a *discrete score*, with as many different values as the number of leaf nodes. This number, with maximum depth 4, cannot exceed 16. Given this discrete structure of the scores, thresholds don't make much sense here.
-
-Next, we take the random forest model, which, compared to the logistic regression model, does not look as a serious competitor. Note that, by averaging the trees that integrate the forest, we no longer have a discrete score, with just a few different values.
+We try now a simple neural network, using the **package Keras**, with the default **TensorFlow** backend. We import the function `Input()` and the modules `models` and `layers`, which contain the resources needed for this example.
 
 ```
-In [15]: score_plot(rfclf)
+In [12]: from keras import Input, models, layers
 ```
 
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-3.png)
-
-
-Finally, the gradient boosting model, which looks superior to the other three. Since we have been warned that gradient boosting models are prone to overfitting, we postpone our conclusions until we have tested this approach.
+Next, we specify the **network architecture**, as a sequence of transformations. This will be multilayer perceptron (MLP) with one hidden layer. The **input layer** contains one node for every feature. 
 
 ```
-In [16]: score_plot(xgbclf)
+In [13]: input_tensor = Input(shape=(22,))
 ```
 
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/14-4.png)
-
-## Q3. Testing the models
-
-As we did in the preceding section, we pack here a sequence of calculations as a function, for efficiency. This function will return, foe each model, the true positive and false positive rates, for both the training and the test data. We set the threshold at 0.2 (you can try variations on this).
+The **hidden layer** has 32 nodes (powers of 2 are commonly used in deep learning), and the activation function is the **rectified linear unit function** (ReLU). It is a **dense layer**, meaning that every node is connected to all nodes of the preceding layer. This involves 23 $\times$ 32 = 736 parameters.
 
 ```
-In [17]: def test(mod):
-    ...:     score_train, score_test = mod.predict_proba(X_train)[:, 1], mod.predict_proba(X_test)[:, 1]
-    ...:     y_pred_train, y_pred_test = score_train > 0.2, score_test > 0.2
-    ...:     tp_train = y_pred_train[y_train == 1].mean().round(3)
-    ...:     fp_train = y_pred_train[y_train == 0].mean().round(3)
-    ...:     tp_test = y_pred_test[y_test == 1].mean().round(3)
-    ...:     fp_test = y_pred_test[y_test == 0].mean().round(3)
-    ...:     return (tp_train, fp_train), (tp_test, fp_test)
+In [14]: x = layers.Dense(32, activation='relu')(input_tensor)
 ```
 
-In the preceding section, we have trained four models, discarding the decision tree model for the current analysis. When comparing the histograms, the gradient boosting model looks as the top performer on the training data, followed by the other two models. Mind that, while logistic regression is, essentially, a single thing, we can obtain different ensemble models by changing the parameters `max_depth` and `n_estimators`. What we say in this section about these models refers only to the specific choice we have made (`max_depth=4` and `n_estimators=200`). We left further exploration for the homework. 
-
-First, we test the logistic regression model. There is not evidence of overfitting. 
+The **output layer** has two nodes, since this model is a binary classifier. The activation function is here the **softmax function**, which ensures that the output is a vector of probabilities (positive numbers summing 1). It adds 33 $\times$ 2 = 66 parameters.
 
 ```
-In [18]: test(logclf)
-Out[18]: ((0.774, 0.269), (0.772, 0.26))
+In [15]: output_tensor = layers.Dense(2, activation='softmax')(x)
 ```
 
-Let us repeat the exercise with our random forest model. This seems to be slightly overfitting the training data, but should be confirmed with more splits (changing the `random_state` value). Anyway, compared to the logistic regression model, this model shows a lower true positive rate, so it will be left aside, given the cost/benefit estimates provided.
+The next step is instantiate an object of the class `models.Model()`. This works as in scikit-learn. We specify here the input and the output.
 
 ```
-In [19]: test(rfclf)
-Out[19]: ((0.726, 0.228), (0.71, 0.22))
+In [16]: mlp = models.Model(input_tensor, output_tensor)
 ```
 
-Finally, the gradient boosting model. Overfitting is evident here. For instance, the true positive rate is 87% on the training data and 74.6% on the test data, which makes a difference from a business perspective. For this model, the performance on the test data should be taken as the only valid evaluation. Given the cost/benefit analysis suggested in the introduction, the comparison between the two models would favor the logistic regression model. You can explore this a bit more in the homework.
+Now, we **compile** the model, meaning the mathematical apparatus needed for fitting the model to the data gets ready. We have to specify the **optimization algorithm** (`optimizer='adam'`), the **loss function** (`loss='sparse_categorical_crossentropy'`) and the metrics used to evaluate the model performance (`metrics=['acc']`), in a list or dictionary.
 
 ```
-In [20]: test(xgbclf)
-Out[20]: ((0.857, 0.199), (0.727, 0.211))
+In [17]: mlp.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 ```
 
-## Homework
+We are ready now to apply the method `.fit()`. Note that the number of iterations is specified here, not when creating the model, as it was in scikit-learn. In every iteration, or **epoch**, the data set is randomly split in batches of size 32 (if you accept the deafult size). These batches are passed sequentially, and the parameter values are updated for evey batch. This means that they not are updated 50 times, but 50 times the number of batches (2,838). With `verbose=0` we stop a report of the progress being gradually displayed on the screen (we will see this later). Also, the semicolon stops some irrelevant output showing up (the same we do when plotting with Matplotlib). In this example, every epoch takes between one and two seconds in a regular laptop.
 
-1. Try other values of the parameter `random_state` in train/test split, to see the extent to which the results may change. 
+```
+In [18]: mlp.fit(X_train, y_train, epochs=50, verbose=0);
+```
 
-2. Switch to `max_depth=5` in the random forest model, to see whether it becomes competitive.
+Once the model has been trained, it is evaluated on the test data. The model does not improve the accuracy of the ensemble models tried before.  
 
-3. Intuition suggests that too may iterations in the gradient boosting process may lead to a model with very performance on the training data but, at the same time, may have a negative impact on the performance on test data. To explore this question, try different values of `n_estimators`, such as 25, 50, 100 and 150, to monitor the overfitting and its potential negative impact on the performance of the gradient boosting model on the test data.
+```
+In [19]: round(mlp.evaluate(X_test, y_test, verbose=0)[1], 3)
+Out[19]: 0.907
+```
 
-4. Evaluate in dollar terms the models that you find interesting.
+## Q5. Multilayer perceptron model (normalized data)
+
+Though scikit-learn has a method for normalizing all the columns of the feature matrix in one shot, it is not dificult to do it in Pandas. First we define a **min-max normalization** function:
+
+```
+In [20]: def normalize(x): 
+    ...:     return (x - x.min())/(x.max() - x.min())
+```
+
+Now, we apply this function by column with the method `.apply()`.
+
+```
+In [21]: XN = X.apply(normalize)
+```
+
+We have now a new feature matrix, that we split exactly in the same way as we did with `X` and `y` (the argument `random_state=0` does the trick).
+
+```
+In [22]: XN_train, XN_test = train_test_split(XN, test_size=0.2, random_state=0)
+```
+We replicate the process of question Q4 with the normalized features. The improvement is quite clear, though the accuracy falls a bit short of that of the XGBoost model.
+
+```
+In [23]: mlp = models.Model(input_tensor, output_tensor)
+    ...: mlp.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
+    ...: mlp.fit(XN_train, y_train, epochs=50, verbose=0);
+    ...: round(mlp.evaluate(XN_test, y_test, verbose=0)[1], 3)
+Out[23]: 0.943
+```
