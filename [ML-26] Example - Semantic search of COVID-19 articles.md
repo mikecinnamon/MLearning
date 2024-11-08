@@ -242,12 +242,13 @@ In [17]: search_output = df.sort_values(by='similarity', ascending=False).head(2
 
 These are the selected papers, so far.
 
+```
 In [18]: search_output.index
 Out[18]: 
 Index([3393, 5942, 4073,  660,  932, 6230, 4180, 3307, 2215,  149, 5344, 3979,
        5740, 2311, 1549, 5923, 5957, 4048, 9821, 8866],
       dtype='int64')
-
+```
 
 ## Q5. Reranking
 
