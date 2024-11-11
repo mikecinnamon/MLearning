@@ -7,6 +7,7 @@ df = pd.read_csv(path + 'clothing.csv', index_col=0)
 
 # Exploring the data #
 df.info()
+df[list(df.columns[4:9]) + list(df.columns[24:27])] = df[list(df.columns[4:9]) + list(df.columns[24:27])]/1000
 df['resp'].mean().round(3)
 
 # Train-test split #
@@ -14,28 +15,28 @@ from sklearn.model_selection import train_test_split
 df_train, df_test = train_test_split(df, test_size=0.2, random_state=0)
 df_train.shape, df_test.shape
 
-# Target vectors and feature matrices #
+# Target vectors and features matrices #
 y_train, X_train = df_train['resp'], df_train.drop(columns='resp')
 y_test, X_test = df_test['resp'], df_test.drop(columns='resp')
 
-## Q1a. Logistic regression model ##
+# Q1a. Logistic regression model #
 from sklearn.linear_model import LogisticRegression
-logclf = LogisticRegression(max_iter=5000)
+logclf = LogisticRegression(max_iter=1000, random_state=0)
 logclf.fit(X_train, y_train)
 
-## Q1b. Decision tree model ##
+# Q1b. Decision tree model #
 from sklearn.tree import DecisionTreeClassifier
 treeclf = DecisionTreeClassifier(criterion='entropy', max_depth=4)
 treeclf.fit(X_train, y_train)
 
 # Q1c. Random forest model #
 from sklearn.ensemble import RandomForestClassifier
-rfclf = RandomForestClassifier(criterion='entropy', max_depth=4, n_estimators=200)
+rfclf = RandomForestClassifier(criterion='entropy', max_depth=4, n_estimators=200, random_state=0)
 rfclf.fit(X_train, y_train)
 
 # Q1d. XGBoost model #
 from xgboost import XGBClassifier
-xgbclf = XGBClassifier(learning_rate=0.1, max_depth=4, n_estimators=200)
+xgbclf = XGBClassifier(learning_rate=0.1, max_depth=4, n_estimators=200, random_state=0)
 xgbclf.fit(X_train, y_train)
 
 # Q2a. Plotting function #
