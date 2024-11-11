@@ -2,13 +2,13 @@
 
 ## Introduction
 
-This example deals with the classification of grayscale images of handwritten digits (28 pixels by 28 pixels), into 10 classes (0 to 9). The data are the famous **MNIST data**, a classic in the ML community, which have been around for almost as long as the field itself and have been very intensively studied. 
+This example deals with the classification of grayscale images of handwritten digits (resolution 28 $\times$ 28), into 10 classes (0 to 9). The data are the famous **MNIST data**, a classic in the ML community, which have been around for almost as long as the field itself and have been very intensively studied. 
 
 The MNIST data set contains 60,000 training images, plus 10,000 test images, assembled by the National Institute of Standards and Technology (NIST) in the 1980s. They have been extensively used for benchmarking. You can think of "solving" MNIST as the "Hello World" of deep learning. As you become an ML practitioner, the MNIST data come up over and over again, in scientific papers, blog posts, and so on.
 
 ## The data set
 
-The data from the 70,000 images come together in the file `mnist.csv` (zipped). Every row stands for an image. The first column is a label identifying the digit (0-9). The other 784 columns correspond to the image pixels (28 $\times$ 28 = 784). The column name `ixj` must be read as the gray intensity of the pixel in row $i$ and column $j$ (in the images). These intensities are integers from 0 = Black to 255 = White (8-bit grayscale).
+The data of the 70,000 images come together in the file `mnist.csv` (zipped). Every row stands for an image. The first column is a label identifying the digit (0-9). The other 784 columns correspond to the image pixels (28 $\times$ 28 = 784). The column name `ixj` must be read as the gray intensity of the pixel in row $i$ and column $j$ (in the images). These intensities are integers from 0 = Black to 255 = White (8-bit grayscale).
 
 ## Questions
 
@@ -16,9 +16,9 @@ Q1. Pick the first digit image (row 1). The 784 entries on the right of the labe
 
 Q2. Repeat the exercise with other images. You don't need the function `gray()` anymore.
 
-Q3. Split the data in a training set with 60,000 samples and a test set with 10,000 samples.
+Q3. Split the data in a training set with 60,000 data units and a test set with 10,000 units.
 
-Q4. Train and test a **decision tree classifier**, using these data. Control the growth of the tree with the argument `max_leaf_nodes=128`.
+Q4. Train and test a **decision tree classifier** on these data, controlling the growth of the tree with the argument `max_leaf_nodes=128`.
 
 Q5. Train and test a **random forest classifier**, with  `max_leaf_nodes=128` and `n_ estimators=10`. Is it better than the decision tree model?
 
@@ -41,7 +41,7 @@ In [2]: df.shape
 Out[2]: (70000, 785)
 ```
 
-## Target vector and feature matrix
+## Target vector and features matrix
 
 We set this first column (the image labels) as the target vector. We can examine this vector with the Pandas method `.value_counts()`. which shows that the data are a bit unbalanced: ones are most frequent, and fives least frequent.
 
@@ -62,7 +62,7 @@ Out[3]:
 Name: label, dtype: int64
 ```
 
-The 784 columns containing the pixel intensities will integrate the feature matrix. We extract the values of the corresponding subframe as a 2D NumPy array, so we can work better on the first questions. We check then that the pixels values are also as expected, with the NumPy function `unique()`.
+The 784 columns containing the pixel intensities will integrate the features matrix. We extract the values of the corresponding subframe as a 2D NumPy array, so we can work better on the first questions. We check then that the pixels values are also as expected, with the NumPy function `unique()`.
 
 ```
 In [4]: X = df.iloc[:, 1:].values
@@ -92,7 +92,7 @@ array([  0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,
 
 ## Q1. Plotting the first image
 
-Every row corresponds to the image of a digit. Let us visualize this by plotting the images with Matplotlib. In the first row, the 784 entries, from 1 $\times$ 1 to 28 $\times$ 28, are the pixels' gray intensities. To plot the image, we have to reshape it as a 2D array with 28 rows and 28 columns. This can be done with method `.reshape()`.
+Every row corresponds to the image of a digit. Let us visualize this by plotting the images with Matplotlib. In the first row, the 784 entries, from 1 $\times$ 1 to 28 $\times$ 28, are the pixels' gray intensities. To plot the image, we have to reshape it as a 2D array with 28 rows and 28 columns. This can be done with the method `.reshape()`.
 
 ```
 In [5]: pic = X[0, :].reshape(28,28)
