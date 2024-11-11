@@ -4,8 +4,6 @@
 import numpy as np, pandas as pd
 path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
 df = pd.read_csv(path + 'mnist.csv.zip')
-
-# Target vector and feature matrix #
 y = df.iloc[:, 0].values
 X = df.iloc[:, 1:].values
 
