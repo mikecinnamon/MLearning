@@ -43,7 +43,7 @@ x5 = layers.Conv2D(64, (3, 3), activation='relu')(x4)
 x6 = layers.Flatten()(x5)
 x7 = layers.Dense(64, activation='relu')(x6)
 output_tensor = layers.Dense(10, activation='softmax')(x7)
-clf3.summary()
 clf3 = models.Model(input_tensor, output_tensor)
+clf3.summary()
 clf3.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 clf3.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test));
