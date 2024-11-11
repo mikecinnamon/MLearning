@@ -28,7 +28,7 @@ In this context, the slope coefficients $w_1, w_2, \dots, w_k$  are called weigh
 
 The multilayer perceptron could be seen as if the samples were circulating through the network one-by-one. The feature values are entered in the input nodes, which send them to the nodes of the first hidden layer. At each hidden node, they are combined using the corresponding weights, and the result is transformed by means of the activation function. The hidden nodes send the resulting values to the nodes of the next layer, where they are combined. And so on, until arriving to the output layer.
 
-## A graphical exxample 
+## A graphical example 
 
 Let us help intuition with the graphical representation of a small network. The model of the figure below is an MLP regressor with one hidden layer of two nodes. The diagram is just a graphical representation of a set of three equations, two for the hidden nodes and one for the output node. The equation of node $A$ combines $X_1$, $X_2$ and $X_3$ with weights $w_{1A}$, $w_{2A}$ and $w_{3A}$, while the equation in node $B$ combines them with weights $w_{1B}$, $w_{2B}$ and $w_{3B}$. The biases are $w_{0A}$ and $w_{0B}$, respectively.
 
