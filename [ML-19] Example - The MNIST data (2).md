@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This example uses the **MNIST data** that appeared in the example ML-17. There, we compared the accuracies of several tree-based models for classifying handwritten digits. Here, we show how to improve the performance of the classic MLP neural network with a **convolutional neural network**. We use standard **Keras** procedures to develop these models.
+This example uses the **MNIST data** that appeared in the example ML-17. There, we compared the accuracies of several tree-based models for classifying handwritten digits. Here, we show how to improve the performance of the classic MLP neural network with a **convolutional neural network**. We use standard **Keras** procedures to develop our models.
 
 ## Questions
 
@@ -50,7 +50,7 @@ As in our previous experience with neural networks, in example ML-16, we use the
 In [4]: from keras import Input, models, layers
 ```
 
-Next, we specify our first **network architecture**, as a sequence of transformations. As in the preceding example, we use a multilayer perceptron (MLP) network with one **hidden layer** of 32 nodes, with **ReLU activation**. The **output layer** has now ten nodes, one for each digit, with **softmax activation**. These two layers are **dense layers**, meaning that every node is connected to all nodes of the preceding layer. Note that, in lines 1 and 3, the shapes have been adapted to the data of this example.
+Next, we specify our first **network architecture**, as a sequence of transformations. As in example ML-16, we use a multilayer perceptron (MLP) network with one **hidden layer** of 32 nodes, with **ReLU activation**. The **output layer** has now ten nodes, one for each digit, with **softmax activation**. These two layers are **dense layers**, meaning that every node is connected to all nodes of the preceding layer. Note that, in lines 1 and 3, the shapes of the input and the output tensors have been adapted to the data of this example.
 
 ```
 In [5]: input_tensor = Input(shape=(784,))
@@ -58,13 +58,13 @@ In [5]: input_tensor = Input(shape=(784,))
    ...: output_tensor = layers.Dense(10, activation='softmax')(x)
 ```
 
-We instantiate an object of the class `models.Sequential()`, specifying the the input and the output.
+We instantiate an object of the class `models.Model()`, specifying the input and the output.
 
 ```
 In [6]: clf1 = models.Model(input_tensor, output_tensor)
 ```
 
-The method `.summary()` prints a summary of the network architecture, reporting the number of parameters in every layer. In the hidden layer, every node receives 784 inputs (one for each pixel), which are combined with a linear expression involving the same number of **weights** (the slope coefficients) plus a **bias** (the intercept). So, 785 parameters are needed at every node, which makes a total of 32 $\times$ 785 = 25,120 parameters. In a similar way, in the output layer, every node needs 33 parameters, which adds 10 $\times$ 33 = 330 parameters to get a total of 25,450 parameters for the whole network.  
+The method `.summary()` prints a summary of the network architecture, reporting the number of parameters in every layer. In the hidden layer, every node receives 784 inputs (one for each pixel), which are combined wby means of a linear expression involving the same number of **weights** (the slope coefficients) plus a **bias** (the intercept). So, 785 parameters are needed at every node, which makes a total of 32 $\times$ 785 = 25,120 parameters. In a similar way, in the output layer, every node needs 33 parameters, which adds 10 $\times$ 33 = 330 parameters to get a total of 25,450 parameters for the whole network.  
 
 ```
 In [7]: clf1.summary()
@@ -95,7 +95,7 @@ The **compilation** step is the same as in example ML-16.
 In [8]: clf1.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 ```
 
-Finally, we fit the model to the training data. We don't use `verbose=0` here (this means `verbose=1`), so we are going to get a complete report of the fitting process. So, we set `epochs=20`, to keep it short. Also, with the argument `validation_data=(X_test, y_test)`, the model is evaluated on the test data at the end of every epoch.
+Finally, we fit the model to the training data. We don't use `verbose=0` here (this means `verbose=1`), so we are going to get a report of the training process. We set `epochs=20`, to keep it short. Also, with the argument `validation_data=(X_test, y_test)`, the model is evaluated on the test data at the end of every epoch.
 
 ```
 In [9]: clf1.fit(X_train, y_train, epochs=20, validation_data=(X_test, y_test));
@@ -141,11 +141,11 @@ Epoch 20/20
 1875/1875 [==============================] - 1s 531us/step - loss: 0.2325 - acc: 0.9416 - val_loss: 0.3716 - val_acc: 0.9240
 ```
 
-This report shows that the accuracy on the test data is about 92.5% at the 10th epoch, and does not go beyond this, while it keeps improving on the training data, so it is above 94% at the 20th epoch. In example ML-16, we did a bit better with a random forest model.
+This report shows that the accuracy on the test data is about 92.5% at the 10th epoch, and does not go beyond this, while it keeps improving on the training data, up to 94% at the 20th epoch. In example ML-16, we did a bit better with a random forest model.
 
-## Q3. Prediction with a MLP network
+## Q3. Prediction with a MLP model
 
-For every input, the method `.predict()` returns the 10 values given by the softmax activation at the output nodes, which are the **predicted class probabilities** for that input. So, for a classification model, it works as the method `.predict_proba()` in scikit-learn. For instance, for the first digit of the test set, we get:
+For every input, the method `.predict()` returns the 10 values given by the softmax activation at the output nodes, which are the **predicted class probabilities** for that input. So, in a classification setting, it works as the method `.predict_proba()` in scikit-learn. For instance, for the first digit of the test set, we get:
 
 ```
 In [10]: clf1.predict(X_test[:1, :])
@@ -225,11 +225,11 @@ Epoch 20/20
 1875/1875 [==============================] - 1s 533us/step - loss: 0.1061 - acc: 0.9683 - val_loss: 0.1726 - val_acc: 0.9501
 ```
 
-## Q5. Convolutional neural network
+## Q5. CNN model
 
-We dig deeper in this last section, exploring **convolutional neural network** (CNN) models, in particular a model based on a 2D convolutional network. We continue working with the rescaled features. Instead of using a (2D) 60,000 $\times$ 784 feature matrix, we pack the inputs in a 4D array, in which the axes are:
+We dig deeper in this last section, exploring **convolutional neural network** (CNN) models, in particular a model based on a 2D convolutional network. We continue working with the rescaled features. Instead of using a 60,000 $\times$ 784 features matrix (a 2D array), we pack the training data as a 4D array, in which the axes are:
 
-* `axis=0` with dimension 60,000, identifies the inputs, *i.e*. the pictures, 
+* `axis=0` with dimension 60,000, identifies the inputs, *i.e*. the images, 
 
 * `axis=1` and `axis=2` both with dimension 28, identify the pixel positions.
 
@@ -255,6 +255,7 @@ In [16]: input_tensor = Input(shape=(28, 28, 1))
     ...: x6 = layers.Flatten()(x5)
     ...: x7 = layers.Dense(64, activation='relu')(x6)
     ...: output_tensor = layers.Dense(10, activation='softmax')(x7)
+    ...: clf3 = models.Model(input_tensor, output_tensor)
 ```
 
 As for the MLP model, we can print a summary reporting the number of parameters involved in every layer:
@@ -313,8 +314,7 @@ Model: "functional_4"
 The rest of the process is the same as in the MLP models. We use here `epochs=10`, to make it shorter. At the end of the first epoch, the model achieves 98% accuracy on the test data. After the 10 epochs, this has been improved to 99%, which is quite satisfactory.
 
 ```
-In [18]: clf3 = models.Model(input_tensor, output_tensor)
-    ...: clf3.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
+In [18]: clf3.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
     ...: clf3.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test));
 Epoch 1/10
 1875/1875 [==============================] - 14s 7ms/step - loss: 0.1442 - acc: 0.9548 - val_loss: 0.0635 - val_acc: 0.9796
