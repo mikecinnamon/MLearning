@@ -111,7 +111,7 @@ clf.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['
 Now, we can apply the method `.fit()`, which is just a bit more complex than in scikit-learn. Assuming that you have previously performed a train/test split, this step could be:
 
 ```
-clf.fit(X_train, y, epochs=10)
+clf.fit(X_train, y_train, epochs=10)
 ```
 
 Note that the number of iterations (the parameter `epochs`) is specified as an argument of `.fit()`, not as in scikit-learn, when instantiating the estimator. In Keras, you can run `.fit()` many times, getting a gradual improvement.
