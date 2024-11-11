@@ -84,7 +84,7 @@ A simple way to specify the network architecture is to create a list of layers. 
 input_tensor = Input(shape=(784,))
 ```
 
-Next, the hidden layer, that transforms the input tensor (length 784) into a new tensor (length (32): the activation function is $\hbox{ReLU}$$.
+Next, the hidden layer, that transforms the input tensor (length 784) into a new tensor (length (32): the activation function is $\hbox{ReLU}()$.
 
 ```
 x = layers.Dense(32, activation='relu')(input_tensor)
