@@ -32,7 +32,7 @@ clf2 = models.Model(input_tensor, output_tensor)
 clf2.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 clf2.fit(X_train, y_train, epochs=20, validation_data=(X_test, y_test));
 
-# Q5. Convolutional neural network #
+# Q5. CNN model #
 X_train, X_test = X_train.reshape(60000, 28, 28, 1), X_test.reshape(10000, 28, 28, 1)
 input_tensor = Input(shape=(28, 28, 1))
 x1 = layers.Conv2D(32, (3, 3), activation='relu')(input_tensor)
