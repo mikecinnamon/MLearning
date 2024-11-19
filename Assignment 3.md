@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This assignment is a continuation of the analysis performed in examples ML-17 and ML-19, which use the **MNIST data**. The examples have given you an idea about the extent to which simple machine learning models can recognize handwritten **digits**. In this assignment, we explore this a bit more, trying alternative approaches. 
+This assignment is a continuation of the analysis performed in examples ML-17 and ML-19, which use the **MNIST data**. These examples have given you an idea about the extent to which simple machine learning models can recognize handwritten **digits**. In this assignment, we explore this a bit more, trying alternative approaches. 
 
 ## Questions
 
