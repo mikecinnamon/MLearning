@@ -14,7 +14,7 @@ Q3. Insert a second hidden layer in the MLP model of example ML-19, getting a **
 
 Q4. Make it deeper inserting a third hidden layer. Is this better?
 
-Q5. We used in example ML-19 a **convolutional neural network** (CNN) model taken from the literature. But perhaps we do not need a network with so many laters. Drop the last convolutional layers, so that you are left with with two `Conv2D` layers and two `MaxPooling2D` layers. Are losing much power?
+Q5. We used in example ML-19 a **convolutional neural network** (CNN) model taken from the literature. But perhaps we do not need a network with so many layers. Drop the last convolutional layer, so that you are left with with two `Conv2D` layers and two `MaxPooling2D` layers. Is the performance really affected by this reduction?
 
 Q6. Train and test a **gradient boosting model** on the MNIST data. Mind that, with hundreds of columns, training a gradient boosting model may be much slower than training a random forest model with the same tree size and number of trees. A model with 200 trees and a size similar to those shown in this example can take half an hour to train, though you may find a speedup by increasing the **learning rate**.
 
