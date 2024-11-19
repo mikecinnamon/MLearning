@@ -2,11 +2,11 @@
 
 ## Introduction
 
-Web services are often protected with a challenge that is supposed to be easy for people to solve, but difficult for computers. Such a challenge is often called a **CAPTCHA** (Completely Automated Public Turing test to tell Computers and Humans Apart) or **HIP** (Human Interactive Proof). HIPs are used for many purposes, such as to reduce email and blog spam and prevent brute force attacks on web site passwords.
+Web services are often protected with a challenge that is supposed to be easy for people, but difficult for computers. Such a challenge is often called **CAPTCHA** (Completely Automated Public Turing test to tell Computers and Humans Apart) or **HIP** (Human Interactive Proof). CAPTCHA's are used for many purposes, such as to reduce email and blog spam, preventing brute force attacks on web site passwords.
 
-**Asirra** (Animal Species Image Recognition for Restricting Access) is an HIP that works by asking users to identify photographs of **cats** and **dogs**. This task is difficult for computers, but studies have shown that people can accomplish it quickly and accurately. Asirra is unique because of its partnership with **Petfinder.com**, the world's largest site devoted to finding homes for homeless pets. They have provided Microsoft Research with over three million images of cats and dogs, manually classified by people at thousands of animal shelters across the United States.
+**ASIRRA** (Animal Species Image Recognition for Restricting Access) is a CAPTCHA that works by asking users to identify photographs of **cats** and **dogs**. This task is difficult for computers, but studies have shown that people can accomplish it quickly and accurately. ASIRRA is unique because of its partnership with **Petfinder.com**, the world's largest site devoted to finding homes for homeless pets. They have provided Microsoft Research with over three million images of cats and dogs, manually classified by people at thousands of animal shelters across the United States.
 
-This example uses part of this data set, released for the *Dogs vs. Cats* Kaggle competition. It is inspired by the approach to transfer learning taken in chapter 9 of F Chollet's book. 
+This example uses part of this data set, released for the *Dogs vs. Cats* Kaggle competition. It is inspired by the approach to transfer learning taken in chapter 9 of the Keras book (Chollet, 2021). 
 
 ## The data set
 
@@ -24,7 +24,7 @@ Sources:
 
 Q1. CReate a folder in the working directory of your current Python kernel and download there the ZIP files. Unzip these files, so you will the four folders mentioned above. The folders with training data contain contain 1,000 JPG files each, while those with test data contain 500 files each. 
 
-Q2. Write a function which reads the JPG files as NumPy arrays, and converts the arrays to shape `(1, 150, 150, 3)`. You can do this with the function `resize` of the package `opencv`. Apply your function to all the JPG files and concatenate the resulting arrays in such a way that you obtain an array `X_train` of shape `(2000, 150, 150, 3)` and an array `X_test` with shape `(1000, 150, 150, 3)`. Create the corresponding target vectors, with value 1 for the dogs and value 0 for the cats.
+Q2. Write a function which reads the JPG files as NumPy arrays, and converts the arrays to shape `(1, 150, 150, 3)`. You can do this with the function `resize` of the package `opencv`. Apply your function to all the JPG files and concatenate the resulting arrays in such a way that you obtain an array `X_train`, with shape `(2000, 150, 150, 3)` and an array `X_test`, with shape `(1000, 150, 150, 3)`. Create the corresponding target vectors, with value 1 for the dogs and value 0 for the cats.
 
 Q3. Train a CNN model from scratch and evaluate it. Build the network stacking four pairs of `Conv2D` and `MaxPooling2D` layers, a `Flatten` layer and two `Dense` layers. The last layer must output the two class probabilities.
 
@@ -40,13 +40,13 @@ The package `os` (included in the Python Standard Library) contains a collection
 In [1]: import os
 ``` 
 
-The function `mkdir()` creates a folder, that will be appear in ther working directory of the current kernel, unless you specify a specific path.
+The function `mkdir()` creates a folder, that will be appear in the working directory of the current kernel, unless you specify a specific path.
 
 ```
 In [2]: os.mkdir('data/')
 ``` 
 
-*Note*. The slash (`/`) at the end of the folder name is not needed, but may help to distinguish between files and folders.
+*Note*. The slash (`/`) at the end of the folder name is not needed, but it may help to distinguish between files and folders.
 
 ## Q1b. Dowloading the zip files
 
@@ -130,17 +130,17 @@ Out[11]: 1000
 
 ## Q2a. Converting images to tensors
 
-we are going to use now the package `opencv`. You can install it with `pip install opencv-python`. We import it as `cv2`.
+We use now the package `opencv`. It is not included in the Anaconda distribution (but it is available in Colab notebooks). You can install it with `pip install opencv-python`. We import it as `cv2`.
 
 ```
 In [12]: import numpy as np, cv2
 ```
 
-We convert the JPG files to NumPy arrays. These arrays must have the same shape so they can be packed in the training and test feature arrays and processed by a neural network model. We write a function to loop over the folders jusr created in question Q1. The resources involved are:
+For our training job of this example, we convert the JPG files to NumPy arrays. These arrays must have the same shape so they can be packed in the training and test features arrays, and processed by a neural network model. We write a function to loop over the folders just created in question Q1. The resources involved are:
 
 * The `opencv` function `imread()` converts a JPEG file to a NumPy array. This is a classic Matplotlib function incorporated by many packages. It works the same for other image formats (such as BMP or PNG).
 
-* The `opencv` function `resize()` changes the shape of the resulting array in a way that is equivalent to changing the resolution of a picture. Note that resizing is not the same as reshaping: when reshaping, the terms of the array do not change, they are indexed in a different way. Here we create the new array by interpolating in the original array. The resolution 150 $\times$ 150, which is arbitrary, is taken from the book.
+* The `opencv` function `resize()` changes the shape of the resulting array in a way that is equivalent to changing the resolution of a picture. Note that resizing is not the same as reshaping: when reshaping, the terms of the array do not change, they are indexed in a different way. Here we create the new array by interpolating in the original array. The resolution 150 $\times$ 150, which is arbitrary, is taken from the book. The argument `interpolation=cv2.INTER_LANCZOS4` specifies the interpolation algorithm used. I omit the technicalities here.
 
 * Once every picture has been transformed into a 3D array of shape `(150, 150, 3)`, we reshape the resulting array to `(1, 150, 150, 3)`. Remember that, in example ML-20, the input of the convolutional network was a 4D tensor.
 
@@ -323,7 +323,7 @@ Epoch 10/10
 
 ## Q4a. Pre-trained CNN model
 
-The sources of pre-trained models have been discussed in lecture ML-20. The Keras module `applications` is a legacy of Keras 2 that provides a limited supply (compared to current repositories), but is more than enough for this example. It contains a collection of deep learning models that are made available alongside pre-trained weights. These models can be used for prediction, feature extraction, and fine-tuning. The model VGG16 is a (relatively) simple CNN model with a convolutional base made of `Conv2D` and `MaxPooling2D` layers. Importing this model in a straightforward.
+The typical sources of pre-trained models have been briefly discussed in lecture ML-20. The Keras module `applications` is a legacy of Keras 2 that provides a limited supply (compared to the current repositories), but is more than enough for this example. It contains a collection of deep learning models that are made available alongside pre-trained weights. These models can be used for prediction, feature extraction, and fine-tuning. The model VGG16 is a (relatively) simple CNN model with a convolutional base made of `Conv2D` and `MaxPooling2D` layers. Importing this model is straightforward.
 
 ```
 In [29]: from keras.applications import VGG16
@@ -331,7 +331,7 @@ In [29]: from keras.applications import VGG16
 
 We instantiate a VGG16 model. Note the choices made:
 
-* The argument `weights='imagenet'` specifies that the initial parameter values are those obtained from training the model with the ImageNet data. We can update them in the training process or not (see below). We can also update only a subset (typically those of the last layers).
+* The argument `weights='imagenet'` specifies that the initial parameter values are those obtained from training the model with the ImageNet data. We can update them in the training process, or freeze them, which is what we do in this example. We can also update only a subset of the weights (typically those from the last layers), as proposed later .
 
 * The model can be seen as a convolutional base plus a densely connected classifier on top. With the argument `include_top=False`, this classifier, which would return probabilities for the 1,000 ImageNet classes, is discarded.
 
@@ -393,7 +393,7 @@ Model: "vgg16"
  Non-trainable params: 0 (0.00 B)
 ```
 
-Here we freeze the parameter values, so they will not be adapted to the cats vs dogs data. This is optional, and it is even possible to freeze only the initial layers. Other options are proposed in the homework. Freezing the whole convolutional base is pretty easy:
+Here we freeze the parameter values of the convolutional base, so they will not be adapted to the cats vs dogs data. This is optional, and it is even possible to freeze only the initial layers, as suggested in the homework. Other options are proposed in the homework. Freezing the whole convolutional base is pretty easy:
 
 ```
 In [31]: conv_base.trainable = False
@@ -401,7 +401,7 @@ In [31]: conv_base.trainable = False
 
 ## Q4b. Adding a densely connected classifier on top
 
-Now we build a new network adding three layers on top of the convolutional base. The convolutional base is managed here as a single component. The top layers are the same as in the network of question Q3. Note that the 14,714,688 parameters of the convolutional base appear here as non-trainable.
+Next, we build a new network adding three layers on top of the convolutional base. The convolutional base is managed here as a single component. The top layers are the same as in the network of question Q3. Note that the 14,714,688 parameters of the convolutional base appear here as non-trainable.
 
 ```
 In [32]: input_tensor = Input(shape=(150, 150, 3))
@@ -472,6 +472,6 @@ In [35]: os.rmdir('data')
 
 1. `keras.applications` offers plenty of choice for pre-trained models, beyond VGG16. `https://keras.io/api/applications` can help you to choose. For instance, you can try **Xception**, which uses some additional tricks proposed by F Chollet.
 
-2. You can easily unfreeze some of the last layers of the pre-trained model. For instance, in the VGG16 model, after freezing all the layers with `conv_base.trainable = False`, you can apply the loop `for l in conv_base.layers[-2]: l.trainable = True`. Some call this **fine-tuning** the model. Try this with the VGG16 model that you have used in the preceding exercise, to see whether you can improve the performance. For the fitting process to work, you will have to decrease the **learning rate** (the default is `learning_rate=1e-3`). First, import the module `optimizers` (`from keras import optimizers`), and then compile the model using the argument `optimizer=optimizers.Adam(learning_rate=5e-5)`.
+2. You can easily unfreeze some of the last layers of the pre-trained model. For instance, in the VGG16 model, after freezing all the layers with `conv_base.trainable = False`, you can apply the loop `for l in conv_base.layers[-2]: l.trainable = True`. Try this with the VGG16 model, to see whether you can improve the performance. For the fitting process to work, you will have to decrease the **learning rate** (the default is `learning_rate=1e-3`). First, import the module `optimizers` (`from keras import optimizers`), and then compile the model using the argument `optimizer=optimizers.Adam(learning_rate=5e-5)`.
 
-3. If you survive to the preceding challenges, you can play with the learning rate, to see how this affects the fitting process.
+3. If you have survived to the preceding exercises, you can play with the learning rate, to see how this affects the fitting process.
