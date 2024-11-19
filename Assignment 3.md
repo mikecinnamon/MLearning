@@ -8,7 +8,7 @@ This assignment is a continuation of the analysis performed in examples ML-17 an
 
 Q1. Try a **logistic regression** model on the MNIST data and compare its performance to that of the models presented in in examples ML-17 and ML-19. Normalize the data as in question Q4 of example ML-19.
 
-Q2. A logistic regression model is just an **MLP** model without **hidden layers**. Specify the model of question Q1 as neural network model, and use Keras to train and test it. Are the results comparable to those of question Q1?
+Q2. A logistic regression model is just an **MLP** model without **hidden layers**. Specify the model of question Q1 as a neural network model, and use Keras to train and test it. Are the results comparable to those of question Q1?
 
 Q3. Insert a second hidden layer in the MLP model of example ML-19, getting a **deeper** model. Do you get a higher accuracy?
 
