@@ -73,23 +73,22 @@ clf1.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=[
 clf1.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test));
 
 # Q4a. Pre-trained CNN model #
-from keras import applications
-conv_base = applications.VGG16(weights='imagenet', include_top=False, input_shape=(150, 150, 3))
+from keras.applications import VGG16
+conv_base = VGG16(weights='imagenet', include_top=False, input_shape=(150, 150, 3))
 conv_base.summary()
 conv_base.trainable = False
 
 # Q4b. Adding a densely connected classifier on top #
-from keras import optimizers
 input_tensor = Input(shape=(150, 150, 3))
 x1 = conv_base(input_tensor)
 x2 = layers.Flatten()(x1)
 x3 = layers.Dense(256, activation='relu')(x2)
 output_tensor = layers.Dense(2, activation='softmax')(x3)
 clf2 = models.Model(input_tensor, output_tensor)
-clf2.compile(optimizer=optimizers.Adam(learning_rate=5e-5), loss='sparse_categorical_crossentropy', metrics=['acc'])
 clf2.summary()
 
 # Q5. Training the new model #
+clf2.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 clf2.fit(X_train, y_train, epochs=5, validation_data=(X_test, y_test));
 
 # Removing the data (optional) #
