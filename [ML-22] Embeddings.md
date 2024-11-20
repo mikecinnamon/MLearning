@@ -68,7 +68,7 @@ First, the distance. Take two vectors $\hbox{\bf x}$ and $\hbox{\bf y}$ in a spa
 
 $$\hbox{dist}(\hbox{\bf x}, \hbox{\bf y}) = \sqrt{\sum_{i=1}^n(x_i - y_i)^2}.$$
 
-Angles are operationalized through the **cosine**. The cosine formula is commonly used in data mining, in particular in natural language processing, as a similarity measure. The vectors can represent texts, as in example ML-26, or customers, products or many other possibilities, depending on the application. Mathematically, the cosine works as a correlation, so vectors pointing in the same direction have cosine 1, while orthogonal vectors have cosine 0. 
+Angles are operationalized through the **cosine**. The cosine formula is commonly used as a similarity measure in data mining, in particular in natural language processing. The vectors can represent texts, as in example ML-26, or customers, products or many other possibilities, depending on the application. Mathematically, the cosine works as a correlation, so vectors pointing in the same direction have cosine 1, while orthogonal vectors have cosine 0. 
 
 The cosine of the angle determined by two vectors $\hbox{\bf x}$ and $\hbox{\bf y}$ can be calculated as
 
