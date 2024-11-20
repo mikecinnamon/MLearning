@@ -65,6 +65,7 @@ There is plenty of competition in this fast-growing sector, where you can find:
 How do we search in a vector database? The query comes as a vector, created by the same encoder as the vectors in the database. The database engine searches for similar vectors (in the geometric sense), whose associated texts are then returned as the query result. To operationalize this, a mathematical formula for the **similarity** has to be specified. Two typical similarity measures are those based on the distance and the angle. A math refresher follows, just in case you need it. 
 
 First, the distance. Take two vectors $\hbox{\bf x}$ and $\hbox{\bf y}$ in a space of dimension $n$. Imagine them as two arrows whose origin is the zero point. Then, the distance between the endpoints is given by the formula (Pythagoras theorem):
+
 $$\hbox{dist}(\hbox{\bf x}, \hbox{\bf y}) = \sqrt{\sum_{i=1}^n(x_i - y_i)^2}.$$
 
 Angles are operationalized through the **cosine**. The cosine formula is commonly used in data mining, in particular in natural language processing, as a similarity measure. The vectors can represent texts, as in example ML-26, or customers, products or many other possibilities, depending on the application. Mathematically, the cosine works as a correlation, so vectors pointing in the same direction have cosine 1, while orthogonal vectors have cosine 0. 
@@ -76,6 +77,7 @@ $$\cos(\hbox{\bf x}, \hbox{\bf y}) = \frac{\displaystyle \hbox{\bf x}\cdot\hbox{
 In this formula, the numerator is the **dot product** (`dot()` in NumPy, `SUMPRODUCT()` in Excel)
 
 $$\hbox{\bf x}\cdot \hbox{\bf y} = \sum_{i=1}^n x_i y_i$$
+
 and the denominator is the product of the lengths (length meaning here the distance from the origin to the endpoint, not the number of terms),
 
 $$\lVert\hbox{\bf x}\rVert = \sqrt{\sum_{i=1}^n x_i^2}.$$
