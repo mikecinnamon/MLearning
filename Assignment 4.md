@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This assignment is a continuation of the analysis performed in example ML-23, which uses **kake news data**. In the assignment we explore this a bit more, trying alternative approaches. 
+This assignment is a continuation of the analysis performed in example ML-23, on **fake news data**. In the assignment we explore this a bit more, trying alternative approaches. 
 
 ## Questions
 
