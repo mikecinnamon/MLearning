@@ -48,7 +48,7 @@ LLM's are essentially of two types:
 
 The models behind the chat apps (ChatGPT is the top popular one) are based on autoregressive models. The input text is called the **prompt**. Though these models perform most of the classic NLP tasks, the users do not perceive them as such. To get the best output, you have to carefully craft your prompts. This is called **prompt engineering**, a skill set quite appreciated in business. Two simple examples: 
 
-* To get a summary, the user includes in the prompt instructions such as *summarize the following text, in no more than 100 words $\dots$*. 
+* To get a summary, the user includes in the prompt instructions such as *summarize the following text, in no more than 100 words* $\dots$. 
 
 * To get a translation, he/she includes something like *translate to French the following text* $\dots$. 
 
