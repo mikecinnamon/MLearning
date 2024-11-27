@@ -50,7 +50,7 @@ The models behind the chat apps (ChatGPT is the top popular one) are based on au
 
 * To get a summary, the user includes in the prompt instructions such as *summarize the following text, in no more than 100 words $\dots$*. 
 
-* To get a translation, he/she includes something like *translate to French the following text $\dots$*. 
+* To get a translation, he/she includes something like *translate to French the following text* $\dots$. 
 
 ## What makes the transformers special?
 
