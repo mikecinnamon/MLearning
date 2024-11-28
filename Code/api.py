@@ -2,7 +2,7 @@
 
 # Chatting through the API #
 import cohere
-co = cohere.ClientV2('bfxqhSNJ5OaBPsjXvXLbzpCJjoS8EuZrN05QT9qj')
+co = cohere.ClientV2(api_key='YOUR_API_KEY')
 model_name = 'command-r-plus-08-2024'
 messages = [{'role': 'user', 'content': 'Tell me, in no more than 25 words, what is machine learning'}]
 response = co.chat(model=model_name, messages=messages)
