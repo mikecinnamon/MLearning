@@ -2,13 +2,13 @@
 
 ## Using an LLM through the API
 
-An **application programming interface** (API) is a way for two or more computer programs or components to communicate with each other. It is a type of software interface, offering a service to other pieces of software. The main players in the LLM arena (OpenAI, Anthropic, Meta, Cohere, etc) offer API platforms which allow us to use their models in a remote way. For closed models like those of the GPT-4 collection, this is the only way you have to include the tasks performed by the model in your programs. 
+An **application programming interface** (API) is a way for two or more computer programs or components to communicate with each other. It is a type of software interface, offering a service to other pieces of software. The main players in the LLM arena (OpenAI, Anthropic, Meta, Cohere, etc) offer API platforms which allow us to use their models in a remote way. For closed models like those of the GPT collection (later than GPT-2), this is the only way you have to include the tasks performed by the model in your programs. 
 
-In some cases, like **OpenAI**, you have to pay for using LLM's through an API, though you find sometimes, as in **Cohere**, a margin for free, though limited use. OpenAI and Cohere are discussed in this tutorial.
+In some cases, like **OpenAI**, you have to pay for using LLM's through an API, though you find sometimes, as in **Cohere** and Google's Gemini, a margin for free, though limited use. OpenAI and Cohere are discussed in this tutorial.
 
-Note that everything in this field is changing fast, so we can say nothing completely definite about anything. For instance, prices are falling down due to fierce competition. Also, it seems that the focus is moving from the **chat** to the **assistant**. 
+Note that everything in this field is changing fast, so we can say nothing completely definite about anything. For instance, prices are falling down due to fierce competition. Also, it seems that the focus is moving from the **chat** to the **agent**. 
 
-The remote connection with an LLM API is managed by means of an **API key** and a **software development kit** (SDK). The API key is given by the provider through its website. Before asking for the API key, you must register, providing a user name and a password. The SDK can be a Pyhton package, but other languages like node.js are available in most cases. 
+The remote connection with an LLM API is managed by means of an **API key** and a **software development kit** (SDK). The API key is given by the provider through its website. Before asking for the API key, you must register, providing a user name and a password. The SDK can be a Pyhton package, but other languages like Java or node.js are available in most cases. 
 
 ## The OpenAI API
 
@@ -23,205 +23,228 @@ Since we cannot use the OpenAI API for free, we are very brief about it in this 
 
 ## The Cohere's API
 
-In Cohere API, the Python SDK is a package called `cohere`, which you can install in the usual way. For technical detail and code examples, you can take a look at `https://docs.cohere.com/reference`. 
-
-The following tutorial is limited to three basic methods, `.chat()`, `.embed()` and `.rerank()`.
-
-## Chatting through the API
-
-The method `.chat()` allows for chatting in a programmatic way. Mind that if you just want to ask a couple of questions, you can use the chat interface at `https://coral.cohere.com`, which is quite similar to ChatGPT, without any Python code.
+Cohere offers a chat interface at `https://coral.cohere.com`, quite similar to ChatGPT. In the Cohere API, the Python SDK is a package called `cohere`, which you can install in the usual way. For technical detail and code examples, you can take a look at `https://docs.cohere.com/reference`. 
 
 After importing the package `cohere`, you create a client using your API key:
 
 ```
 In [1]: import cohere
-   ...: co = cohere.Client('YOUR_API_KEY')
+   ...: co = cohere.ClientV2('YOUR_API_KEY')
 ```
 
-The models for chatting are called **Command** in Cohere. The (current) default is `command-r-plus`, a 104B parameter multilingual model, but this may change as soon as Cohere develops a more powerful model. Both the old `command-r` and `command-r-plus` are available from Hugging Face, so you may run them locally, but you would need for that about a few hundred GB of free space in your hard disk and 32 GB RAM.
+The following tutorial is limited to three basic methods, `.chat()`, `.embed()` and `.rerank()`. Note that we use `.ClientV2()`, which is a recent upgrade. Most tutorials in Internet still use the previous version, `.Client()`, whose syntax is a bit different.  
 
-Let us start with a supersimple example, in which we enter a question as if we were in common chat application.
+## Chatting through the API
+
+The method `.chat()` allows for chatting in a programmatic way. The models for chatting are called **Command** in Cohere. The current version is:
 
 ```
-In [2]: response = co.chat(message='Tell me, in no more than 25 words, what is machine learning')
+In [2]: model_name = 'command-r-plus-08-2024'
+```
+
+This is a 104B parameter multilingual model. Old and new versions of the Command models are available at Hugging Face, so you may run them locally, if you have a few hundred GB of free space in your hard disk and 32 GB RAM.
+
+Let us start with a single prompt. Note the way in which the input is entered, which is the same as in the OpenAI API. This protocol may look a bit complicated, but it has been designed for better control of the conversation.
+
+```
+In [3]: input_message = [{'role': 'user', 'content': 'Tell me, in no more than 25 words, what is machine learning'}]
+```
+
+We submit now our prompt to the chat model.
+
+```
+In [4]: response = co.chat(model=model_name, messages=input_message)
 ```
 
 Note that, unlike a common chat app, this does not output a simple string, but an object containing a lot of metadata. 
 
 ```
-In [3]: response
-cohere.Chat {
-	id: 5101bd44-cbb6-4aba-b265-87a3048b25de
-	response_id: 5101bd44-cbb6-4aba-b265-87a3048b25de
-	generation_id: 50f5eb53-3524-43a7-8f11-9cb0812eafdc
-	message: Tell me, in no more than 25 words, what is machine learning.
-	text: Machine learning is a branch of AI that uses data to train models and make predictions or decisions without being explicitly programmed.
-	conversation_id: None
-	prompt: None
-	chat_history: [{'role': 'USER', 'message': 'Tell me, in no more than 25 words, what is machine learning.'}, {'role': 'CHATBOT', 'message': 'Machine learning is a branch of AI that uses data to train models and make predictions or decisions without being explicitly programmed.'}]
-	preamble: None
-	client: <cohere.client.Client object at 0x74d52bf9bc40>
-	token_count: None
-	meta: {'api_version': {'version': '1'}, 'billed_units': {'input_tokens': 17, 'output_tokens': 23}, 'tokens': {'input_tokens': 215, 'output_tokens': 23}}
-	is_search_required: None
-	citations: None
-	documents: None
-	search_results: None
-	search_queries: None
-	finish_reason: COMPLETE
-}
+In [5]: response
+Out[5]: ChatResponse(id='b7f23c08-3c53-4564-a52a-ca9ba4b2e2fe', finish_reason='COMPLETE', prompt=None, message=AssistantMessageResponse(role='assistant', tool_calls=None, tool_plan=None, content=[TextAssistantMessageResponseContentItem(type='text', text='Machine learning is a branch of computer science that enables systems to automatically learn and improve from experience, without being explicitly programmed. It focuses on developing algorithms to analyse data.')], citations=None), usage=Usage(billed_units=UsageBilledUnits(input_tokens=16.0, output_tokens=33.0, search_units=None, classifications=None), tokens=UsageTokens(input_tokens=217.0, output_tokens=33.0)), logprobs=None)
 ```
 
-Nevertheless, you can extract the text of the response in a direct way:
+Nevertheless, we can extract the text of the response in a direct way:
 
 ```
-In [4]: response.text
-Out[4]: 'Machine learning is a branch of AI that uses data to train models and make predictions or decisions without being explicitly programmed.'
-```
-
-```
-In [5]: co.chat(message='Tell me, in no more than 25 words, what is machine learning').text
-Out[5]: 'Machine learning is a branch of computer science that enables computers to learn and improve from experience, without being explicitly programmed. It focuses on developing algorithms to make predictions.'
-```
-
-```
-In [6]: co.chat(message='Tell me, in no more than 25 words, what is machine learning', temperature=0).text
+In [6]: response.message.content[0].text
 Out[6]: 'Machine learning is a branch of computer science that enables systems to automatically learn and improve from experience, without being explicitly programmed. It focuses on developing algorithms to analyse data.'
 ```
 
+Since we are interested only in the output text, it will be practical to streamline the code with a function: 
+
 ```
-In [7]: co.chat(message='Tell me, in no more than 25 words, what is machine learning', temperature=0).text
-Out[7]: 'Machine learning is a branch of computer science that enables systems to automatically learn and improve from experience, without being explicitly programmed. It focuses on developing algorithms to analyse data.'
+In [7]: def mychat(input):
+   ...:     return co.chat(model=model_name, messages=input).message.content[0].text
 ```
 
 ## Creating a conversation
 
-As the contents of `response` suggests, you can have a better control of your chat. Let us engage now in a conversation in which our questions will be: 
+The input message can be organized in a way that allows us to control the flow in the chat. Let us engage now in a conversation in which our questions will be: 
 
 ```
-In [8]: prompt1 = 'Who is the president of USA?'
-   ...: prompt2 = 'How old is he/she?'
+In [8]: query1 = 'Who is the president of USA?'
+   ...: query2 = 'How old is he/she?'
 ```
 
 We get the first response as we did above:
 
 ```
-In [9]: resp1 = co.chat(message=prompt1)
-   ...: resp1.text
-Out[9]: 'As of January 2024, the current president of the United States of America is Joe Biden. He was sworn in as the 46th president on January 20, 2021, following his victory in the 2020 presidential election.'
+In [9]: mes1 = [{'role': 'user', 'content': query1}]
+   ...: resp1 = mychat(mes1)
+   ...: resp1
+Out[9]: 'As of January 2024, the current president of the United States of America is Joseph Robinette Biden Jr., also known as Joe Biden. He is the 46th president and was sworn into office on January 20, 2021.'
 ```
 
-We wish this to be remembered for the second question to be related to Joe Biden. We can control this through the **chat history**, which is a list of dictionaries corresponding to the contributions of the user and the chatbot to the conversation.
+We wish this to be remembered for the second question to be related to Joe Biden. We can control this by including in the input message the current state of the conversation.
 
 ```
-In [10]: resp1.chat_history
+In [10]: mes2 = mes1 + [{'role': 'assistant', 'content': resp1}] + [{'role': 'user', 'content': query2}]
+    ...: mes2
 Out[10]: 
-[ChatMessage(role='USER', message='Who is the president of USA?'),
- ChatMessage(role='CHATBOT', message='As of January 2024, the current president of the United States of America is Joe Biden. He was sworn in as the 46th president on January 20, 2021, following his victory in the 2020 presidential election.')]
+[{'role': 'user', 'content': 'Who is the president of USA?'},
+ {'role': 'assistant',
+  'content': 'As of January 2024, the current president of the United States of America is Joseph Robinette Biden Jr., also known as Joe Biden. He is the 46th president and was sworn into office on January 20, 2021.'},
+ {'role': 'user', 'content': 'How old is he/she?'}]
 ```
 
-The chat history is a list of messages. Note the roles of USER and CHATBOT. We will come back to the roles below. First, let us continue the chat  taking into account
+Note that the input is always a list of messages, which are dictionaries with two keys, `role` and `content`. We will come back to the roles below. First, let us enter the second question. As you can see, the conversation continues.
 
 ```
-In [11]: resp2 = co.chat(message=prompt2, chat_history=resp1.chat_history)
-    ...: resp2.text
-Out[11]: 'Joe Biden was born on November 20, 1942, making him 81 years old as of my cut-off date in January 2024.'
+In [11]: resp2 = mychat(mes2)
+    ...: resp2
+Out[11]: 'Joe Biden was born on November 20, 1942, in Scranton, Pennsylvania, making him 81 years old as of 2024.'
 ```
-
-Now the chat history contains the two prompts and the corresponding responses of the chatbot.
-
-```
-In [12]: resp2.chat_history
-Out[12]: 
-[ChatMessage(role='USER', message='Who is the president of USA?'),
- ChatMessage(role='CHATBOT', message='As of January 2024, the current president of the United States of America is Joe Biden. He was sworn in as the 46th president on January 20, 2021, following his victory in the 2020 presidential election.'),
- ChatMessage(role='USER', message='How old is he/she?'),
- ChatMessage(role='CHATBOT', message='Joe Biden was born on November 20, 1942, making him 81 years old as of my cut-off date in January 2024.')]
- ```
 
 ## The roles in the chat
 
-There is a third role, SYSTEM. It is typically used to add content throughout a conversation, or to adjust the model's overall behavior and conversation style. Most of the so called **prompt engineering** is just a way of managing the SYSTEM role. This can be done in many ways, the simplest one being, probably, to set the rules at the begininng of the chat history. The following is a simple example. 
+We have used the roles `user` and `assistant` to create a conversation in the preceding section. There are two other roles, `system`  and `tool`. The `tool` role is used to enter functions in the chat. This role is not covered by this short tutorial, but, even if your experience with Python functions is limited, you can guess that this creates a host of oportunities for task automation in the chat.
+
+The `system` role is typically used to add content throughout a conversation, or to adjust the model's overall behavior and conversation style. Most of the so called **prompt engineering**, as applied in chat apps, is just a way of managing this role. We illustrate this with a simple example. Take the following question:
 
 ```
-In [13]: length = 'Answer the questions in no more than 10 words'
-    ...: resp = co.chat(message=prompt1, chat_history=[{'role': 'SYSTEM', 'message': length}])
-    ...: resp.text
-Out[13]: 'Joe Biden.'
+In [12]: query = 'Who is the president of USA?'
 ```
 
-Note that the value of the parameter `chat_history` is a Python list, so you can manage it in a Pythonic way. It may be useful to split the rules set by the SYSTEM role, as in the following example.
+Suppose that you want the response to satisfy a length constraint such as:
 
 ```
-In [14]: length = 'Answer the questions in no more than 10 words'
-    ...: style = 'Include middle names'
-    ...: resp = co.chat(message=prompt1, chat_history=[{'role': 'SYSTEM', 'message': length}, {'role': 'SYSTEM', 'message': style}])
-    ...: resp.text
-Out[14]: 'Joseph Robinette Biden Jr.'
+In [13]: length = 'Respond the following question in no more than 10 words'
+```
+
+We include this as an additional message in the list. The recommended practice is to put the `system` messages at the begginning.
+
+```
+In [14]: mes1 = [{'role': 'system', 'content': length}, {'role': 'user', 'content': query}]
+```
+
+Our function `mychat` responds now as requested:
+
+```
+In [15]: resp1 = mychat(mes1)
+    ...: resp1
+Out[15]: 'Joe Biden.'
+```
+
+Since we enter the messages as a list, we can easily include several instructions. A simple example follows.
+
+```
+In [16]: style = 'Include middle names in your response'
+    ...: mes2 = [{'role': 'system', 'content': length}, {'role': 'system', 'content': style}, {'role': 'user', 'content': query}]
+    ...: resp2 = mychat(mes2)
+    ...: resp2
+Out[16]: 'Joseph Robinette Biden Jr.'
 ```
 
 ## Embeddings
 
-```
-In [15]: model_name = 'embed-english-v3.0'
-```
+We are going to extract some embedding vectors from a Cohere model. We first specify the embedding model.
 
 ```
-In [16]: text1 = '''Machine learning (ML) is a field of study in artificial intelligence concerned 
+In [17]: model_name = 'embed-english-v3.0'
+```
+
+In this simple example, we use three sentences concerned with machine learning. The first two sentences are definitions collected in Internet, and the third one is a (very) subjective statement.
+
+```
+In [18]: text1 = '''Machine learning (ML) is a field of study in artificial intelligence concerned 
     ...: with the development and study of statistical algorithms that can learn from data and 
     ...: generalize to unseen data and thus perform tasks without explicit instructions.'''
     ...: text2 = '''Machine learning is a subset of artificial intelligence that gives systems the
     ...: ability to learn and optimize processes without having to be consistently programmed.'''
-    ...: text3 = '''Machine learning (ML) is a branch of artificial intelligence (AI) and computer 
-    ...: science that focuses on developing methods for computers to learn and improve their performance.'''
+    ...: text3 = '''This course on machine learning is very interesting.'''
+    ...: texts=[text1, text2, text3]
 ```
 
-```
-In [17]: response = co.embed(texts=[text1, text2, text3], model=model_name, input_type='search_document')
-```
+Next, we submit our texts. Cohere embedding model allows you choose among five input types: `search_document`, `search_query`, `classification`, `clustering` and `image`. The first one is typically used to generate embedding vectors to be stored in a vector database for future search. We will use the second one in example ML-26. We use `embedding_types=['float']` to get vectors whose terms are float numbers, with decimals. The other possibilities are beyond of the scope of this course.
 
 ```
-In [18]: import numpy as np
-    ...: embeds = np.array(response.embeddings)
+In [19]: response = co.embed(model=model_name, input_type='search_document', embedding_types=['float'], texts=texts)
 ```
 
-```
-In [19]: embeds.shape
-Out[19]: (3, 4096)
-```
+Now, `response` is a big object which contains the three embedding vectors. So, we don't print it. `response.embeddings.float`is a list containing the vectors. To manage this, we convert the list to 2D array.
 
 ```
-In [20]: embeds[:, :5]
-Out[20]: 
+In [20]: import numpy as np
+    ...: embeds = np.array(response.embeddings.float)
+```
+
+Let us check the shape of ths array.
+```
+In [21]: embeds.shape
+Out[21]: (3, 4096)
+```
+
+We see that the embedding dimension is 4,096 here. We can also take a look at the first terms.
+
+```
+In [22]: embeds[:, :5]
+Out[22]: 
 array([[-0.0322876 , -0.0135498 , -0.0406189 ,  0.02316284, -0.02153015],
        [-0.01147461, -0.03625488, -0.02270508,  0.00922394, -0.03140259],
-       [-0.04000854, -0.02990723, -0.02749634,  0.02322388, -0.04135132]])
+       [ 0.00759506, -0.01594544,  0.01041412, -0.01133728, -0.03338623]])
 ```
 
-```
-In [21]: abs(embeds[0] - embeds[1]).mean().round(3)
-Out[21]: 0.014
-```
+As in the encoders that we managed through the package `sentence_transformers`, the embedding vectors are normalized, that is, they have unit length. Remember that the (geometric) length is the square root of the sum of the squares. We can also check this.
 
 ```
-In [22]: abs(embeds[0] - embeds[2]).mean().round(3)
-Out[22]: 0.009
+In [23]: (embeds**2).sum(axis=1)
+Out[23]: array([1.00032005, 1.00065999, 0.99988624])
 ```
+
+We can expect the vectors of first two sentences to show a stronger similarity. Since these vectofrs have unit length, it is indiferent to use the measure the similarity with the distance or with the cosine. Both are provided by the scikit-learn module `metrics`. We use the cosine in this course. First we import the function `cosine`:
+
+```
+In [24]: from sklearn.metrics.pairwise import cosine_similarity
+```
+
+Then, we apply the function to the array `embeds`. Note that this function take the vectors by row, which is appropriate here.
+
+```
+In [25]: cosine_similarity(embeds).round(3)
+Out[25]: 
+array([[1.   , 0.843, 0.472],
+       [0.843, 1.   , 0.48 ],
+       [0.472, 0.48 , 1.   ]])
+```
+
+This can be read as a correlation matrix (mathematically, the correlation is a cosine). The results are as expected.
 
 ## Reranking
 
 Rerank models sort text inputs by semantic relevance to a specified query. They are often used to sort search results returned from an existing search solution.
 
+We specify the model as in the other cases.
+
 ```
-In [23]: model_name = 'rerank-english-v3.0'
+In [26]: model_name = 'rerank-english-v3.0'
 ```
 
 ```
-In [24]: query = 'Are there fitness-related perks?'
+In [27]: query = 'Are there fitness-related perks?'
 ```
 
 ```
-In [25]: doc1 = '''Reimbursing Travel Expenses: Easily manage your travel expenses by submitting them
+In [28]: doc1 = '''Reimbursing Travel Expenses: Easily manage your travel expenses by submitting them
     ...: through our finance tool. Approvals are prompt and straightforward.'''
     ...: doc2 = '''Working from Abroad: Working remotely from another country is possible.
     ...: Simply coordinate with your manager and ensure your availability during core hours.'''
@@ -233,25 +256,23 @@ In [25]: doc1 = '''Reimbursing Travel Expenses: Easily manage your travel expens
 ```
 
 ```
-In [26]: response = co.rerank(query=query, model=model_name, documents=docs, top_n=4)
+In [29]: response = co.rerank(model=model_name, query=query, documents=docs, top_n=4)
 ```
 
-Again the response of the model is an object, similar to a list, in which many things are packed. The document on top of the ranking is:
+Again the response of the model is an object in which many things are packed.
 
 ```
-In [27]: response[0]
-Out[27]: 
-RerankResult<document['text']: Health and Wellness Benefits: We care about your well-being and offer gym
-memberships, on-site yoga classes, and comprehensive health insurance., index: 2, relevance_score: 0.01798621>
+In [30]: response
+Out[30]: V2RerankResponse(id='8338f1af-a0e0-43e4-adfb-d2915df9ae11', results=[V2RerankResponseResultsItem(document=None, index=2, relevance_score=0.01798621), V2RerankResponseResultsItem(document=None, index=3, relevance_score=8.463939e-06), V2RerankResponseResultsItem(document=None, index=0, relevance_score=7.296379e-06), V2RerankResponseResultsItem(document=None, index=1, relevance_score=1.1365637e-06)], meta=ApiMeta(api_version=ApiMetaApiVersion(version='2', is_deprecated=None, is_experimental=None), billed_units=ApiMetaBilledUnits(images=None, input_tokens=None, output_tokens=None, search_units=1.0, classifications=None), tokens=None, warnings=None))
 ```
 
-So, there are two pieces of information: (a) the index, which indicates the index of this document in the list submitted, and (b) a **relevance score**, which is query dependent, and could be higher or lower depending on the query and passages sent in. It is easy to extract the whole ranking as a table using Pandas:
+So, there are two relevant pieces of information here: (a) the index, which indicates the index of this document in the list submitted, and (b) a **relevance score**, which is query dependent, and could be higher or lower depending on the query and passages sent in. It is easy to extract the whole ranking as a table using Pandas:
 
 ```
-In [28]: import pandas as pd
+In [31]: import pandas as pd
     ...: pd.DataFrame({'index': [response[i].index for i in range(len(docs))],
     ...:     'relevance_score': [response[i].relevance_score for i in range(len(docs))]})
-Out[28]: 
+Out[31]: 
    index  relevance_score
 0      2         0.017986
 1      3         0.000008
@@ -263,4 +284,4 @@ Here, the second document is clearly ahead of the other three.
 
 ## Homework
 
-1. As you already know, when repeat a prompt to a chat app based on an LLM, you may not get the same response. This is managed by a parameter called **temperature**. In Cohere's method `.chat()`, the default is `temperature=0.3`. Check that, with default temperature, you get different responses to `In [2]`. Try also with `temperature=1`.
+1. As you already know, when repeat a prompt to a chat app based on an LLM, you may not get the same response. This is managed by a parameter called **temperature**. In Cohere's method `.chat()`, the default is `temperature=0.3`. Check that, with the default temperature, you get different responses to `In [2]`. Try also with `temperature=1`.
