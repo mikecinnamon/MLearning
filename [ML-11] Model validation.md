@@ -30,7 +30,6 @@ clf.fit(X_train, y_train)
 Then, you can evaluate the model separately on both data sets and compare the results. If the evaluation is based on the accuracy, this would be:
 
 ```
-ypred_train = clf.predict(X_train)
 clf.score(X_train, y_train), clf.score(X_test, y_test)
 ```
 
