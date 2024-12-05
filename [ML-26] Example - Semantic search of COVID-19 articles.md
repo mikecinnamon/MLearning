@@ -30,7 +30,7 @@ Q3. Encode the abstracts included in the data set.
 
 Q4. Perform a vector search based on the vectors obtained in the preceding questions.
 
-Q5. Refine your results using a reanking method.
+Q5. Refine your results using a reranking method.
 
 
 ## Importing the data
@@ -43,7 +43,7 @@ In [1]: import pandas as pd, numpy as np
    ...: df = pd.read_csv(path + 'covid.csv')
 ```
 
-The data come as expected. No missing values.
+The data come as expected. There are no missing values.
 
 ```
 In [2]: df.info()
@@ -94,10 +94,10 @@ We import the package `cohere`, using the API key to create a **client**.
 
 ```
 In [5]: import cohere
-   ...: co = cohere.Client('YOUR_API_KEY')
+   ...: co = cohere.ClientV2(api_key='YOUR_API_KEY')
 ```
 
-Remeber that, if youy use a **trial key**, you have to cope with some constraints. We will see that later. As in lecture ML-25, we use the model `embed-english-v3.0` to generate the embedding vectors.
+Remember that, if youy use a **trial key**, you have to cope with some constraints. We will see that later. As in lecture ML-25, we use the model `embed-english-v3.0` to generate the embedding vectors.
 
 ```
 In [6]: model_name = 'embed-english-v3.0'
@@ -109,7 +109,7 @@ We are ready to start. The steps are:
 
 * Encode the abstracts as vectors. This is typically done off-line, and the vectors are already stored in a **vector database**.
 
-* Search for the abstracts whose vector are closest to the query vector, selecting the top-$N$ **nearest neighbors**. In this example we take $N=20$, using the **cosine formula** to measure the **similarity** of the query vector and the abstract vectors. 
+* Search for the abstracts whose vectors are closest to the query vector, selecting the top-$N$ **nearest neighbors**. In this example we take $N=20$, using the **cosine formula** to measure the **similarity** of the query vector and the abstract vectors. 
 
 * The abstracts come ranked by their similarity to the query. They are passed through a reranking algorithm, and then a further selection is performed, so we get smaller number (three in this example).
 
@@ -199,7 +199,7 @@ array([ 0.02650452,  0.02928162,  0.00417709, ..., -0.00869751,
 
 ## Q4. Vector search
 
-We create a new column in our data set, by means of the method `.apply()`. In every row, we calculate the similarity of the query and the abstract in that row, as given by the **cosine formula**. In this example, the embedding vectors have length 1, which is the default of Cohere's method `.embed()`, so the denominator in the cosine formula is not needed, and we can use as a similarity function the NumPy function `dot()`. We take a look at the first rows of the resulting data set.
+We create now a new column in our data frame by means of the method `.apply()`, calculating, in every row, the **cosine similarity** of the query and the abstract. In this example, the embedding vectors have length 1, which is the default of most embedding models. So, the denominator in the cosine formula is not needed, and we can use as a similarity function the NumPy function `dot()`. We take a look at the first rows of the resulting data set.
 
 ```
 In [16]: df['similarity'] = df['abstract_embed'].apply(lambda x: np.dot(x, query_embed))
@@ -234,7 +234,7 @@ Out[16]:
 4  [0.038635254, -0.0021972656, -0.007873535, -0....    0.458840  
 ```
 
-We are interested in the rows where the similarity is highest. Sorting by this column in descending order and picking the top 20 rows, we get them.
+We are interested in the rows in which the similarity is higher. Sorting by this column in descending order and picking the top 20 rows, we get them.
 
 ```
 In [17]: search_output = df.sort_values(by='similarity', ascending=False).head(20)
@@ -242,13 +242,12 @@ In [17]: search_output = df.sort_values(by='similarity', ascending=False).head(2
 
 These are the selected papers, so far.
 
-```
 In [18]: search_output.index
 Out[18]: 
 Index([3393, 5942, 4073,  660,  932, 6230, 4180, 3307, 2215,  149, 5344, 3979,
        5740, 2311, 1549, 5923, 5957, 4048, 9821, 8866],
       dtype='int64')
-```
+
 
 ## Q5. Reranking
 
@@ -275,7 +274,7 @@ Out[21]:
  RerankResponseResultsItem(document=None, index=6, relevance_score=0.94468933)]
 ```
 
-Finally, we get the PubMed URL's of the selecetd papers.
+Finally, we get the PubMed URL's of the selected papers.
 
 ```
 In [22]: selection = [r.index for r in top3.results]
