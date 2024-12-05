@@ -257,7 +257,7 @@ Finally, we refine the selection by reranking. We use the same model as in lectu
 In [19]: model_name = 'rerank-english-v3.0'
 ```
 
-We collect the slecetd abstracts in a list:
+We collect the slected abstracts in a list:
 
 ```
 In [20]: docs = search_output['abstract'].tolist()
