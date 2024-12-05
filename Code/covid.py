@@ -5,12 +5,12 @@ import pandas as pd, numpy
 path = 'https://raw.githubusercontent.com/mikecinnamon/Data/main/'
 df = pd.read_csv(path + 'covid.csv')
 df.info()
-df.head()
+df[['title', 'abstract']].head()
 pd.concat([df['title'].str.len().describe(), df['abstract'].str.len().describe()], axis=1)
 
-# Q1. embedding model #
+# Q1. Embedding model #
 import cohere
-co = cohere.Client('YOUR_API_KEY')
+co = cohere.ClientV2(api_key='YOUR_API_KEY')
 model_name = 'embed-english-v3.0'
 
 # Q2. Encoding the query #
@@ -35,8 +35,6 @@ df['abstract_embed'][0]
 df['similarity'] = df['abstract_embed'].apply(lambda x: np.dot(x, query_embed))
 df.head()
 search_output = df.sort_values(by='similarity', ascending=False).head(20)
-abstract_search_output
-search_output['abstract'].iloc[0]
 
 # Q5. Reranking #
 model_name = 'rerank-english-v3.0'
@@ -45,4 +43,3 @@ top3 = co.rerank(model=model_name, query=query[0], documents=docs, top_n=3)
 top3.results
 selection = [r.index for r in top3.results]
 search_output['url'].iloc[selection]
-search_output['title'][0]
