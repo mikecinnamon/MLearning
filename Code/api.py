@@ -2,21 +2,21 @@
 
 # Chatting through the API #
 import cohere
-co = cohere.ClientV2(api_key='YOUR_API_KEY')
+co = cohere.ClientV2(api_key='bfxqhSNJ5OaBPsjXvXLbzpCJjoS8EuZrN05QT9qj')
 model_name = 'command-r-plus-08-2024'
-messages = [{'role': 'user', 'content': 'Tell me, in no more than 25 words, what is machine learning'}]
-response = co.chat(model=model_name, messages=messages)
+input_message = [{'role': 'user', 'content': 'Tell me, in no more than 25 words, what is machine learning'}]
+response = co.chat(model=model_name, messages=input_message)
 response
 response.message.content[0].text
-def mychat(messages):
-    return co.chat(model_name, messages=messages).message.content[0].text
+def mychat(input):
+    return co.chat(model=model_name, messages=input).message.content[0].text
 
 # Creating a conversation #
 query1 = 'Who is the president of USA?'
-mes1 = [{'role': 'user', 'content': query}]
+query2 = 'How old is he/she?'
+mes1 = [{'role': 'user', 'content': query1}]
 resp1 = mychat(mes1)
 resp1
-query2 = 'How old is he/she?'
 mes2 = mes1 + [{'role': 'assistant', 'content': resp1}] + [{'role': 'user', 'content': query2}]
 mes2
 resp2 = mychat(mes2)
