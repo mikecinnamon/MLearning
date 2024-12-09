@@ -188,10 +188,10 @@ In [20]: import numpy as np
     ...: embeds = np.array(response.embeddings.float)
 ```
 
-Let us check the shape of ths array.
+Let us check the shape of this array.
 ```
 In [21]: embeds.shape
-Out[21]: (3, 4096)
+Out[21]: (3, 1024)
 ```
 
 We see that the embedding dimension is 4,096 here. We can also take a look at the first terms.
@@ -231,7 +231,7 @@ This can be read as a correlation matrix (mathematically, the correlation is a c
 
 ## Reranking
 
-Rerank models sort text inputs by semantic relevance to a specified query. They are often used to sort search results returned from an existing search solution.
+Reranking models sort text inputs by their semantic relevance to a specified query. They are often used to sort search results returned by a semantic search engine.
 
 We specify the model as in the other cases.
 
