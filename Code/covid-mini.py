@@ -1,4 +1,4 @@
-## [ML-26] Example - Semantic search of COVID-19 articles - jina version ##
+## [ML-26] Example - Semantic search of COVID-19 articles ##
 
 # Stopping warnings #
 import warnings
