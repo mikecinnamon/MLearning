@@ -113,7 +113,7 @@ These are the default colors displayed by `imshow()`. To turn them into gray sca
 In [7]: plt.imshow(pic, cmap='gray');
 ```
 
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/172.png)
+![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/17-2.png)
 
 The gray scale can be set as the default with the function `gray()`. Now, reversing the scale, we can show the picture as it were a digit written with black pencil on a white paper surface:
 
@@ -122,7 +122,7 @@ In [8]: plt.gray()
    ...: plt.imshow(255 - pic);
 ```
 
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/mle-09.3.png)
+![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/17-3.png)
 
 This five is far from caligraphic, but still recognizable by a human eye.
 
@@ -135,7 +135,7 @@ In [9]: pic = X[1, :].reshape(28,28)
    ...: plt.imshow(255 - pic);
 ```
 
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/mle-09.4.png)
+![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/17-4.png)
 
 And the third one a four:
 
@@ -144,7 +144,7 @@ In [10]: pic = X[2, :].reshape(28,28)
     ...: plt.imshow(255 - pic);
 ```
 
-![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/mle-09.5.png)
+![](https://github.com/mikecinnamon/MLearning/blob/main/Figures/17-5.png)
 
 ## Q3. Train-test split
 
