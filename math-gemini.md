@@ -19,9 +19,8 @@ Since there are 60 minutes in an hour, 55 minutes is equal to 55/60 = 11/12 of a
 Therefore, t = 11/12.
 
 ----
-----
 
-### Input
+## Input
 
 Ten friends have a dinner in a restaurant. Since four of them don't carry any money, the other six friends pay for them. How much cheaper for each of these six friends would it be if everybody had paid?
 
