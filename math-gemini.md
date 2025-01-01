@@ -59,7 +59,7 @@ Note:
 
 Ten friends have a dinner in a restaurant. Since four of them don't carry any money, the other six friends pay for them. How much cheaper for each of these six friends would it be if everybody had paid?
 
-(A) 60% &nbsp;&nbsp; (B) 30%     (C) 45%     (D) 40%     (E) 50%
+(A) 60% &nbsp;&nbsp;&nbsp;&nbsp; (B) 30% &nbsp;&nbsp;&nbsp;&nbsp; (C) 45% &nbsp;&nbsp;&nbsp;&nbsp; (D) 40% &nbsp;&nbsp;&nbsp;&nbsp; (E) 50%
 
 ## Output
 
