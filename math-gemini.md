@@ -55,6 +55,8 @@ Note:
 * This calculation assumes that the cost of the dinner is evenly divided among those who pay. 
 * 'X' represents the total cost of the dinner.
 
+---
+
 ## Input
 
 Ten friends have a dinner in a restaurant. Since four of them don't carry any money, the other six friends pay for them. How much cheaper for each of these six friends would it be if everybody had paid?
